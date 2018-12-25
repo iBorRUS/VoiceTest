@@ -35,7 +35,7 @@ recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   //console.log('recognizer.onstart');
-  if (!voicestart) { voicestart = true; strvoice("Произнесите команду."); }
+  //if (!voicestart) { voicestart = true; strvoice("Произнесите команду."); }
 }
 
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
