@@ -5,7 +5,7 @@ var speech = new SpeechSynthesisUtterance();        // Возвращает но
     speech.lang = 'ru-Ru';                          // Язык для диктовки текста
 var voicestart = false;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
-recognizer.interimResults = false;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
+recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прикратил говорить, распознование не закончилось
 
