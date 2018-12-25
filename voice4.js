@@ -14,7 +14,7 @@ function speechmic () {                             // Включаем микр
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   recognizer.start();
 }
-
+/*
 speech.onstart = function() {                       // когда идет текст, 
   recognizer.stop();                                //                  отключить микрофн
 }                                                   //
@@ -22,7 +22,7 @@ speech.onstart = function() {                       // когда идет те�
 speech.onend = function() {                         // когда текст закончился, 
   recognizer.start();                               //                        включить микрофон
 }
-
+*/
 recognizer.onresult = function (event) {          	// Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];  	// содержит все данные, связанные с конечным результатом распознавания речи
   if (result.isFinal) {                           	// результат является окончательным
@@ -41,7 +41,7 @@ recognizer.onend = function(){                    	// Закончилось в�
   strvoice("Я жду команду");
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
-  //recognizer.start();
+  recognizer.start();
 }
 
 function strvoice(textvoice){
