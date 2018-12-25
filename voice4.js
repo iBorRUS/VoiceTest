@@ -30,7 +30,7 @@ recognizer.onresult = function (event) {          	// Вызывается ес�
 recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-  if (!voicestart) strvoice("Произнесите команду"); voicestart = true;
+  //if (!voicestart) strvoice("Произнесите команду"); voicestart = true;
 }
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
   //strvoice("Давно не было вопросов. Я устала ждать. Отключаюсь.");
