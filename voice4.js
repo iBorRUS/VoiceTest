@@ -13,14 +13,16 @@ function speechmic () {                             // Включаем микр
   console.log("Включаем микрофон");
   recognizer.start();
 }
-/*
+
 speech.onstart = function() {                       // когда идет текст, 
+  console.log('speech.onstart');
   recognizer.stop();                                //                  отключить микрофн
 }                                                   //
 speech.onend = function() {                         // когда текст закончился, 
-  //recognizer.start();                               //                        включить микрофон
+  console.log('speech.onend');
+  recognizer.start();                               //                        включить микрофон
 }
-*/
+
 recognizer.onresult = function (event) {          	// Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];  	// содержит все данные, связанные с конечным результатом распознавания речи
   if (result.isFinal) {                           	// результат является окончательным
@@ -34,6 +36,7 @@ recognizer.onstart = function(){
   console.log('recognizer.onstart');
   strvoice("Произнесите команду"); voicestart = true;
 }
+
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
   console.log('recognizer.onend');
   strvoice("Отключаюсь.");
