@@ -1,11 +1,11 @@
 
 var modaltitle = "";								                // Заголовок текущего окна
 var editjob = "";									                  // изменение, удаление задания
-//var speech = new SpeechSynthesisUtterance();        // Возвращает новый экземпляр объекта т.е. включает динамики (массив)
-    
+var speech = new SpeechSynthesisUtterance();        // Возвращает новый экземпляр объекта т.е. включает динамики (массив)
+    speech.lang = 'ru-Ru';                          // Язык для диктовки текста
 var voicestart = false;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
-recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
+recognizer.interimResults = false;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прикратил говорить, распознование не закончилось
 
@@ -30,22 +30,21 @@ recognizer.onresult = function (event) {          	// Вызывается ес�
 recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-  //if (!voicestart) strvoice("Произнесите команду"); voicestart = true;
+  strvoice("Произнесите команду"); voicestart = true;
 }
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
-  //strvoice("Давно не было вопросов. Я устала ждать. Отключаюсь.");
-  //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
-  //strcommand="";
-  recognizer.start();
+  strvoice("Давно не было вопросов. Я устала ждать. Отключаюсь.");
+  document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
+  strcommand="";
+  //recognizer.start();
 }
 
 function strvoice(textvoice){
-  var speech = new SpeechSynthesisUtterance();  	// Возвращает новый экземпляр объекта т.е. включает динамики (массив)
+  //var speech = new SpeechSynthesisUtterance();  	// Возвращает новый экземпляр объекта т.е. включает динамики (массив)
   speech.text = textvoice;					  		// текстовая строка 
   speech.volume = 1;                            	// громкость речи
   speech.rate = 1;                              	// темп речи
   speech.pitch = 1;                             	// диапазон речи
-  speech.lang = 'ru-Ru';                          // Язык для диктовки текста
   window.speechSynthesis.speak(speech);         	// произнести тестовую строку
   //window.speechSynthesis.speak(new SpeechSynthesisUtterance(textvoice));
 }
