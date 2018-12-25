@@ -34,12 +34,12 @@ recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   console.log('recognizer.onstart');
-  strvoice("Произнесите команду"); voicestart = true;
+  if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
 
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
   console.log('recognizer.onend');
-  strvoice("Отключаюсь.");
+  strvoice("Жду команды.");                          // strvoice("Отключаюсь.");
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
   recognizer.start();
