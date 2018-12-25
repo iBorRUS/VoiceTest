@@ -36,7 +36,7 @@ recognizer.onstart = function(){
 }
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
   console.log('recognizer.onend');
-  strvoice("Не было вопросов. Отключаюсь.");
+  strvoice("Отключаюсь.");
   document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
   //recognizer.start();
