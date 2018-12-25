@@ -10,18 +10,17 @@ recognizer.lang = 'ru-Ru';                        	// Язык для распо
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
 function speechmic () {                             // Включаем микрофон
+  strvoice("Произнесите команду.");
+  document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   recognizer.start();
 }
 
 speech.onstart = function() {                       // когда идет текст, 
-  voicestart = true;
   recognizer.stop();                                //                  отключить микрофн
 }                                                   //
 
 speech.onend = function() {                         // когда текст закончился, 
-  if (!voicestart) { recognizer.start(); }
-  else { voicestart = true; }                              //                        включить микрофон
-  
+  recognizer.start();                               //                        включить микрофон
 }
 
 recognizer.onresult = function (event) {          	// Вызывается если результат — слово или фраза были распознаны положительно
@@ -32,14 +31,13 @@ recognizer.onresult = function (event) {          	// Вызывается ес�
 }
 
 recognizer.onstart = function(){
-  document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+  //document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   //console.log('recognizer.onstart');
   //if (!voicestart) { voicestart = true; strvoice("Произнесите команду."); }
 }
 
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
-  //console.log('recognizer.onend');
   strvoice("Я жду команду");
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
