@@ -14,7 +14,7 @@ function speechmic () {                             // Включаем микр
   recognizer.start();
 }
 
-/*
+
 speech.onstart = function() {                       // когда идет текст, 
   console.log('speech.onstart');
   recognizer.stop();                                //                  отключить микрофн
@@ -24,7 +24,7 @@ speech.onend = function() {                         // когда текст з�
   console.log('speech.onend');
   recognizer.start();                               //                        включить микрофон
 }
-*/
+
 
 recognizer.onresult = function (event) {          	// Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];  	// содержит все данные, связанные с конечным результатом распознавания речи
@@ -36,12 +36,12 @@ recognizer.onresult = function (event) {          	// Вызывается ес�
 recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-  console.log('recognizer.onstart');
+  //console.log('recognizer.onstart');
   if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
 
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
-  console.log('recognizer.onend');
+  //console.log('recognizer.onend');
   strvoice("Жду команду");
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
@@ -49,7 +49,7 @@ recognizer.onend = function(){                    	// Закончилось в�
 }
 
 function strvoice(textvoice){
-  console.log('function strvoice');
+  //console.log('function strvoice');
   //var speech = new SpeechSynthesisUtterance();  	// Возвращает новый экземпляр объекта т.е. включает динамики (массив)
   speech.text = textvoice;					  		// текстовая строка 
   speech.volume = 1;                            	// громкость речи
