@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+  <title>Ежедневник 2018 v4.0</title>
+  <meta charset="utf-8">                                     <!-- Подключаем кодировку -->
+  <link href="bloknotstyle4.css" rel="stylesheet" type="text/css">     <!-- Подключаем стиль CSS -->
+  <script src="bloknot4.js"></script>
+  <script src="bloknotdb4.js"></script>
+  <script src="voice4.js"></script>
+</head>
+
+<body id="mybody" onclick="bodyclick()" oncontextmenu="bodyclick(); return false;">
+<div class="mainwindow">
+  <div class="centerTop">
+    
+	<!--<button id="micbutton" class="mic" onclick="speech ()" style="margin-left: 2%;"> </button>-->
+
+    <h1 style = "margin-left: 4%">ЕЖЕДНЕВНИК  2018</h1>
+    <button type="button" id="buttontopsavetabl" class="buttonTop" style="float: right; margin-right: 3%;">СОХРАНИТЬ ТАБЛИЦУ</button>
+	<!--<p></p>-->
+    <div class="theadtable">
+    <table>                                                 <!-- ФИКСИРОВАННЫЙ ЗАГОЛОВОК ТАБЛИЦЫ -->
+      <th id="mycheckbox" type="checkbox" >Статус</th>  
+      <th id=mydate type="date" style="width: 12%;">Дата</th>               
+      <th id="myzadanie" style="width: 88%;">Задание</th>                   
+    </table>
+    </div>
+  </div>  <!-- class="centerTop" -->
+<!-----------------------------------------------------------------------
+<   СТРУКТУРА ТАБЛИЦЫ 
+<----------------------------------------------------------------------->
+  <div id= "center" class="center">
+    <table id="myTable" class = "table">
+      <thead>
+        <tr class="strokatabl" id="strokatbl">                                  <!-- строка заголовка таблицы -->
+          <th id="mycheckbox" type="checkbox" >Статус</th>  
+          <th id=mydate type="date" style="width: 12%;">Дата</th>               
+          <th id="myzadanie" style="width: 88%;">Задание</th>                   
+        </tr>
+      </thead>
+      <tbody id="mytbody">     
+      </tbody>
+    </table> 
+	<button id="voice"></button>
+  </div>  <!-- class="center" -->
+</div>  <!-- class="mainwindow"  -->
+
+<div class="theadhelp">
+  <h>Голосовые команды:</h>
+  <dl>
+    <dt>- Добавить</dt>
+      <dd>- Сохранить</dd>
+      <dd>- Закрыть</dd>
+    <dt>- Изменить</dt>
+      <dd>- Сохранить</dd>
+      <dd>- Закрыть</dd>
+    <dt>- Удалить</dt>
+      <dd>- Да</dd>
+      <dd>- Закрыть</dd> 
+    <dt>- Интернет</dt>
+    <dt>- Ниже</dt>
+    <dt>- Выше</dt>
+  </dl>
+  <button id="micbutton" class="mic" onclick="speechmic ()" style="margin-left: 30%;"> </button>
+</div>
+<!-----------------------------------------------------------------------
+<   МОДАЛЬНОЕ ОКНО ДЛЯ ВВОДА НОВОГО И ИЗМЕНЕНИЯ СТАРОГО ЗАДАНИЯ
+<----------------------------------------------------------------------->
+<div id="myModal" class="modal">
+  <div class="modal-header"> 
+    <span id="closemodal" class="close">&times;</span>
+      <p id="modal-title" class="modal-title"></p>
+  </div>
+  <div id="bodymodal">
+    <div class="modal-body">
+    <input id="today" type="date" class="date-input">
+    <input id="job" type="text" placeholder="Новое задание">
+    </div>
+    <div class="modal-footer">
+    <button id="okbutton" class="Ok">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-----------------------------------------------------------------------
+<   МОДАЛЬНОЕ ОКНО С СООБЩЕНИЕМ ОБ ОШИБКЕ
+<----------------------------------------------------------------------->
+  <div id="errModal" class="errmodal">
+    <div class="modal-header">
+      <span id="closeerrmodal" class="errclose">&times;</span>
+      <!-- <button type="button" class="close" data-dismiss="modal"><span>×</span></button> -->
+      <h4 class="modal-title">ВНИМАНИЕ !!!</h4>
+    </div>
+    <div class="modal-body">
+      <p class="errtext">ОШИБКА - НЕТ ТЕКСТА ЗАДАНИЯ !!!</p>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </div>
+
+<!-------------------------------------------------------------------
+//    АВТОЗАГРУЗКА 
+//------------------------------------------------------------------>
+<script>
+  window.onload = dbopenJob();
+
+  // <menuitem label="Обновить" onclick="window.location.reload()"></menuitem>
+  //  onmousemove="this.value = event.clientX+':'+event.clientY"
+
+</script>
+
+</body>
+</html>

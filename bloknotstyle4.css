@@ -1,0 +1,322 @@
+body {font-family: Arial, Helvetica, sans-serif;}
+h, dl {
+font-size:  80%;
+}
+h1 {                    /* ЕЖЕДНЕВНИК 2018 */
+    color: white;
+    text-shadow: 1px 3px 6px #000000;
+    font-size:  170%;
+    text-align: left;
+    letter-spacing: 0.1em;
+}
+
+.buttonTop {            /* КНОПКИ УПРАВЛЕНИЯ */
+    background-color: #dcdcdc; /* Серый */
+    color: #0000ff; 
+    border: none;
+    border-radius: 4px;
+    padding: 1%;         /* расстояние от текста до границы внутри кнопки */
+    text-align: center;
+    text-decoration: none;
+    font-size: 70%;
+    cursor: pointer;
+    width: 25%;
+    margin-top: -5%;
+    box-shadow: 0px 6px 18px 0px rgba(0,0,0,0.12);
+    /*box-shadow: 0px 10px 16px 0px rgba(0,0,0,0.1);*/
+}
+
+.mainwindow {
+    position: absolute;
+    left: 15%;
+	/*width: 100%;
+    /*top: 100%;*/
+}
+
+.centerTop {            /* ВЕРХНЕЕ ОКНО С КНОПКАМИ  */
+    position: fixed;    
+    top: 0;
+    left: 15%;
+    right: 10%;
+    height: 80px;
+    width:  70%;
+    border: 1px solid black;
+    background-color: white;
+    z-index: 1; /* поверх всех */
+}
+
+.theadtable {           /* ЗАГОЛОВОК ТАБЛИЦЫ  */
+    position: fixed;    /* Позиционирует объект точно так же, как absolute, но относительно window */
+    top: 70px;
+    left: 15%;
+    right: 10%;
+	width: 69.9%;
+    background-color: #dcdcdc; /* Серый */
+    border: 1px solid black;
+    padding: 1px;
+}
+
+.center {               /* ОКНО С ДАННЫМИ В ТАБЛИЦЕ */
+    position: relative; /* Позиционирует объект точно так же, как absolute, но относительно window */
+    top: 64px;
+    width: 82.2%;              /*69.8%;*/
+    border: 1px solid black;
+    padding: 1px;
+}
+
+
+.theadhelp {           /* ПОДСКАЗКА  */
+	position: fixed;    /* Позиционирует объект точно так же, как absolute, но относительно window */
+    top: 5px;
+    left: 5px;
+    border: 1px solid black;
+	padding: 2px;
+}
+
+.mic {
+    border: 1px solid black;
+    background: url('mic.gif');
+    width: 50px;
+    height: 50px;
+	box-shadow: 0px 16px 20px 0px rgba(0,0,0,0.1);
+}
+
+/*-------------------------------------------------------
+/    ТАБЛИЦА С РЕЗУЛЬТАТАМИ ПОИСКА ПО КЛЮЧЕВОЙ ФРАЗЕ 
+/------------------------------------------------------*/
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th {
+    text-align: center; /* Текст в заголовке таблицы */
+    font-size: 80%;
+}
+
+tr {
+    text-align: center; /* Текст в строке таблицы */
+    font-size: 80%;
+}
+
+tr:hover {
+  background-color:#f5f5f5; /* выделить строки таблицы над мышью */
+} 
+
+td {
+    text-align: left;
+}
+
+th, td {
+    padding: 4px;
+}
+/*
+thead th {
+  position: sticky;
+  top: 0;
+  background: white;
+}
+*/
+/* Показ модального окна */
+.modal {
+    display: none;
+    z-index: 1; /* поверх всех */
+    border-radius: 10px;
+    border: 1px solid #888;
+    border-color: #dcdcdc;
+    background-color: #fefefe;
+    margin: 0 auto;                           /* выравнивание по центру             */
+    width: 60%;                             /* ширина окна относительно экрана    */
+    height:auto;
+    position: fixed; /* фиксированное позиционирование, окно стабильно при прокрутке */
+    top: 20%; /* отступ сверху */
+    right: 0;
+    left: 0;
+    /*box-shadow: 0 8px 16px 0 rgba(0,0,0,0.8),0 6px 20px 0 rgba(0,0,0,0.19);*/
+    box-shadow: 20px 20px 120px 60px rgba(0,0,0,0.4);
+    -webkit-animation-name: openModal;
+    -webkit-animation-duration: 0.5s;  
+}
+@-webkit-keyframes openModal {
+    0%   { transform: scale(0); }
+    60%  { transform: scale(1.03); }
+    80%  { transform: scale(0.97); }   
+    100% { transform: scale(1); }       
+}
+/* Закрытие модального окна */
+.modal-out {
+    border-radius: 10px;
+    border: 1px solid #888;
+    border-color: #dcdcdc;
+    background-color: #fefefe;
+    margin: auto;                           
+    width: 60%;  
+    z-index: 1; /* поверх всех */
+    position: fixed; /* фиксированное позиционирование, окно стабильно при прокрутке */
+    top: 20%; /* отступ сверху */
+    right: 0;
+    left: 0;
+    box-shadow: 20px 20px 120px 60px rgba(0,0,0,0.4);
+    -webkit-animation-name: outModal;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-delay: 0.0s;   /* задержка перед выполнением */
+    -webkit-animation-fill-mode: forwards;  /* убрать с экрана после выполнения */
+}
+@-webkit-keyframes outModal {
+    from    {transform: scale(1);} 
+    to      {transform: scale(0);}
+}
+
+/* Показ модального окна */
+.errmodal {
+    display: none;
+    z-index: 2; /* поверх всех */
+    border-radius: 10px;
+    border: 1px solid #888;
+    border-color: #dcdcdc;
+    background-color: #fefefe;
+    width: 30%;                             /* ширина окна относительно экрана    */
+    position: absolute;
+    top: 20%;
+    left: 35%;
+    box-shadow: 20px 20px 120px 60px rgba(0,0,0,0.4);
+    -webkit-animation: openerrModal 0.5s; 
+
+}
+@-webkit-keyframes openerrModal {  
+    25% {top: 25%;}
+}
+
+/* Закрытие модального окна */
+.errmodal-out {
+    z-index: 2; /* поверх всех */
+    border-radius: 10px;
+    border: 1px solid #888;
+    border-color: #dcdcdc;
+    background-color: #fefefe;                 
+    width: 30%;  
+    position: absolute;
+    top: 20%;
+    left: 35%;
+    box-shadow: 20px 20px 120px 60px rgba(0,0,0,0.4);
+    -webkit-animation-name: outerrModal;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-fill-mode: forwards;  /* убрать с экрана после выполнения */
+}
+@-webkit-keyframes outerrModal {
+    from    {transform: scale(1);} 
+    to      {transform: scale(0);}
+}
+.errtext {
+    text-align: center; 
+    color: red; 
+    font-size: 150%;
+}
+
+/* Сделать кнопку не активной */
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;   
+}
+
+/* кнопка <X> */
+.close, .errclose {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+/* навели курсор на кнопку -> изменился цвет кнопки */
+.close, .errclose:hover,
+.close, .errclose:focus {
+    color: #0000ff;
+    text-decoration: none;
+    cursor: pointer;
+}
+/* кнопка <Cancel> и <Ok> */
+.cancel, .Ok {
+    padding: 4px 16px;
+    border-radius: 7px;
+    color: black;
+    /*float: right;*/
+    font-size: 16px;
+    /*font-weight: bold;*/
+}
+/* навели курсор на кнопку -> изменился цвет кнопки */
+.cancel, .Ok:hover,
+.cancel, .Ok:focus {
+    background-color: #0000ff;
+    color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+}
+/* заголовок модального окна */
+.modal-header {
+    border-radius: 10px 10px 0px 0px;
+    padding: 2px 10px;
+    background-color: #dcdcdc;
+    color: black;
+}
+.modal-title {
+    text-align: left; 
+    color: blue; 
+    font-size: 130%;
+}
+
+/* тело модального окна */
+.modal-body {
+    text-align: left;
+    padding: 2px 2px;
+    height: 100%;
+}
+
+/* подвал модального окна */
+.modal-footer {
+    border-radius: 0px 0px 10px 10px;
+    padding: 16px 16px;
+    background-color: #dcdcdc;/*#5cb85c;*/
+    color: black;
+    text-align: right;
+}
+/* навели курсор на кнопку -> изменился фон кнопки */
+.keybutton:hover {      
+    background-color: #00bfff;
+}
+/* нажали на кнопку -> увеличился её размер */
+.keybutton:active {     
+  background-color: #00bfff;
+  transform: scale(1.1,1.1);
+}
+
+/* Стиль кнопок ввода даты и задания */
+input[type=text] {
+    color: black;
+    width: 98%;
+    margin: 10px;
+    box-sizing: border-box;
+    border: 2px solid grey;
+    border-radius: 2px;
+    font-size: 18px;
+}
+
+input[type=date] {
+    color: black;
+    width: 30%;
+    margin: 10px;
+    box-sizing: border-box;
+    border: 2px solid grey;
+    border-radius: 2px;
+    font-size: 18px;
+}
+
+.miganie {
+    animation: miganie 1500ms infinite;
+}
+@keyframes miganie {
+  0% { background-color: #ffffff;  }
+  50% { background-color: #ff0000;  }
+  100% { background-color: #ffffff;  }
+}
