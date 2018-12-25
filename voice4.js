@@ -40,7 +40,7 @@ recognizer.onstart = function(){
 
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
   console.log('recognizer.onend');
-  strvoice("Отключаюсь.");
+  strvoice("Жду команду");
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
   recognizer.start();
