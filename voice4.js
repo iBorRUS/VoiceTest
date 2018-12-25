@@ -10,21 +10,19 @@ recognizer.lang = 'ru-Ru';                        	// Язык для распо
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
 function speechmic () {                             // Включаем микрофон
-  console.log("Включаем микрофон");
   recognizer.start();
 }
 
-
 speech.onstart = function() {                       // когда идет текст, 
-  console.log('speech.onstart');
+  voicestart = true;
   recognizer.stop();                                //                  отключить микрофн
 }                                                   //
 
 speech.onend = function() {                         // когда текст закончился, 
-  console.log('speech.onend');
-  recognizer.start();                               //                        включить микрофон
+  if (!voicestart) { recognizer.start(); }
+  else { voicestart = true; }                              //                        включить микрофон
+  
 }
-
 
 recognizer.onresult = function (event) {          	// Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];  	// содержит все данные, связанные с конечным результатом распознавания речи
@@ -37,7 +35,7 @@ recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   //console.log('recognizer.onstart');
-  if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
+  if (!voicestart) { voicestart = true; strvoice("Произнесите команду."); }
 }
 
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
