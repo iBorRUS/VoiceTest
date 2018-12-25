@@ -7,7 +7,7 @@ var voicestart = false;                             // флаг 1-го вклю�
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
 recognizer.interimResults = false;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
-recognizer.continuous = true;                     	// когда пользователь прикратил говорить, распознование не закончилось
+recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
 function speechmic () {                             // Включаем микрофон
   console.log("Включаем микрофон");
@@ -45,7 +45,7 @@ recognizer.onend = function(){                    	// Закончилось в�
   strvoice("Я жду команду");
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
-  recognizer.start();
+  //recognizer.start();
 }
 
 function strvoice(textvoice){
