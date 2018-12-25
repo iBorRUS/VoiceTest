@@ -10,8 +10,6 @@ recognizer.lang = 'ru-Ru';                        	// Язык для распо
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
 function speechmic () {                             // Включаем микрофон
-  strvoice("Произнесите команду.");
-  document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   recognizer.start();
 }
 /*
@@ -31,10 +29,10 @@ recognizer.onresult = function (event) {          	// Вызывается ес�
 }
 
 recognizer.onstart = function(){
-  //document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+  document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   //console.log('recognizer.onstart');
-  //if (!voicestart) { voicestart = true; strvoice("Произнесите команду."); }
+  voicestart = true; strvoice("Произнесите команду."); 
 }
 
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
