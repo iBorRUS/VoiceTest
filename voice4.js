@@ -18,6 +18,7 @@ speech.onstart = function() {                       // когда идет те�
   console.log('speech.onstart');
   recognizer.stop();                                //                  отключить микрофн
 }                                                   //
+
 speech.onend = function() {                         // когда текст закончился, 
   console.log('speech.onend');
   recognizer.start();                               //                        включить микрофон
