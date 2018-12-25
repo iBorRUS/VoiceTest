@@ -33,10 +33,10 @@ recognizer.onstart = function(){
   strvoice("Произнесите команду"); voicestart = true;
 }
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
-  strvoice("Давно не было вопросов. Я устала ждать. Отключаюсь.");
-  document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
-  strcommand="";
-  //recognizer.start();
+  //strvoice("Давно не было вопросов. Я устала ждать. Отключаюсь.");
+  //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
+  //strcommand="";
+  recognizer.start();
 }
 
 function strvoice(textvoice){
@@ -105,7 +105,7 @@ function voicecommand(strcommand) {
       switch (modaltitle) {
         case 'ЗАКРЫТЬ ПРОГРАММУ':
           dbsaveJob();
-          setTimeout( function() {open(location, '_self').close()},3000);
+          open(location, '_self').close();
         break
         case "НОВОЕ ЗАДАНИЕ":
           if (today.value !== "" && job.value !== "") {
