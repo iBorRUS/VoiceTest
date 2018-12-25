@@ -10,6 +10,7 @@ recognizer.lang = 'ru-Ru';                        	// Язык для распо
 recognizer.continuous = true;                     	// когда пользователь прикратил говорить, распознование не закончилось
 
 function speechmic () {                             // Включаем микрофон
+  console.log("Включаем микрофон");
   recognizer.start();
 }
 
@@ -30,16 +31,19 @@ recognizer.onresult = function (event) {          	// Вызывается ес�
 recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
+  console.log('recognizer.onstart');
   strvoice("Произнесите команду"); voicestart = true;
 }
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
+  console.log('recognizer.onend');
   strvoice("Давно не было вопросов. Я устала ждать. Отключаюсь.");
   document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
-  strcommand="";
+  //strcommand="";
   //recognizer.start();
 }
 
 function strvoice(textvoice){
+  console.log('function strvoice');
   //var speech = new SpeechSynthesisUtterance();  	// Возвращает новый экземпляр объекта т.е. включает динамики (массив)
   speech.text = textvoice;					  		// текстовая строка 
   speech.volume = 1;                            	// громкость речи
