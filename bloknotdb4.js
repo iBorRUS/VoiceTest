@@ -43,10 +43,11 @@ function dbopenJob(){
                 for (i = 1; i < len; i++) { 
                     row = results.rows.item(i);
                     addRowTable(row['db_check'], row['db_data'], row['db_job']); // добавить строку в таблицу
-                } else {
-                    dbinsJob("0", "2563", "Игорь");             // создается новая таблица в базе данных
-                }
+                } 
                 //nomerstroki = len;
+            } else {
+                dbinsJob("0", "2563", "Игорь");             // создается новая таблица в базе данных
+                alert("СОЗДАНА НОВАЯ ТАБЛИЦА В БАЗЕ ДАННЫХ !");
             }
         }, null); 
     }); 
