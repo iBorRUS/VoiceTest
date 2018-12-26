@@ -15,14 +15,14 @@ function speechmic () {                             // Включаем микр
 }
 //-----------------------------------------------------------------------------------------------
 speech.onstart = function() {                       // когда идет текст, 
-  console.log('speech.onstart = voicestart='+voicestart);
+  console.log('speech.onstart = voicestart='+recognizing);
   recognizer.stop();                                //                  отключить микрофн
-  recognizing = true;
+  recognizing = false;
 }                                                   //
 speech.onend = function() {                         // когда текст закончился, 
-  console.log('speech.onend = voicestart='+voicestart);
-  recognizer.start();                               //                        включить микрофон
-  recognizing = false;
+  console.log('speech.onend = voicestart='+recognizing);
+  if (!recognizing) recognizer.start();                               //                        включить микрофон
+  recognizing = true;
 }
 //-----------------------------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ recognizer.onresult = function (event) {          	// Вызывается ес�
 recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-  console.log('recognizer.onstart = voicestart='+voicestart);
+  console.log('recognizer.onstart = recognizing='+recognizing);
    if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
 
