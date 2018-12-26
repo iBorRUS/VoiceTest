@@ -12,15 +12,17 @@ recognizer.continuous = true;                     	// когда пользов�
 function speechmic () {                             // Включаем микрофон
   recognizer.start();
 }
-/*
+
 speech.onstart = function() {                       // когда идет текст, 
+  console.log('speech.onstart = voicestart='+voicestart);
   recognizer.stop();                                //                  отключить микрофн
 }                                                   //
 
 speech.onend = function() {                         // когда текст закончился, 
+  console.log('speech.onend = voicestart='+voicestart);
   recognizer.start();                               //                        включить микрофон
 }
-*/
+
 recognizer.onresult = function (event) {          	// Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];  	// содержит все данные, связанные с конечным результатом распознавания речи
   if (result.isFinal) {                           	// результат является окончательным
@@ -31,7 +33,7 @@ recognizer.onresult = function (event) {          	// Вызывается ес�
 recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-  //console.log('recognizer.onstart');
+  console.log('recognizer.onstart = voicestart='+voicestart);
    if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
 
