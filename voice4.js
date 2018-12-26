@@ -32,7 +32,7 @@ recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   //console.log('recognizer.onstart');
-  voicestart = true; strvoice("Произнесите команду."); 
+   if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
 
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
