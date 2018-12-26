@@ -17,10 +17,12 @@ function speechmic () {                             // Включаем микр
 speech.onstart = function() {                       // когда идет текст, 
   console.log('speech.onstart = voicestart='+voicestart);
   recognizer.stop();                                //                  отключить микрофн
+  recognizing = false;
 }                                                   //
 speech.onend = function() {                         // когда текст закончился, 
   console.log('speech.onend = voicestart='+voicestart);
   recognizer.start();                               //                        включить микрофон
+  recognizing = true;
 }
 //-----------------------------------------------------------------------------------------------
 
@@ -35,17 +37,16 @@ recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   console.log('recognizer.onstart = voicestart='+voicestart);
-  recognizing = true;
    if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
 
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
-   //if (!recognizing) { 
-    recognizer.start();
-    strvoice("Я жду команду");
-  //}
+    if (recognizing) { 
+      strvoice("Я жду команду");
+    }
+  recognizer.start();
 }
 
 function strvoice(textvoice){
