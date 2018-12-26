@@ -1,15 +1,30 @@
+var windowmain;                                     // указатель на окно с открытым приложением
 var modaltitle = "";								                // Заголовок текущего окна
 var editjob = "";									                  // изменение, удаление задания
 var speech = new SpeechSynthesisUtterance();        // Возвращает новый экземпляр объекта т.е. включает динамики (массив)
+    speech.lang = 'ru-Ru';                          // Язык для диктовки текста
 var voicestart = false;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
+var recognizing = false;
 recognizer.interimResults = false;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
-recognizer.continuous = true;                     	// когда пользователь прикратил говорить, распознование не закончилось
+recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
 function speechmic () {                             // Включаем микрофон
   recognizer.start();
 }
+//-----------------------------------------------------------------------------------------------
+speech.onstart = function() {                       // когда идет текст, 
+  console.log('speech.onstart = voicestart='+recognizing);
+  recognizer.stop();                                //                  отключить микрофн
+  recognizing = false;
+}                                                   //
+speech.onend = function() {                         // когда текст закончился, 
+  console.log('speech.onend = voicestart='+recognizing);
+  if (!recognizing) recognizer.start();             //                        включить микрофон
+  recognizing = true;
+}
+//-----------------------------------------------------------------------------------------------
 
 recognizer.onresult = function (event) {          	// Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];  	// содержит все данные, связанные с конечным результатом распознавания речи
@@ -21,16 +36,22 @@ recognizer.onresult = function (event) {          	// Вызывается ес�
 recognizer.onstart = function(){
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-  strvoice("Произнесите команду"); voicestart = true;
+  console.log('recognizer.onstart = recognizing='+recognizing);
+   if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
+
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
-  strvoice("Давно не было вопросов. Я устала ждать. Отключаюсь.");
-  document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
-  strcommand="";
-  //recognizer.start();
+  //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
+  //strcommand="";
+    if (recognizing) { 
+      strvoice("Я жду команду");
+      recognizer.start();
+    }
+  
 }
 
 function strvoice(textvoice){
+  //console.log('function strvoice');
   //var speech = new SpeechSynthesisUtterance();  	// Возвращает новый экземпляр объекта т.е. включает динамики (массив)
   speech.text = textvoice;					  		// текстовая строка 
   speech.volume = 1;                            	// громкость речи
@@ -48,6 +69,16 @@ function voicecommand(strcommand) {
   document.getElementById('voice').innerHTML = strcommand;
 
   switch (strcommand) { 
+    case 'выше':
+      window.scrollBy(0,-200);                    // прокрутка окна вниз
+    break
+    case 'ниже':                                  // прокрутка окна вверх
+      window.scrollBy(0,200);
+    break
+    case 'закрыть программу':
+      strvoice("Сохранить данные в таблице?");
+      modaltitle = 'ЗАКРЫТЬ ПРОГРАММУ';
+    break
     //----------------------------------------------------------------
     // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ 
     //----------------------------------------------------------------
@@ -58,7 +89,8 @@ function voicecommand(strcommand) {
     // ВВОД НОВОГО ЗАДАНИЯ (dblclick правой клавишей)
     //----------------------------------------------------------------
     case 'добавить':
-    case 'новое задание':
+    //case 'новое задание':
+    console.log('000');
       strvoice("скажите новое задание");
       editjob = 'новое';
       strcommand="";
@@ -84,6 +116,11 @@ function voicecommand(strcommand) {
       // ПОДТВЕРЖДЕНИЕ ПРИ ВЫХОДЕ ИЗ МОДАЛЬНОГО ОКНА 
       //----------------------------------------------------------------
       switch (modaltitle) {
+        case 'ЗАКРЫТЬ ПРОГРАММУ':
+          dbsaveJob();
+          //open(location, '_self').close();
+          window.close();
+        break
         case "НОВОЕ ЗАДАНИЕ":
           if (today.value !== "" && job.value !== "") {
             addRowTable("0", today.value, job.value );
@@ -126,6 +163,10 @@ function voicecommand(strcommand) {
     case 'выход':
     case 'нет':
       switch (modaltitle) {
+        case 'ЗАКРЫТЬ ПРОГРАММУ':
+          window.close();
+          //open(location, '_self').close();
+        break
         case 'НОВОЕ ЗАДАНИЕ':
   	    case 'ИЗМЕНИТЬ ЗАДАНИЕ':
   	    case 'УДАЛИТЬ ЗАДАНИЕ':
@@ -148,8 +189,9 @@ function voicecommand(strcommand) {
   	    // НОВОЕ ЗАДАНИЕ
   	    //----------------------------------------------------------------
         case 'новое':
+        console.log('111');
           editjob = "newjob";
-          strcommand="";
+          //strcommand="";
           today.valueAsDate = new Date();
           job.value = "";
           job.focus();
@@ -189,7 +231,7 @@ function voicecommand(strcommand) {
     		break
     		case 'okgoogle':
     			//window.location = "https://www.google.ru/search?q="+event.results[0][0].transcript;
-    			window.open('https://www.google.ru/search?q='+strcommand, '_blank');	// открыть страницу в новом окне
+    			windowmain=window.open('https://www.google.ru/search?q='+strcommand, '_blank');	// открыть страницу в новом окне
     		break
       } // switch (editjob)
     break // default:
