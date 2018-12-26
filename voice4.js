@@ -6,7 +6,7 @@ var speech = new SpeechSynthesisUtterance();        // Возвращает но
 var voicestart = false;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
 var recognizing = false;
-recognizer.interimResults = false;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
+recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
@@ -15,12 +15,10 @@ function speechmic () {                             // Включаем микр
 }
 //-----------------------------------------------------------------------------------------------
 speech.onstart = function() {                       // когда идет текст, 
-  console.log('speech.onstart = voicestart='+recognizing);
   recognizer.stop();                                //                  отключить микрофн
   recognizing = false;
 }                                                   //
 speech.onend = function() {                         // когда текст закончился, 
-  console.log('speech.onend = voicestart='+recognizing);
   if (!recognizing) recognizer.start();             //                        включить микрофон
   recognizing = true;
 }
@@ -36,17 +34,14 @@ recognizer.onresult = function (event) {            // Вызывается ес
 recognizer.onstart = function(){                    // вллючился микрофон
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-  console.log('recognizer.onstart = recognizing='+recognizing);
    if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
 
 recognizer.onend = function(){                      // Закончилось время ожидания (примерно 15 сек)
-  //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
-  //strcommand="";
-    if (recognizing) { 
-      strvoice("Я жду команду");
-      recognizer.start();
-    }
+  if (recognizing) { 
+    strvoice("Я жду команду");
+    recognizer.start();
+  }
 }
 //----------------------------------------------------------------
 // ПРОИЗНЕСТИ КОМАНДУ 
@@ -67,6 +62,7 @@ function voicecommand(strcommand) {
   var today = document.getElementById("today");   // указатель на дату в строке с заданием
   var job = document.getElementById("job");       // указатель на задание
   document.getElementById('voice').innerHTML = strcommand;
+
   switch (strcommand) { 
     case 'выше':
       window.scrollBy(0,-200);                    // прокрутка окна вниз
@@ -175,14 +171,15 @@ function voicecommand(strcommand) {
   	    break
       }
     break
-	
+    //--------------------------------------------------------------------
+    // АНАЛИЗ НЕ ОСНОВНЫХ КОМАНД (команды второго, третьего и ... уровней)
+    //--------------------------------------------------------------------
     default:
       switch (editjob) {
         //----------------------------------------------------------------
-  	    // НОВОЕ ЗАДАНИЕ
+  	    // ВВОД НОВОГО ЗАДАНИЯ
   	    //----------------------------------------------------------------
         case 'новое':
-        console.log('111');
           editjob = "newjob";
           today.valueAsDate = new Date();
           job.value = "";
