@@ -42,10 +42,10 @@ recognizer.onstart = function(){
 recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
-   if (!recognizing) { 
+   //if (!recognizing) { 
     recognizer.start();
     strvoice("Я жду команду");
-  }
+  //}
 }
 
 function strvoice(textvoice){
