@@ -5,6 +5,7 @@ var speech = new SpeechSynthesisUtterance();        // Возвращает но
     speech.lang = 'ru-Ru';                          // Язык для диктовки текста
 var voicestart = false;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
+var recognizing = false;
 recognizer.interimResults = false;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
@@ -12,16 +13,23 @@ recognizer.continuous = true;                     	// когда пользов�
 function speechmic () {                             // Включаем микрофон
   recognizer.start();
 }
-
+//-----------------------------------------------------------------------------------------------
 speech.onstart = function() {                       // когда идет текст, 
   console.log('speech.onstart = voicestart='+voicestart);
   recognizer.stop();                                //                  отключить микрофн
 }                                                   //
-
 speech.onend = function() {                         // когда текст закончился, 
   console.log('speech.onend = voicestart='+voicestart);
   recognizer.start();                               //                        включить микрофон
 }
+//-----------------------------------------------------------------------------------------------
+recognition.onstart = function () {                 // микрофон включен
+    recognizing = true;
+};
+recognition.onend = function () {                   // микрофон выключен
+    recognizing = false;
+};
+//-----------------------------------------------------------------------------------------------
 
 recognizer.onresult = function (event) {          	// Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];  	// содержит все данные, связанные с конечным результатом распознавания речи
@@ -41,7 +49,7 @@ recognizer.onend = function(){                    	// Закончилось в�
   strvoice("Я жду команду");
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
-  recognizer.start();
+   if (!recognizing)recognizer.start();
 }
 
 function strvoice(textvoice){
