@@ -17,12 +17,12 @@ function speechmic () {                             // Включаем микр
 speech.onstart = function() {                       // когда идет текст, 
   console.log('speech.onstart = voicestart='+voicestart);
   recognizer.stop();                                //                  отключить микрофн
-  recognizing = false;
+  recognizing = true;
 }                                                   //
 speech.onend = function() {                         // когда текст закончился, 
   console.log('speech.onend = voicestart='+voicestart);
   recognizer.start();                               //                        включить микрофон
-  recognizing = true;
+  recognizing = false;
 }
 //-----------------------------------------------------------------------------------------------
 
@@ -45,8 +45,9 @@ recognizer.onend = function(){                    	// Закончилось в�
   //strcommand="";
     if (recognizing) { 
       strvoice("Я жду команду");
+      recognizer.start();
     }
-  recognizer.start();
+  
 }
 
 function strvoice(textvoice){
