@@ -21,7 +21,7 @@ speech.onstart = function() {                       // когда идет те�
 }                                                   //
 speech.onend = function() {                         // когда текст закончился, 
   console.log('speech.onend = voicestart='+recognizing);
-  if (!recognizing) recognizer.start();                               //                        включить микрофон
+  if (!recognizing) recognizer.start();             //                        включить микрофон
   recognizing = true;
 }
 //-----------------------------------------------------------------------------------------------
@@ -90,6 +90,7 @@ function voicecommand(strcommand) {
     //----------------------------------------------------------------
     case 'добавить':
     //case 'новое задание':
+    console.log('000');
       strvoice("скажите новое задание");
       editjob = 'новое';
       strcommand="";
@@ -186,6 +187,7 @@ function voicecommand(strcommand) {
   	    // НОВОЕ ЗАДАНИЕ
   	    //----------------------------------------------------------------
         case 'новое':
+        console.log('111');
           editjob = "newjob";
           //strcommand="";
           today.valueAsDate = new Date();
