@@ -23,10 +23,10 @@ speech.onend = function() {                         // когда текст з�
   recognizer.start();                               //                        включить микрофон
 }
 //-----------------------------------------------------------------------------------------------
-recognition.onstart = function () {                 // микрофон включен
+recognizer.onstart = function () {                  // микрофон включен
     recognizing = true;
 };
-recognition.onend = function () {                   // микрофон выключен
+recognizer.onend = function () {                    // микрофон выключен
     recognizing = false;
 };
 //-----------------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ recognizer.onend = function(){                    	// Закончилось в�
   strvoice("Я жду команду");
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
-   if (!recognizing)recognizer.start();
+   if (!recognizing) recognizer.start();
 }
 
 function strvoice(textvoice){
