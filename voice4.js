@@ -26,48 +26,47 @@ speech.onend = function() {                         // когда текст з�
 }
 //-----------------------------------------------------------------------------------------------
 
-recognizer.onresult = function (event) {          	// Вызывается если результат — слово или фраза были распознаны положительно
-  var result = event.results[event.resultIndex];  	// содержит все данные, связанные с конечным результатом распознавания речи
-  if (result.isFinal) {                           	// результат является окончательным
+recognizer.onresult = function (event) {            // Вызывается если результат — слово или фраза были распознаны положительно
+  var result = event.results[event.resultIndex];    // содержит все данные, связанные с конечным результатом распознавания речи
+  if (result.isFinal) {                             // результат является окончательным
     voicecommand((result[0].transcript).trim().toLowerCase());	// удалиь пробелы слева и справа, все буквы - мленькие
   } 
 }
 
-recognizer.onstart = function(){
+recognizer.onstart = function(){                    // вллючился микрофон
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   console.log('recognizer.onstart = recognizing='+recognizing);
    if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
 
-recognizer.onend = function(){                    	// Закончилось время ожидания (примерно 15 сек)
+recognizer.onend = function(){                      // Закончилось время ожидания (примерно 15 сек)
   //document.getElementById('micbutton').classList.remove("miganie");	// убрать МИГАНИЕ МИКРОФОНА
   //strcommand="";
     if (recognizing) { 
       strvoice("Я жду команду");
       recognizer.start();
     }
-  
 }
-
+//----------------------------------------------------------------
+// ПРОИЗНЕСТИ КОМАНДУ 
+//----------------------------------------------------------------}
 function strvoice(textvoice){
-  //console.log('function strvoice');
-  //var speech = new SpeechSynthesisUtterance();  	// Возвращает новый экземпляр объекта т.е. включает динамики (массив)
-  speech.text = textvoice;					  		// текстовая строка 
+  speech.text = textvoice;					  		        // текстовая строка 
   speech.volume = 1;                            	// громкость речи
   speech.rate = 1;                              	// темп речи
   speech.pitch = 1;                             	// диапазон речи
   window.speechSynthesis.speak(speech);         	// произнести тестовую строку
-  //window.speechSynthesis.speak(new SpeechSynthesisUtterance(textvoice));
 }
-
+  
+//----------------------------------------------------------------
+// АНАЛИЗ ГОЛОСОВОЙ КОМАНДЫ 
+//----------------------------------------------------------------
 function voicecommand(strcommand) {
   var modal = document.getElementById('myModal'); // указатель на модальное окно с ключевыми фразами
   var today = document.getElementById("today");   // указатель на дату в строке с заданием
   var job = document.getElementById("job");       // указатель на задание
-  //document.getElementById("mytbody").contentEditable = "false"; // запретить изменения в таблице
   document.getElementById('voice').innerHTML = strcommand;
-
   switch (strcommand) { 
     case 'выше':
       window.scrollBy(0,-200);                    // прокрутка окна вниз
@@ -76,19 +75,13 @@ function voicecommand(strcommand) {
       window.scrollBy(0,200);
     break
     case 'закрыть программу':
-      strvoice("Сохранить данные в таблице?");
       modaltitle = 'ЗАКРЫТЬ ПРОГРАММУ';
+      strvoice("Сохранить данные в таблице?");
     break
-    //----------------------------------------------------------------
-    // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ 
-    //----------------------------------------------------------------
-    case 'сохранить таблицу':     
+    case 'сохранить таблицу':                     // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ
        dbsaveJob();
     break
-    //----------------------------------------------------------------
-    // ВВОД НОВОГО ЗАДАНИЯ (dblclick правой клавишей)
-    //----------------------------------------------------------------
-    case 'добавить':
+    case 'добавить':                              // ВВОД НОВОГО ЗАДАНИЯ
     //case 'новое задание':
     console.log('000');
       strvoice("скажите новое задание");
@@ -96,14 +89,14 @@ function voicecommand(strcommand) {
       strcommand="";
       voicecommand(strcommand);
     break
-    case 'изменить':
+    case 'изменить':                              // изменить существующее задание
     case 'изменить задание':
     	strvoice("какое задание изменить?");
     	editjob = 'изменить';
     	modaltitle = 'ИЗМЕНИТЬ ЗАДАНИЕ';
     break
 
-    case 'удалить':
+    case 'удалить':                               // удалить существующее задание
     case 'удалить задание':
     	strvoice("какое задание удалить?");
     	editjob = 'удалить';
@@ -191,7 +184,6 @@ function voicecommand(strcommand) {
         case 'новое':
         console.log('111');
           editjob = "newjob";
-          //strcommand="";
           today.valueAsDate = new Date();
           job.value = "";
           job.focus();
@@ -203,11 +195,13 @@ function voicecommand(strcommand) {
         //----------------------------------------------------------------
       	case 'изменить':
     		case 'удалить':
+          var onend = false;                                      // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
            	for (nomerstroki=1; nomerstroki<trStroka.length; nomerstroki++) {     // цикл по количеству строк в таблице
     	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');// получить массив всех колонок в строке
     	         var newjob = (tdStroka[2].innerHTML).toLowerCase();
     	         if ( newjob.indexOf(strcommand) !== -1 ) {
+                  onend = true;
     	          	today.value = tdStroka[1].innerHTML;            // дата -> в поле "дата"
               		job.value = tdStroka[2].innerHTML;              // задание -> в поле "задание"
           				if (editjob == 'изменить') {
@@ -223,7 +217,7 @@ function voicecommand(strcommand) {
           			break	// выход из for... нашли задание в таблице
           			}
     	        } 
-    	        //if (editjob !== "") strvoice("нет такого задания");
+    	        if (!onend) strvoice("нет такого задания");
         	break
         case 'newjob':
         	job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);	// Сделать 1-ю букву заглавной
