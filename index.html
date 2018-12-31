@@ -12,9 +12,6 @@
 <body id="mybody" onclick="bodyclick()" oncontextmenu="bodyclick(); return false;">
 <div class="mainwindow">
   <div class="centerTop">
-    
-	<!--<button id="micbutton" class="mic" onclick="speech ()" style="margin-left: 2%;"> </button>-->
-
     <h1 style = "margin-left: 4%">ЕЖЕДНЕВНИК  2018</h1>
     <button type="button" id="buttontopsavetabl" class="buttonTop" style="float: right; margin-right: 3%;">СОХРАНИТЬ ТАБЛИЦУ</button>
 	<!--<p></p>-->
@@ -49,9 +46,11 @@
   <h>Голосовые команды:</h>
   <dl>
     <dt>- Добавить</dt>
+      <dd>- Изменить дату</dd>
       <dd>- Сохранить (Да)</dd>
       <dd>- Закрыть</dd>
     <dt>- Изменить</dt>
+      <dd>- Изменить дату</dd>
       <dd>- Сохранить (Да)</dd>
       <dd>- Закрыть</dd>
     <dt>- Удалить</dt>
@@ -105,10 +104,6 @@
 //------------------------------------------------------------------>
 <script>
   window.onload = dbopenJob();
-
-  // <menuitem label="Обновить" onclick="window.location.reload()"></menuitem>
-  //  onmousemove="this.value = event.clientX+':'+event.clientY"
-
 </script>
 
 </body>

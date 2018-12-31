@@ -21,7 +21,7 @@ function bodyclick(){
 }
 
 function myevent(kod) {
-  //alert("nomerstroki="+nomerstroki+ "kod="+kod+ " btnCode="+btnCode+"  tagName="+target.tagName+"  class="+target.className);
+  //alert("nomerstroki="+nomerstroki+ "  kod="+kod+ " btnCode="+btnCode+"  tagName="+target.tagName+"  class="+target.className);
   var modal = document.getElementById('myModal'); // указатель на модальное окно с ключевыми фразами
   var today = document.getElementById("today");   // указатель на дату в строке с заданием
   var job = document.getElementById("job");       // указатель на задание
@@ -94,6 +94,7 @@ function myevent(kod) {
           editstroka = false;                             // отлючить режим редактирования строки
         break
         case 'okbutton':
+        case 'ok':
         //----------------------------------------------------------------
         // ПОДТВЕРЖДЕНИЕ ПРИ ВЫХОДЕ ИЗ МОДАЛЬНОГО ОКНА 
         //----------------------------------------------------------------
@@ -125,7 +126,8 @@ function myevent(kod) {
           if (!errmodalopen) {
             modal.className = 'modal-out';                  // поменять класс на <Закрытие модального окна>
             today.removeAttribute('readonly');
-            job.removeAttribute('readonly'); 
+            job.removeAttribute('readonly');
+            editjob = ""; 
           }
           editstroka = false;                             // отлючить режим редактирования строки
         break        
@@ -163,6 +165,7 @@ var addRowTable = function(textCheck, textDate, textZadaniya) {
     newCell0.appendChild(newCheck);                         // добавить 1-ю ячейку в новую стоку
     var newDate  = document.createTextNode(textDate);       // присвоить переменной новую дату
     newDate.type = 'date';
+    //newDate.valueAsDate.format("dd.mm.yyyy");
     newCell1.appendChild(newDate);                          // добавить 2-ю ячейку в новую стоку с новой датой
     var newText  = document.createTextNode(textZadaniya);   // присвоить переменной новое задание
     newCell2.appendChild(newText);                          // добавить 3-ю ячейку в новую стоку с новым заданием
@@ -176,5 +179,5 @@ function soundClick() {
   audio.src = 'hahaha.mp3'; // Указываем путь к звуку "клика"
   audio.autoplay = true; // Автоматически запускаем
 }
- 
+
 

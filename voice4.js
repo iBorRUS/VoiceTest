@@ -16,11 +16,11 @@ function speechmic () {                             // Включаем микр
 //-----------------------------------------------------------------------------------------------
 speech.onstart = function() {                       // когда идет текст, 
   recognizer.stop();                                //                  отключить микрофн
-  recognizing = false;
-}                                                   //
+  recognizing = false;                              //
+}                                                   
 speech.onend = function() {                         // когда текст закончился, 
   if (!recognizing) recognizer.start();             //                        включить микрофон
-  recognizing = true;
+  recognizing = true;                               //
 }
 //-----------------------------------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ recognizer.onend = function(){                      // Закончилось в
 }
 //----------------------------------------------------------------
 // ПРОИЗНЕСТИ КОМАНДУ 
-//----------------------------------------------------------------}
+//----------------------------------------------------------------
 function strvoice(textvoice){
   speech.text = textvoice;					  		        // текстовая строка 
   speech.volume = 1;                            	// громкость речи
@@ -63,7 +63,7 @@ function voicecommand(strcommand) {
   var job = document.getElementById("job");       // указатель на задание
   document.getElementById('voice').innerHTML = strcommand;
 
-  switch (strcommand) { 
+  switch (strcommand) {
     case 'выше':
       window.scrollBy(0,-200);                    // прокрутка окна вниз
     break
@@ -78,8 +78,6 @@ function voicecommand(strcommand) {
        dbsaveJob();
     break
     case 'добавить':                              // ВВОД НОВОГО ЗАДАНИЯ
-    //case 'новое задание':
-    console.log('000');
       strvoice("скажите новое задание");
       editjob = 'новое';
       strcommand="";
@@ -134,6 +132,7 @@ function voicecommand(strcommand) {
           document.getElementById("myTable").deleteRow(nomerstroki);
         break
       } // switch (modaltitle)
+
       if (!errmodalopen) {
         modal.className = 'modal-out';                  // поменять класс на <Закрытие модального окна>
         today.removeAttribute('readonly');
@@ -177,15 +176,23 @@ function voicecommand(strcommand) {
     default:
       switch (editjob) {
         //----------------------------------------------------------------
+        // ВВОД НОВООЙ ДАТЫ
+        //----------------------------------------------------------------
+        case 'newdate':
+        alert('newdate'+strcommand);
+          today.value = formatDate(strcommand);
+        break
+        //----------------------------------------------------------------
   	    // ВВОД НОВОГО ЗАДАНИЯ
   	    //----------------------------------------------------------------
         case 'новое':
-          editjob = "newjob";
-          today.valueAsDate = new Date();
-          job.value = "";
-          job.focus();
-          modaltitle = 'НОВОЕ ЗАДАНИЕ';
-          modalblock (modal, modaltitle, 'СОХРАНИТЬ');
+            editjob = "newjob";
+            today.valueAsDate = new Date();
+            //today.format("dd.mm.yyyy");
+            job.value = "";
+            job.focus();
+            modaltitle = 'НОВОЕ ЗАДАНИЕ';
+            modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
         // ИЗМЕНИТЬ ИЛИ УДАЛИТЬ ВЫБРАННОЕ ЗАДАНИЕ
@@ -217,8 +224,15 @@ function voicecommand(strcommand) {
     	        if (!onend) strvoice("нет такого задания");
         	break
         case 'newjob':
-        	job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);	// Сделать 1-ю букву заглавной
-        	strvoice("Сохранить?");
+          if (strcommand == 'изменить дату') {
+            strvoice("скажите новую дату");
+            editjob='newdate';
+            strcommand="";
+            //voicecommand(strcommand); 
+          } else {
+          	job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);	// Сделать 1-ю букву заглавной
+          	strvoice("Сохранить?");
+          }
     		break
     		case 'okgoogle':
     			//window.location = "https://www.google.ru/search?q="+event.results[0][0].transcript;

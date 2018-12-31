@@ -2,7 +2,7 @@
 //      ИСХОДНЫЕ ДАННЫЕ ДЛЯ СОЗДАНИЯ ТАБЛИЦЫ БД
 //-----------------------------------------------------------------------------
 var myname;
-var mypasswor
+var mypassword;
 var shortName = 'mydiary';  // Мой ежедневник
 var version = '1.0';
 var displayName = 'My Database Diary';
@@ -52,25 +52,7 @@ function dbopenJob(){
         }, null); 
     }); 
 }
-/*
-//-----------------------------------------------------------------------------
-//      ОТКРЫТЬ ТАБЛИЦУ БД ДЛЯ ПРОСМОТРА (автозагрузка с диска)
-//-----------------------------------------------------------------------------
-function dbopenJob(){
-    db.transaction(function (transaction) { 
-        transaction.executeSql('SELECT * from mydiary', [], function (transaction, results) { 
-            var len = results.rows.length, i, row; 
-            row = results.rows.item(0);
-            myname = row['db_job']; mypassword = row['db_data'];
-            for (i = 1; i < len; i++) { 
-                row = results.rows.item(i);
-                addRowTable(row['db_check'], row['db_data'], row['db_job']); // добавить строку в таблицу
-            } 
-            nomerstroki = len;
-        }, null); 
-    }); 
-}
-*/
+
 //-----------------------------------------------------------------------------
 //      ВСТАВИТЬ НОВУЮ СТРОКУ В ТАБЛИЦУ БД
 //-----------------------------------------------------------------------------
