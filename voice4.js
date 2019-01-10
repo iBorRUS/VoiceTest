@@ -233,17 +233,6 @@ function voicecommand(strcommand) {
               job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);  // Сделать 1-ю букву заглавной
               strvoice("Сохранить?");
           }
-/*
-          if (strcommand == 'изменить дату') {
-            strvoice("скажите новую дату");
-            editjob='newdate';
-            strcommand="";
-            voicecommand(strcommand);
-          } else {
-          	job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);	// Сделать 1-ю букву заглавной
-          	strvoice("Сохранить?");
-          }
-*/
     		break
         //----------------------------------------------------------------
         // ВВОД НОВООЙ ДАТЫ
@@ -262,30 +251,27 @@ function voicecommand(strcommand) {
 } // function voicecommand(strcommand)
 
 function formatDate(strdate) {
-  var str = strdate.split(' ');
-  var den, nmoon, yr;
-  var newdate;
-
-  switch (str[1].substring(0,3))
-    {
-      case "янв": nmoon=0; break;
-      case "фев": nmoon=1; break;
-      case "мар": nmoon=2; break;
-      case "апр": nmoon=3; break;
-      case "мая": nmoon=4; break;
-      case "июн": nmoon=5; break;
-      case "июл": nmoon=6; break;
-      case "авг": nmoon=7; break;
-      case "сен": nmoon=8; break;
-      case "окт": nmoon=9; break;
-      case "ноя": nmoon=10; break;
-      case "дек": nmoon=11; break;
-    }
-    newdate = new Date();
-    newdate.setDate(str[0]);
-    newdate.setMonth(nmoon);
-    newdate.setFullYear(str[2]);
-    //alert(newdate);
-    return (newdate)
+  var str = strdate.split(' ');             // разделить строку даты на массив день-месяц-год
+  var den, nmonth, yr;                      //                                   0    1     2
+  switch (str[1].substring(0,3)) {          // поиск по первым трем символам названия месяца
+    case "янв": nmonth=0; break;
+    case "фев": nmonth=1; break;
+    case "мар": nmonth=2; break;
+    case "апр": nmonth=3; break;
+    case "мая": nmonth=4; break;
+    case "июн": nmonth=5; break;
+    case "июл": nmonth=6; break;
+    case "авг": nmonth=7; break;
+    case "сен": nmonth=8; break;
+    case "окт": nmonth=9; break;
+    case "ноя": nmonth=10; break;
+    case "дек": nmonth=11; break;
+  }
+  var newdate = new Date();                 // установить новую СКАЗАННУЮ дату
+  newdate.setDate(str[0]);                  // день
+  newdate.setMonth(nmonth);                 // месяц
+  newdate.setFullYear(str[2]);              // полный год
+  if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); }
+  return (newdate);                         // вернуть новую дату
 }
 
