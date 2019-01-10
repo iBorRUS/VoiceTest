@@ -81,7 +81,7 @@ function voicecommand(strcommand) {
        dbsaveJob();
     break
     case 'добавить':                              // ВВОД НОВОГО ЗАДАНИЯ
-      strvoice("скажите новое задание");
+      //strvoice("скажите новое задание");
       editjob = 'новое';
       strcommand="";
       voicecommand(strcommand);
