@@ -42,11 +42,20 @@ function dbopenJob(){
                 myname = row['db_job']; mypassword = row['db_data'];
                 for (i = 1; i < len; i++) { 
                     row = results.rows.item(i);
+/*     
+	var td = new Date( row['db_data']);
+	var yr = td.getFullYear();
+	var mon = td.getMonth();
+	var den = td.getDate()
+	var dn = td.getDay();
+	//alert("День="+den+" День недели="+dn+" Месяц="+mon+" Год="+yr);
+*/
                     addRowTable(row['db_check'], row['db_data'], row['db_job']); // добавить строку в таблицу
+                    //addRowTable(row['db_check'], den+"."+mon+"."+yr, row['db_job']); // добавить строку в таблицу
                 } 
                 //nomerstroki = len;
             } else {
-                dbinsJob("0", "2563", "Игорь");             // создается новая таблица в базе данных
+                dbinsJob("0", "пароль", "имя");             // создается новая таблица в базе данных
                 alert("СОЗДАНА НОВАЯ ТАБЛИЦА В БАЗЕ ДАННЫХ !");
             }
         }, null); 
@@ -72,7 +81,7 @@ function dbsaveJob(){
     var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
     if (trStroka.length <= 1) {
         alert('ОШИБКА - НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ !!!');
-        dbinsJob("0", "2563", "Игорь");
+        dbinsJob("0", "пароль", "имя");
     } else {
         db.transaction(                                                     // Удалить все старые записи
             function(transaction){
@@ -95,7 +104,7 @@ function dbsaveJob(){
             dbinsJob(newcheck, newdata, newjob);
         } 
     }
-    strvoice(("Сохранили "+(trStroka.length-1)+" заданий"));
+    strvoice("Сохранили "+(trStroka.length-1)+" заданий");
 }
 
 //-----------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 var windowmain;                                     // указатель на окно с открытым приложением
-var modaltitle = "";								                // Заголовок текущего окна
-var editjob = "";									                  // изменение, удаление задания
+var modaltitle = "";								// Заголовок текущего окна
+var editjob = "";									// изменение, удаление задания
 var speech = new SpeechSynthesisUtterance();        // Возвращает новый экземпляр объекта т.е. включает динамики (массив)
-    speech.lang = 'ru-Ru';                          // Язык для диктовки текста
+	speech.lang = 'ru-Ru';                          // Язык для диктовки текста
 var voicestart = false;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
 var recognizing = false;
@@ -64,6 +64,9 @@ function voicecommand(strcommand) {
   document.getElementById('voice').innerHTML = strcommand;
 
   switch (strcommand) {
+    //--------------------------------------------------------------------
+    // АНАЛИЗ ОСНОВНЫХ КОМАНД (команды первого уровня)
+    //--------------------------------------------------------------------
     case 'выше':
       window.scrollBy(0,-200);                    // прокрутка окна вниз
     break
@@ -72,7 +75,7 @@ function voicecommand(strcommand) {
     break
     case 'закрыть программу':
       modaltitle = 'ЗАКРЫТЬ ПРОГРАММУ';
-      strvoice("Сохранить данные в таблице?");
+      strvoice("Сохранить данные?");
     break
     case 'сохранить таблицу':                     // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ
        dbsaveJob();
@@ -84,7 +87,6 @@ function voicecommand(strcommand) {
       voicecommand(strcommand);
     break
     case 'изменить':                              // изменить существующее задание
-    case 'изменить задание':
     	strvoice("какое задание изменить?");
     	editjob = 'изменить';
     	modaltitle = 'ИЗМЕНИТЬ ЗАДАНИЕ';
@@ -105,8 +107,8 @@ function voicecommand(strcommand) {
       switch (modaltitle) {
         case 'ЗАКРЫТЬ ПРОГРАММУ':
           dbsaveJob();
-          //open(location, '_self').close();
-          window.close();
+          errmodalopen = true;                              // не показывать закрытие модальных окон (не красиво смотриться)
+          setTimeout( function(){ window.close()}, 3000);   // Задержка 3сек. для озвучки сообщения о записи на диск 
         break
         case "НОВОЕ ЗАДАНИЕ":
           if (today.value !== "" && job.value !== "") {
@@ -176,19 +178,11 @@ function voicecommand(strcommand) {
     default:
       switch (editjob) {
         //----------------------------------------------------------------
-        // ВВОД НОВООЙ ДАТЫ
-        //----------------------------------------------------------------
-        case 'newdate':
-        alert('newdate'+strcommand);
-          today.value = formatDate(strcommand);
-        break
-        //----------------------------------------------------------------
   	    // ВВОД НОВОГО ЗАДАНИЯ
   	    //----------------------------------------------------------------
         case 'новое':
             editjob = "newjob";
             today.valueAsDate = new Date();
-            //today.format("dd.mm.yyyy");
             job.value = "";
             job.focus();
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
@@ -211,7 +205,7 @@ function voicecommand(strcommand) {
           				if (editjob == 'изменить') {
           					job.focus();
           					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-          					strvoice("скажите новое задание");
+          					//strvoice("скажите новое задание");
           					editjob = "newjob";
           				} else {			
           					modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
@@ -224,16 +218,40 @@ function voicecommand(strcommand) {
     	        if (!onend) strvoice("нет такого задания");
         	break
         case 'newjob':
+          switch (strcommand) {
+            case 'изменить дату':
+              strvoice("скажите новую дату");
+              editjob='newdate';
+              strcommand="";
+              voicecommand(strcommand);
+            break
+            case 'изменить задание':
+              strvoice("скажите новое задание");
+              editjob = "newjob";
+            break
+            default:
+              job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);  // Сделать 1-ю букву заглавной
+              strvoice("Сохранить?");
+          }
+/*
           if (strcommand == 'изменить дату') {
             strvoice("скажите новую дату");
             editjob='newdate';
             strcommand="";
-            //voicecommand(strcommand); 
+            voicecommand(strcommand);
           } else {
           	job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);	// Сделать 1-ю букву заглавной
           	strvoice("Сохранить?");
           }
+*/
     		break
+        //----------------------------------------------------------------
+        // ВВОД НОВООЙ ДАТЫ
+        //----------------------------------------------------------------
+        case 'newdate':
+          today.valueAsDate = formatDate(strcommand);
+          editjob = "newjob";                             // вернуться в окно редактирования задания
+        break
     		case 'okgoogle':
     			//window.location = "https://www.google.ru/search?q="+event.results[0][0].transcript;
     			windowmain=window.open('https://www.google.ru/search?q='+strcommand, '_blank');	// открыть страницу в новом окне
@@ -242,4 +260,32 @@ function voicecommand(strcommand) {
     break // default:
   } // switch (strcommand)
 } // function voicecommand(strcommand)
+
+function formatDate(strdate) {
+  var str = strdate.split(' ');
+  var den, nmoon, yr;
+  var newdate;
+
+  switch (str[1].substring(0,3))
+    {
+      case "янв": nmoon=0; break;
+      case "фев": nmoon=1; break;
+      case "мар": nmoon=2; break;
+      case "апр": nmoon=3; break;
+      case "мая": nmoon=4; break;
+      case "июн": nmoon=5; break;
+      case "июл": nmoon=6; break;
+      case "авг": nmoon=7; break;
+      case "сен": nmoon=8; break;
+      case "окт": nmoon=9; break;
+      case "ноя": nmoon=10; break;
+      case "дек": nmoon=11; break;
+    }
+    newdate = new Date();
+    newdate.setDate(str[0]);
+    newdate.setMonth(nmoon);
+    newdate.setFullYear(str[2]);
+    //alert(newdate);
+    return (newdate)
+}
 
