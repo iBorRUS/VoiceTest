@@ -80,6 +80,7 @@ function voicecommand(strcommand) {
     case 'сохранить таблицу':                     // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ
        dbsaveJob();
     break
+	
     case 'добавить':                              // ВВОД НОВОГО ЗАДАНИЯ
       //strvoice("скажите новое задание");
       editjob = 'новое';
@@ -87,6 +88,7 @@ function voicecommand(strcommand) {
 	  document.getElementById('dtins').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
       voicecommand(strcommand);
     break
+	
     case 'изменить':                              // изменить существующее задание
     	strvoice("какое задание изменить?");
     	editjob = 'изменить';
@@ -95,11 +97,16 @@ function voicecommand(strcommand) {
     break
 
     case 'удалить':                               // удалить существующее задание
-    case 'удалить задание':
     	strvoice("какое задание удалить?");
     	editjob = 'удалить';
     	modaltitle = 'УДАЛИТЬ ЗАДАНИЕ';
 		document.getElementById('dtdel').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+    break
+
+    case 'статус':                               // удалить существующее задание
+    	strvoice("назовите задание.");
+    	editjob = 'статус';
+		document.getElementById('dtststus').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
     break
 
     case 'сохранить':
@@ -207,7 +214,8 @@ function voicecommand(strcommand) {
         // ИЗМЕНИТЬ ИЛИ УДАЛИТЬ ВЫБРАННОЕ ЗАДАНИЕ
         //----------------------------------------------------------------
       	case 'изменить':
-    		case 'удалить':
+    	case 'удалить':
+		case 'статус':
           var onend = false;                                      // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
            	for (nomerstroki=1; nomerstroki<trStroka.length; nomerstroki++) {     // цикл по количеству строк в таблице
@@ -217,17 +225,28 @@ function voicecommand(strcommand) {
                   onend = true;
     	          	today.value = tdStroka[1].innerHTML;            // дата -> в поле "дата"
               		job.value = tdStroka[2].innerHTML;              // задание -> в поле "задание"
-          				if (editjob == 'изменить') {
-          					job.focus();
+					
+					switch (editjob) {
+						case 'изменить':
+						    job.focus();
           					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
           					//strvoice("скажите новое задание");
           					editjob = "newjob";
 							document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
-          				} else {			
-          					modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
+						break
+						case 'удалить':
+						    modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
           					editjob = "deljob";
           					strvoice("Удалить?");
-          				} 
+						break
+						case 'статус':
+							var checkstat = tdStroka[0].getElementsByTagName('input');
+						    checkstat[0].checked = !(checkstat[0].checked);
+          					editjob = "";
+          					strvoice("Задание отмечено");
+							document.getElementById('dtststus').classList.remove("miganie");
+						break
+					}						
           			break	// выход из for... нашли задание в таблице
           			}
     	        } 
