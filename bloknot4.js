@@ -46,6 +46,7 @@ function myevent(kod) {
           case 1:                                    
             if (target.cellIndex >0){                         // если не check box, то "ИЗМЕНИТЬ ЗАДАНИЕ"
               job.focus();
+			  document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
               modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "ИЗМЕНИТЬ");
             }
           break

@@ -84,12 +84,14 @@ function voicecommand(strcommand) {
       //strvoice("скажите новое задание");
       editjob = 'новое';
       strcommand="";
+	  document.getElementById('dtins').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
       voicecommand(strcommand);
     break
     case 'изменить':                              // изменить существующее задание
     	strvoice("какое задание изменить?");
     	editjob = 'изменить';
     	modaltitle = 'ИЗМЕНИТЬ ЗАДАНИЕ';
+		document.getElementById('dtedit').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
     break
 
     case 'удалить':                               // удалить существующее задание
@@ -97,6 +99,7 @@ function voicecommand(strcommand) {
     	strvoice("какое задание удалить?");
     	editjob = 'удалить';
     	modaltitle = 'УДАЛИТЬ ЗАДАНИЕ';
+		document.getElementById('dtdel').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
     break
 
     case 'сохранить':
@@ -141,12 +144,18 @@ function voicecommand(strcommand) {
         job.removeAttribute('readonly'); 
         editjob = "";
         modaltitle = "";
+		document.getElementById('recjob').classList.remove("miganie");
+		document.getElementById('dtins').classList.remove("miganie");
+		document.getElementById('dtedit').classList.remove("miganie");
+		document.getElementById('dtdel').classList.remove("miganie");
+		document.getElementById('dtenet').classList.remove("miganie");
       }
     break
 
   	case 'интернет':
   		strvoice("Скажите, что искать");
   		editjob = "okgoogle";
+		document.getElementById('dtenet').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   	break
 
     case 'закрыть':
@@ -163,6 +172,11 @@ function voicecommand(strcommand) {
   	     	modal.className = 'modal-out';                  // поменять класс на <Закрытие модального окна>
   	      editjob = "";
           modaltitle = "";
+		  document.getElementById('recjob').classList.remove("miganie");
+		  document.getElementById('dtins').classList.remove("miganie");
+		  document.getElementById('dtedit').classList.remove("miganie");
+		  document.getElementById('dtdel').classList.remove("miganie");
+		  document.getElementById('dtenet').classList.remove("miganie");
   	    break
         case 'ВНИМАНИЕ !!!':
   	      errmodalopen = false;
@@ -186,6 +200,7 @@ function voicecommand(strcommand) {
             job.value = "";
             job.focus();
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
+			document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
@@ -207,6 +222,7 @@ function voicecommand(strcommand) {
           					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
           					//strvoice("скажите новое задание");
           					editjob = "newjob";
+							document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
           				} else {			
           					modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
           					editjob = "deljob";
@@ -223,15 +239,17 @@ function voicecommand(strcommand) {
               strvoice("скажите новую дату");
               editjob='newdate';
               strcommand="";
+			  document.getElementById('recdate').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+			  document.getElementById('recjob').classList.remove("miganie");
               voicecommand(strcommand);
             break
-            case 'изменить задание':
-              strvoice("скажите новое задание");
-              editjob = "newjob";
-            break
+            //case 'изменить задание':
+            //  strvoice("скажите новое задание");
+            //  editjob = "newjob";
+            //break
             default:
               job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);  // Сделать 1-ю букву заглавной
-              strvoice("Сохранить?");
+              //strvoice("Сохранить?");
           }
     		break
         //----------------------------------------------------------------
@@ -240,11 +258,16 @@ function voicecommand(strcommand) {
         case 'newdate':
           today.valueAsDate = formatDate(strcommand);
           editjob = "newjob";                             // вернуться в окно редактирования задания
+		  document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+		  document.getElementById('recdate').classList.remove("miganie");
         break
-    		case 'okgoogle':
-    			//window.location = "https://www.google.ru/search?q="+event.results[0][0].transcript;
-    			windowmain=window.open('https://www.google.ru/search?q='+strcommand, '_blank');	// открыть страницу в новом окне
-    		break
+        //----------------------------------------------------------------
+        // ОТКРЫТЬ НОВОЕ ОКНО В goodle со сказанной строкой
+        //----------------------------------------------------------------
+    	case 'okgoogle':
+    		//window.location = "https://www.google.ru/search?q="+event.results[0][0].transcript;
+    		windowmain=window.open('https://www.google.ru/search?q='+strcommand, '_blank');	// открыть страницу в новом окне
+    	break
       } // switch (editjob)
     break // default:
   } // switch (strcommand)

@@ -46,20 +46,19 @@
 <div class="theadhelp">
   <h>Голосовые команды:</h>
   <dl>
-    <dt>- Добавить</dt>
+    <dt id="dtins">- Добавить</dt>
       <dd>- Изменить дату</dd>
-      <dd>- Изменить задание</dd>
-      <dd>- Сохранить (Да)</dd>
+      <!--<dd>- Изменить задание</dd>-->
+      <dd>- Сохранить</dd>
       <dd>- Закрыть</dd>
-    <dt>- Изменить</dt>
+    <dt id="dtedit">- Изменить</dt>
       <dd>- Изменить дату</dd>
-      <dd>- Изменить задание</dd>
-      <dd>- Сохранить (Да)</dd>
+      <dd>- Сохранить</dd>
       <dd>- Закрыть</dd>
-    <dt>- Удалить</dt>
+    <dt id="dtdel">- Удалить</dt>
       <dd>- Да</dd>
       <dd>- Закрыть</dd> 
-    <dt>- Интернет</dt>
+    <dt id="dtenet">- Интернет</dt>
     <dt>- Ниже</dt>
     <dt>- Выше</dt>
     <dt>- Сохранить таблицу</dt>
@@ -77,8 +76,14 @@
   </div>
   <div id="bodymodal">
     <div class="modal-body">
-    <input id="today" type="date" class="date-input">
-    <input id="job" type="text" placeholder="Новое задание">
+		<div>
+			<label class="rec" id="recdate" for="today">O</label>
+			<input id="today" type="date" class="date-input">
+		</div>
+		<div >
+			<label class="rec" id="recjob" for="job">O</label>
+			<input id="job" type="text"> <!-- placeholder="Новое задание"> -->
+		</div>
     </div>
     <div class="modal-footer">
     <button id="okbutton" class="Ok">Сохранить</button>
