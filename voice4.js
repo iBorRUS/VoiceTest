@@ -82,7 +82,7 @@ function voicecommand(strcommand) {
     break
 	
     case 'добавить':                              // ВВОД НОВОГО ЗАДАНИЯ
-      //strvoice("скажите новое задание");
+      tdmiganie();
       editjob = 'новое';
       strcommand="";
 	  document.getElementById('dtins').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
@@ -90,6 +90,7 @@ function voicecommand(strcommand) {
     break
 	
     case 'изменить':                              // изменить существующее задание
+		tdmiganie();
     	strvoice("какое задание изменить?");
     	editjob = 'изменить';
     	modaltitle = 'ИЗМЕНИТЬ ЗАДАНИЕ';
@@ -97,6 +98,7 @@ function voicecommand(strcommand) {
     break
 
     case 'удалить':                               // удалить существующее задание
+		tdmiganie();
     	strvoice("какое задание удалить?");
     	editjob = 'удалить';
     	modaltitle = 'УДАЛИТЬ ЗАДАНИЕ';
@@ -151,11 +153,7 @@ function voicecommand(strcommand) {
         job.removeAttribute('readonly'); 
         editjob = "";
         modaltitle = "";
-		document.getElementById('recjob').classList.remove("miganie");
-		document.getElementById('dtins').classList.remove("miganie");
-		document.getElementById('dtedit').classList.remove("miganie");
-		document.getElementById('dtdel').classList.remove("miganie");
-		document.getElementById('dtenet').classList.remove("miganie");
+		tdmiganie();
       }
     break
 
@@ -179,11 +177,7 @@ function voicecommand(strcommand) {
   	     	modal.className = 'modal-out';                  // поменять класс на <Закрытие модального окна>
   	      editjob = "";
           modaltitle = "";
-		  document.getElementById('recjob').classList.remove("miganie");
-		  document.getElementById('dtins').classList.remove("miganie");
-		  document.getElementById('dtedit').classList.remove("miganie");
-		  document.getElementById('dtdel').classList.remove("miganie");
-		  document.getElementById('dtenet').classList.remove("miganie");
+		  tdmiganie();
   	    break
         case 'ВНИМАНИЕ !!!':
   	      errmodalopen = false;
@@ -230,7 +224,6 @@ function voicecommand(strcommand) {
 						case 'изменить':
 						    job.focus();
           					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-          					//strvoice("скажите новое задание");
           					editjob = "newjob";
 							document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
 						break
@@ -248,8 +241,8 @@ function voicecommand(strcommand) {
 						break
 					}						
           			break	// выход из for... нашли задание в таблице
-          			}
-    	        } 
+				  }	// if ( newjob.indexOf(strcommand) !== -1 )
+    	        }	// for (nomerstroki=1;
     	        if (!onend) strvoice("нет такого задания");
         	break
         case 'newjob':
@@ -317,3 +310,11 @@ function formatDate(strdate) {
   return (newdate);                         // вернуть новую дату
 }
 
+function tdmiganie() {
+	document.getElementById('recjob').classList.remove("miganie");
+	document.getElementById('dtins').classList.remove("miganie");
+	document.getElementById('dtedit').classList.remove("miganie");
+	document.getElementById('dtdel').classList.remove("miganie");
+	document.getElementById('dtenet').classList.remove("miganie");
+	document.getElementById('dtststus').classList.remove("miganie");
+}
