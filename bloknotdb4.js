@@ -42,15 +42,7 @@ function dbopenJob(){
                 myname = row['db_job']; mypassword = row['db_data'];
                 for (i = 1; i < len; i++) { 
                     row = results.rows.item(i);
-/*     
-	var td = new Date( row['db_data']);
-	var yr = td.getFullYear();
-	var mon = td.getMonth();
-	var den = td.getDate()
-	var dn = td.getDay();
-	//alert("День="+den+" День недели="+dn+" Месяц="+mon+" Год="+yr);
-*/
-                    addRowTable(row['db_check'], row['db_data'], row['db_job']); // добавить строку в таблицу
+                    addRowTable(-1, row['db_check'], row['db_data'], row['db_job']); // добавить строку в таблицу
                     //addRowTable(row['db_check'], den+"."+mon+"."+yr, row['db_job']); // добавить строку в таблицу
                 } 
                 //nomerstroki = len;

@@ -102,7 +102,7 @@ function myevent(kod) {
           switch (document.getElementById("modal-title").innerHTML) {
             case "НОВОЕ ЗАДАНИЕ":
               if (today.value !== "" && job.value !== "") {
-                addRowTable("0", today.value, job.value );
+                addRowTable(-1, "0", today.value, job.value );
               } else {
                 //----------------------------------------------------------------
                 // НЕТ ДАТЫ ИЛИ ТЕКСТА ЗАДАНИЯ
@@ -154,9 +154,11 @@ function modalblock (modal, title, okbutton) {
 //----------------------------------------------------------------
 // добавить строку в таблицу на экране
 //----------------------------------------------------------------
-var addRowTable = function(textCheck, textDate, textZadaniya) { 
+var addRowTable = function(nrow, textCheck, textDate, textZadaniya) { 
+	console.log('textDate= '+textDate);
     var tableRef = document.getElementById("myTable").getElementsByTagName('tbody')[0];
-    var newRow = tableRef.insertRow(tableRef.rows.length);  // Вставить строку в конец таблицы
+    if (nrow == -1) nrow = tableRef.rows.length;			// Вставить строку в конец таблицы
+    var newRow = tableRef.insertRow(nrow);  				// Вставить строку в тело таблицы
     var newCell0  = newRow.insertCell(0);                   // Создать пустые ячейки в добавленной строке
     var newCell1  = newRow.insertCell(1);
     var newCell2  = newRow.insertCell(2);
@@ -164,7 +166,7 @@ var addRowTable = function(textCheck, textDate, textZadaniya) {
     newCheck.type = 'checkbox';                                  
     if (textCheck == '1') {newCheck.checked = true;} else {newCheck.checked = false;} // указать тип переменной
     newCell0.appendChild(newCheck);                         // добавить 1-ю ячейку в новую стоку
-    var newDate  = document.createTextNode(textDate);       // присвоить переменной новую дату
+    var newDate  = document.createTextNode(textDate);       // присвоить переменной новую дату 
     newDate.type = 'date';
     newCell1.appendChild(newDate);                          // добавить 2-ю ячейку в новую стоку с новой датой
     var newText  = document.createTextNode(textZadaniya);   // присвоить переменной новое задание

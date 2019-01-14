@@ -11,6 +11,8 @@ recognizer.lang = 'ru-Ru';                        	// Язык для распо
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
 function speechmic () {                             // Включаем микрофон
+  document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+  if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
   recognizer.start();
 }
 //-----------------------------------------------------------------------------------------------
@@ -32,9 +34,9 @@ recognizer.onresult = function (event) {            // Вызывается ес
 }
 
 recognizer.onstart = function(){                    // вллючился микрофон
-  document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+  //document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-   if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
+  //if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
 }
 
 recognizer.onend = function(){                      // Закончилось время ожидания (примерно 15 сек)
@@ -124,7 +126,7 @@ function voicecommand(strcommand) {
         break
         case "НОВОЕ ЗАДАНИЕ":
           if (today.value !== "" && job.value !== "") {
-            addRowTable("0", today.value, job.value );
+          	sortbydate("0", today.valueAsDate, job.value);
           } else {
             //----------------------------------------------------------------
             // НЕТ ДАТЫ ИЛИ ТЕКСТА ЗАДАНИЯ
@@ -137,10 +139,8 @@ function voicecommand(strcommand) {
           }
         break
         case "ИЗМЕНИТЬ ЗАДАНИЕ":
-          var trStroka = document.getElementById('myTable').getElementsByTagName('tr'); // получить массив всех строк
-          var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');  // получить массив всех колонок в строке
-          tdStroka[1].innerHTML = document.getElementById("today").value;   // заменить дату
-          tdStroka[2].innerHTML = document.getElementById("job").value;     // заменить задание
+          document.getElementById("myTable").deleteRow(nomerstroki);
+          sortbydate("0", document.getElementById("today").valueAsDate, document.getElementById("job").value);	  
         break
         case "УДАЛИТЬ ЗАДАНИЕ":
           document.getElementById("myTable").deleteRow(nomerstroki);
@@ -217,7 +217,8 @@ function voicecommand(strcommand) {
     	         var newjob = (tdStroka[2].innerHTML).toLowerCase();
     	         if ( newjob.indexOf(strcommand) !== -1 ) {
                   onend = true;
-    	          	today.value = tdStroka[1].innerHTML;            // дата -> в поле "дата"
+                  	var str = tdStroka[1].innerHTML.split('.');             // разделить строку даты на массив день-месяц-год
+    	          	today.value = str[2]+"-"+str[1]+"-"+str[0];				// tdStroka[1].innerHTML;            // дата -> в поле "дата"
               		job.value = tdStroka[2].innerHTML;              // задание -> в поле "задание"
 					
 					switch (editjob) {
@@ -253,7 +254,6 @@ function voicecommand(strcommand) {
               strcommand="";
 			  document.getElementById('recdate').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
 			  document.getElementById('recjob').classList.remove("miganie");
-              voicecommand(strcommand);
             break
             //case 'изменить задание':
             //  strvoice("скажите новое задание");
@@ -308,6 +308,27 @@ function formatDate(strdate) {
   newdate.setFullYear(str[2]);              // полный год
   if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); }
   return (newdate);                         // вернуть новую дату
+}
+
+function sortbydate(textCheck, textDate, textZadaniya) {
+	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
+	var den, nmonth, yr;
+    for ( var nrow = trStroka.length-1; nrow>0; nrow--) {    	// цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
+      var tdStroka = trStroka[nrow].getElementsByTagName('td');	// получить массив всех колонок в строке
+      console.log('2 nrow ='+ nrow +" tdStroka[1].innerHTML= "+tdStroka[1].innerHTML);
+      var str = tdStroka[1].innerHTML.split('.');             	// разделить строку даты на массив день-месяц-год
+      var newdate = new Date();     		// установить новую дату (из строки таблицы)
+	  newdate.setDate(str[0]);            	// день
+	  newdate.setMonth(str[1]-1);         	// месяц
+	  newdate.setFullYear(str[2]);        	// полный год
+      if ( newdate < textDate ) {	
+    	break
+      }
+    }
+    addRowTable(nrow, textCheck, textDate.toLocaleDateString(), textZadaniya);
+	//addRowTable(nrow, textCheck, textDate.getFullYear()+'-'+('0'+(textDate.getMonth()+1)).slice(-2)+'-'+('0'+textDate.getDate()).slice(-2)
+//, textZadaniya);	// slice(-2) - извлечёт два последних элемента последовательности
+
 }
 
 function tdmiganie() {
