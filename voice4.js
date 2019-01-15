@@ -92,11 +92,19 @@ function voicecommand(strcommand) {
     break
 	
     case 'изменить':                              // изменить существующее задание
-		tdmiganie();
-    	strvoice("какое задание изменить?");
-    	editjob = 'изменить';
-    	modaltitle = 'ИЗМЕНИТЬ ЗАДАНИЕ';
-		document.getElementById('dtedit').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+    tdmiganie();
+      strvoice("какое задание изменить?");
+      editjob = 'изменить';
+      modaltitle = 'ИЗМЕНИТЬ ЗАДАНИЕ';
+    document.getElementById('dtedit').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+    break
+
+    case 'копия':                              // копировать существующее задание
+    tdmiganie();
+      strvoice("какое задание копировать?");
+      editjob = 'копия';
+      modaltitle = 'НОВОЕ ЗАДАНИЕ';
+    document.getElementById('dtcopy').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
     break
 
     case 'удалить':                               // удалить существующее задание
@@ -198,21 +206,23 @@ function voicecommand(strcommand) {
         case 'новое':
             editjob = "newjob";
             today.valueAsDate = new Date();
+            modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
-            modaltitle = 'НОВОЕ ЗАДАНИЕ';
-			document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+			      document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
         // ИЗМЕНИТЬ ИЛИ УДАЛИТЬ ВЫБРАННОЕ ЗАДАНИЕ
         //----------------------------------------------------------------
-      	case 'изменить':
-    	case 'удалить':
-		case 'статус':
+        case 'изменить':
+        case 'удалить':
+    		case 'статус':
+        case 'копия':
           var onend = false;                                      // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
-           	for (nomerstroki=1; nomerstroki<trStroka.length; nomerstroki++) {     // цикл по количеству строк в таблице
+           	//for (nomerstroki=1; nomerstroki<trStroka.length; nomerstroki++) {     // цикл по количеству строк в таблице
+            for (nomerstroki=trStroka.length-1; nomerstroki>0; nomerstroki--) {     // цикл по количеству строк в таблице
     	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');// получить массив всех колонок в строке
     	         var newjob = (tdStroka[2].innerHTML).toLowerCase();
     	         if ( newjob.indexOf(strcommand) !== -1 ) {
@@ -223,21 +233,27 @@ function voicecommand(strcommand) {
 					
 					switch (editjob) {
 						case 'изменить':
-						    job.focus();
-          					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-          					editjob = "newjob";
+						  job.focus();
+          		modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+          		editjob = "newjob";
 							document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
 						break
+            case 'копия':
+              job.focus();
+              modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+              editjob = "newjob";
+              document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+            break
 						case 'удалить':
-						    modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
-          					editjob = "deljob";
-          					strvoice("Удалить?");
+						  modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
+          		editjob = "deljob";
+          		strvoice("Удалить?");
 						break
 						case 'статус':
 							var checkstat = tdStroka[0].getElementsByTagName('input');
-						    checkstat[0].checked = !(checkstat[0].checked);
-          					editjob = "";
-          					strvoice("Задание отмечено");
+						  checkstat[0].checked = !(checkstat[0].checked);
+          		editjob = "";
+          		strvoice("Задание отмечено");
 							document.getElementById('dtststus').classList.remove("miganie");
 						break
 					}						
@@ -252,8 +268,8 @@ function voicecommand(strcommand) {
               strvoice("скажите новую дату");
               editjob='newdate';
               strcommand="";
-			  document.getElementById('recdate').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
-			  document.getElementById('recjob').classList.remove("miganie");
+      			  document.getElementById('recdate').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+      			  document.getElementById('recjob').classList.remove("miganie");
             break
             //case 'изменить задание':
             //  strvoice("скажите новое задание");
@@ -286,8 +302,7 @@ function voicecommand(strcommand) {
 } // function voicecommand(strcommand)
 
 function formatDate(strdate) {
-  var str = strdate.split(' ');             // разделить строку даты на массив день-месяц-год
-  var den, nmonth, yr;                      //                                   0    1     2
+  var str = strdate.split(' ');             // разделить строку даты на массив день-месяц-год                      //                                   0    1     2
   switch (str[1].substring(0,3)) {          // поиск по первым трем символам названия месяца
     case "янв": nmonth=0; break;
     case "фев": nmonth=1; break;
@@ -305,7 +320,8 @@ function formatDate(strdate) {
   var newdate = new Date();                 // установить новую СКАЗАННУЮ дату
   newdate.setDate(str[0]);                  // день
   newdate.setMonth(nmonth);                 // месяц
-  newdate.setFullYear(str[2]);              // полный год
+  if (str.length <3) { newdate.setFullYear(newdate.getFullYear()); }
+  	else { newdate.setFullYear(str[2]); }   // полный год     
   if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); }
   return (newdate);                         // вернуть новую дату
 }
@@ -338,4 +354,5 @@ function tdmiganie() {
 	document.getElementById('dtdel').classList.remove("miganie");
 	document.getElementById('dtenet').classList.remove("miganie");
 	document.getElementById('dtststus').classList.remove("miganie");
+  document.getElementById('dtcopy').classList.remove("miganie");
 }
