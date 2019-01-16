@@ -177,7 +177,7 @@ function voicecommand(strcommand) {
         job.removeAttribute('readonly'); 
         editjob = "";
         modaltitle = "";
-		tdmiganie();
+        tdmiganie();
       }
     break
 
@@ -190,7 +190,6 @@ function voicecommand(strcommand) {
       switch (modaltitle) {
         case 'ЗАКРЫТЬ ПРОГРАММУ':
           window.close();
-          //open(location, '_self').close();
         break
         case 'НОВОЕ ЗАДАНИЕ':
   	    case 'ИЗМЕНИТЬ ЗАДАНИЕ':
@@ -198,7 +197,7 @@ function voicecommand(strcommand) {
   	     	modal.className = 'modal-out';                  // поменять класс на <Закрытие модального окна>
   	      editjob = "";
           modaltitle = "";
-		  tdmiganie();
+          tdmiganie();
   	    break
         case 'ВНИМАНИЕ !!!':
   	      errmodalopen = false;
@@ -324,20 +323,8 @@ function voicecommand(strcommand) {
 function formatDate(strdate) {
   var nmonth;
   var str = strdate.split(' ');             // разделить строку даты на массив день-месяц-год 
-  switch (str[1].substring(0,3)) {          // поиск по первым трем символам названия месяца
-    case "янв": nmonth=0; break;
-    case "фев": nmonth=1; break;
-    case "мар": nmonth=2; break;
-    case "апр": nmonth=3; break;
-    case "мая": nmonth=4; break;
-    case "июн": nmonth=5; break;
-    case "июл": nmonth=6; break;
-    case "авг": nmonth=7; break;
-    case "сен": nmonth=8; break;
-    case "окт": nmonth=9; break;
-    case "ноя": nmonth=10; break;
-    case "дек": nmonth=11; break;
-  }
+  var month = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"]; 
+  for ( nmonth =0; nmonth < 12; nmonth++) if ( month[nmonth] == str[1].substring(0,3)) break; // поиск по первым трем символам названия месяца
   var newdate = new Date();                 // установить новую СКАЗАННУЮ дату
   newdate.setDate(str[0]);                  // день
   newdate.setMonth(nmonth);                 // месяц
@@ -373,11 +360,7 @@ function sortbydate(textCheck, textDate, textZadaniya) {
 // ВЫКЛЮЧИТЬ МИГАНИЕ УПРАВЛЯЮЩИХ КОМАНД
 //----------------------------------------------------------------
 function tdmiganie() {
-	document.getElementById('recjob').classList.remove("miganie");
-	document.getElementById('dtins').classList.remove("miganie");
-	document.getElementById('dtedit').classList.remove("miganie");
-	document.getElementById('dtdel').classList.remove("miganie");
-	document.getElementById('dtenet').classList.remove("miganie");
-	document.getElementById('dtststus').classList.remove("miganie");
-  document.getElementById('dtcopy').classList.remove("miganie");
+  var idindex = ["recjob","dtins","dtedit","dtdel","dtenet","dtststus","dtcopy"];
+  for (var i=0; i < idindex.length; i++)
+    document.getElementById(idindex[i]).classList.remove("miganie");  
 }
