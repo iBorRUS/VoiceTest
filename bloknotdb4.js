@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 //      ИСХОДНЫЕ ДАННЫЕ ДЛЯ СОЗДАНИЯ ТАБЛИЦЫ БД
 //-----------------------------------------------------------------------------
-var myname;
-var mypassword;
+var myname="";
+var mypassword="";
 var shortName = 'mydiary';  // Мой ежедневник
 var version = '1.0';
 var displayName = 'My Database Diary';
@@ -11,14 +11,17 @@ var db = openDatabase(shortName, version, displayName, maxSize);
 
 if(!db){alert("ОШИБКА. НЕТ СВЯЗИ С БАЗОЙ ДАННЫХ !!!"); createTables(db);}
 
-db.transaction(function (transaction) {
-transaction.executeSql(
-     'SELECT * FROM mydiary',[],null,
-        function(){                     // нет данных то в базе, наверно она пустая
-            createTables(db);           // Создать новую таблицу в БД
+function opentable() {
+    db.transaction(function (transaction) {
+    transaction.executeSql(
+         'SELECT * FROM mydiary',[],null,
+            function(){                             // нет данных то в базе, наверно она пустая
+                console.log('Создана новая таблица');
+                createTables(db);                   // Создать новую таблицу в БД
+                dbinsJob("0", mypassword, myname);  // в 1-ю запись -> пароль и имя пользователя
+        });
     });
-});
-
+}
 //-----------------------------------------------------------------------------
 //      СОЗДАТЬ ТАБЛИЦУ БД (если её нет на диске)
 //-----------------------------------------------------------------------------
@@ -34,24 +37,19 @@ function createTables(db){
 //      ОТКРЫТЬ ТАБЛИЦУ БД ДЛЯ ПРОСМОТРА (автозагрузка с диска)
 //-----------------------------------------------------------------------------
 function dbopenJob(){
+    opentable();
     db.transaction(function (transaction) { 
-        transaction.executeSql('SELECT * from mydiary', [], function (transaction, results) { 
-            var len = results.rows.length, i, row; 
-            if (len > 0) {
+        transaction.executeSql('SELECT * from mydiary', [], 
+            function (transaction, results) { 
+                var len = results.rows.length, i, row; 
                 row = results.rows.item(0);
                 myname = row['db_job']; mypassword = row['db_data'];
                 for (i = 1; i < len; i++) { 
                     row = results.rows.item(i);
-                    addRowTable(-1, row['db_check'], row['db_data'], row['db_job']); // добавить строку в таблицу
-                    //addRowTable(row['db_check'], den+"."+mon+"."+yr, row['db_job']); // добавить строку в таблицу
+                    addRowTable(-1, row['db_check'], row['db_data'], row['db_job']);    // добавить строку в таблицу
                 } 
-                //nomerstroki = len;
-            } else {
-                dbinsJob("0", "пароль", "имя");             // создается новая таблица в базе данных
-                alert("СОЗДАНА НОВАЯ ТАБЛИЦА В БАЗЕ ДАННЫХ !");
-            }
-        }, null); 
-    }); 
+            }, null); 
+    });
 }
 
 //-----------------------------------------------------------------------------
@@ -73,7 +71,7 @@ function dbsaveJob(){
     var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
     if (trStroka.length <= 1) {
         alert('ОШИБКА - НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ !!!');
-        dbinsJob("0", "пароль", "имя");
+        dbinsJob("0", mypassword, myname);                                  // в 1-ю запись -> пароль и имя пользователя
     } else {
         db.transaction(                                                     // Удалить все старые записи
             function(transaction){

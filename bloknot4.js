@@ -155,7 +155,6 @@ function modalblock (modal, title, okbutton) {
 // добавить строку в таблицу на экране
 //----------------------------------------------------------------
 var addRowTable = function(nrow, textCheck, textDate, textZadaniya) { 
-	console.log('textDate= '+textDate);
     var tableRef = document.getElementById("myTable").getElementsByTagName('tbody')[0];
     if (nrow == -1) nrow = tableRef.rows.length;			// Вставить строку в конец таблицы
     var newRow = tableRef.insertRow(nrow);  				// Вставить строку в тело таблицы

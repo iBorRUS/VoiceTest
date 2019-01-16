@@ -15,7 +15,8 @@ recognizer.continuous = true;                     	// когда пользов�
 
 function speechmic () {                             // Включаем микрофон
   document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
-  if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
+  //if (!voicestart) { strvoice("Приветствую вас, " + myname); strvoice("Произнесите команду."); }
+  voicestart = true;
   recognizer.start();
 }
 //-----------------------------------------------------------------------------------------------
@@ -39,7 +40,8 @@ recognizer.onresult = function (event) {            // Вызывается ес
 recognizer.onstart = function(){                    // вллючился микрофон
   //document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-  //if (!voicestart) strvoice("Произнесите команду."); voicestart = true;
+  //if (!voicestart) strvoice("Произнесите команду."); 
+  //voicestart = true;
 }
 
 recognizer.onend = function(){                      // Закончилось время ожидания (примерно 15 сек)
@@ -349,21 +351,19 @@ function formatDate(strdate) {
 // ПОИСК ДАТЫ В МАССИВЕ СТРОК В ТАБЛИЦЕ ДЛЯ ВСТАВКИ НОВОЙ СТРОКИ
 //----------------------------------------------------------------
 function sortbydate(textCheck, textDate, textZadaniya) {
-	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
-	//var den, nmonth, yr;
-    for ( var nrow = trStroka.length-1; nrow>0; nrow--) {    	// цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
-      var tdStroka = trStroka[nrow].getElementsByTagName('td');	// получить массив всех колонок в строке
-      console.log('2 nrow ='+ nrow +" tdStroka[1].innerHTML= "+tdStroka[1].innerHTML);
-      var str = tdStroka[1].innerHTML.split('.');             	// разделить строку даты на массив день-месяц-год
-      var newdate = new Date();     		    // установить новую дату (из строки таблицы)
-  	  newdate.setDate(str[0]);            	// день
-  	  newdate.setMonth(str[1]-1);         	// месяц
-  	  newdate.setFullYear(str[2]);        	// полный год
-      if ( newdate <= textDate ) {	
-    	   break
-      }
-    }
-    addRowTable(nrow, textCheck, textDate.toLocaleDateString(), textZadaniya);
+  var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
+  var mstextDate = Date.UTC(textDate.getFullYear(), textDate.getMonth()+1, textDate.getDate()); // возвращает количество миллисекунд 
+  for ( var nrow = trStroka.length-1; nrow>0; nrow--) {    	  // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
+    var tdStroka = trStroka[nrow].getElementsByTagName('td');	// получить массив всех колонок в строке  
+    var str = tdStroka[1].innerHTML.split('.');             	// разделить строку даты на массив день-месяц-год
+    var newdate = new Date();     		    // установить новую дату (из строки таблицы)
+  	newdate.setDate(str[0]);            	// день
+  	newdate.setMonth(str[1]-1);         	// месяц
+  	newdate.setFullYear(str[2]);        	// полный год
+    var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
+    if (parseFloat(mstextDate) >= parseFloat(msnewdate)) break;
+  }
+  addRowTable(nrow, textCheck, textDate.toLocaleDateString(), textZadaniya);
 	//addRowTable(nrow, textCheck, textDate.getFullYear()+'-'+('0'+(textDate.getMonth()+1)).slice(-2)+'-'+('0'+textDate.getDate()).slice(-2)
 //, textZadaniya);	// slice(-2) - извлечёт два последних элемента последовательности
 
