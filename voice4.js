@@ -65,6 +65,8 @@ function voicecommand(strcommand) {
   var modal = document.getElementById('myModal'); // указатель на модальное окно с ключевыми фразами
   var today = document.getElementById("today");   // указатель на дату в строке с заданием
   var job = document.getElementById("job");       // указатель на задание
+  var hours = document.getElementById("hours");   // указатель на часы
+  var minutes = document.getElementById("minutes");   // указатель на минуты
   document.getElementById('voice').innerHTML = strcommand;
 
   switch (strcommand) {
@@ -89,7 +91,7 @@ function voicecommand(strcommand) {
       tdmiganie();
       editjob = 'новое';
       strcommand="";
-	  document.getElementById('dtins').classList.add("miganie");    // добавить МИГАНИЕ 
+	    document.getElementById('dtins').classList.add("miganie");    // добавить МИГАНИЕ 
       voicecommand(strcommand);
     break
 	
@@ -150,7 +152,7 @@ function voicecommand(strcommand) {
         break
         case "НОВОЕ ЗАДАНИЕ":
           if (today.value !== "" && job.value !== "") {
-          	sortbydate("0", today.valueAsDate, job.value);
+          	sortbydate("0", today.valueAsDate, hours.value+":"+minutes.value, job.value);
           } else {
             //----------------------------------------------------------------
             // НЕТ ДАТЫ ИЛИ ТЕКСТА ЗАДАНИЯ
@@ -164,7 +166,7 @@ function voicecommand(strcommand) {
         break
         case "ИЗМЕНИТЬ ЗАДАНИЕ":
           document.getElementById("myTable").deleteRow(nomerstroki);
-          sortbydate("0", document.getElementById("today").valueAsDate, document.getElementById("job").value);	  
+          sortbydate("0", document.getElementById("today").valueAsDate, hours.value+":"+minutes.value, document.getElementById("job").value);	  
         break
         case "УДАЛИТЬ ЗАДАНИЕ":
           document.getElementById("myTable").deleteRow(nomerstroki);
@@ -218,7 +220,10 @@ function voicecommand(strcommand) {
   	    //----------------------------------------------------------------
         case 'новое':
             editjob = "newjob";
-            today.valueAsDate = new Date();
+            var dd = new Date();
+            today.valueAsDate = dd;
+            hours.value = checkTime(dd.getHours());
+            minutes.value = checkTime(dd.getMinutes());
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
@@ -283,10 +288,15 @@ function voicecommand(strcommand) {
       			  document.getElementById('recdate').classList.add("miganie");    // добавить МИГАНИЕ 
       			  document.getElementById('recjob').classList.remove("miganie");
             break
-            //case 'изменить задание':
-            //  strvoice("скажите новое задание");
-            //  editjob = "newjob";
-            //break
+
+            case 'изменить время':
+              strvoice("скажите новое время");
+              editjob='newtimes';
+              strcommand="";
+              document.getElementById('rechours').classList.add("miganie");    // добавить МИГАНИЕ 
+              document.getElementById('recjob').classList.remove("miganie");
+            break
+
             default:
               job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);  // Сделать 1-ю букву заглавной
               //strvoice("Сохранить?");
@@ -302,12 +312,21 @@ function voicecommand(strcommand) {
 		      document.getElementById('recdate').classList.remove("miganie");
         break
         //----------------------------------------------------------------
+        // ВВОД НОВОГО ВРЕМЕНИ
+        //----------------------------------------------------------------
+        case 'newtimes':
+          strcommand=strcommand.replace(/[^0-9]/gim, '');               // удалить все символы кроме цифр
+          if (strcommand.length < 4) strcommand='0'+strcommand; // если час сказан одной цифрой
+          hours.value = strcommand.substr(0,2);
+          minutes.value = strcommand.substr(-2);
+          editjob = "newjob";                             // вернуться в окно редактирования задания
+          document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ 
+          document.getElementById('rechours').classList.remove("miganie");
+        break
+        //----------------------------------------------------------------
         // ОТКРЫТЬ НОВОЕ ОКНО В goodle со сказанной строкой
         //----------------------------------------------------------------
       	case 'okgoogle':
-      		//windowmain=window.open('https://www.google.ru/search?q='+strcommand, '_blank');	// открыть страницу в новом окне
-          //alert( "Браузер находится на " + window.screenX + "," + window.screenY );
-          ///windowmain=window.open('https://www.google.ru/search?q='+strcommand, 'contacts','location,width=1200,height=900');
           var h = 900, w = 1200;
           windowmain=window.open('https://www.google.ru/search?q='+strcommand, 'contacts', 'scrollbars=1,height='+Math.min(h, screen.availHeight)+',width='+Math.min(w, screen.availWidth)+',left='+Math.max(0, (screen.availWidth - w)/2)+',top='+Math.max(0, (screen.availHeight - h)/2));
           windowmain.focus();
@@ -337,7 +356,7 @@ function formatDate(strdate) {
 //----------------------------------------------------------------
 // ПОИСК ДАТЫ В МАССИВЕ СТРОК В ТАБЛИЦЕ ДЛЯ ВСТАВКИ НОВОЙ СТРОКИ
 //----------------------------------------------------------------
-function sortbydate(textCheck, textDate, textZadaniya) {
+function sortbydate(textCheck, textDate, textTimes, textZadaniya) {
   var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
   var mstextDate = Date.UTC(textDate.getFullYear(), textDate.getMonth()+1, textDate.getDate()); // возвращает количество миллисекунд 
   for ( var nrow = trStroka.length-1; nrow>0; nrow--) {    	  // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
@@ -350,10 +369,7 @@ function sortbydate(textCheck, textDate, textZadaniya) {
     var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
     if (parseFloat(mstextDate) >= parseFloat(msnewdate)) break;
   }
-  addRowTable(nrow, textCheck, textDate.toLocaleDateString(), textZadaniya);
-	//addRowTable(nrow, textCheck, textDate.getFullYear()+'-'+('0'+(textDate.getMonth()+1)).slice(-2)+'-'+('0'+textDate.getDate()).slice(-2)
-//, textZadaniya);	// slice(-2) - извлечёт два последних элемента последовательности
-
+  addRowTable(nrow, textCheck, textDate.toLocaleDateString(), textTimes, textZadaniya);
 }
 
 //----------------------------------------------------------------
@@ -363,4 +379,10 @@ function tdmiganie() {
   var idindex = ["recjob","dtins","dtedit","dtdel","dtenet","dtststus","dtcopy"];
   for (var i=0; i < idindex.length; i++)
     document.getElementById(idindex[i]).classList.remove("miganie");  
+}
+//----------------------------------------------------------------
+// ФОРМАТ ВЫВОДА ВРЕМЕНИ 00:00
+//----------------------------------------------------------------
+function checkTime(i){
+if (i<10) i="0" + i; return i;
 }

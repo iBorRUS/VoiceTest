@@ -18,7 +18,7 @@ function opentable() {
             function(){                             // нет данных то в базе, наверно она пустая
                 console.log('Создана новая таблица');
                 createTables(db);                   // Создать новую таблицу в БД
-                dbinsJob("0", mypassword, myname);  // в 1-ю запись -> пароль и имя пользователя
+                //dbinsJob("0", mypassword, "00:00", myname);  // в 1-ю запись -> пароль и имя пользователя
         });
     });
 }
@@ -28,7 +28,7 @@ function opentable() {
 function createTables(db){
     db.transaction(
         function (transaction) {
-            transaction.executeSql('CREATE TABLE mydiary (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, db_check TEXT NOT NULL DEFAULT "0", db_data TEXT NOT NULL DEFAULT "//", db_job TEXT NOT NULL DEFAULT "Новое задание");', [], nullDataHandler, errorHandler);
+            transaction.executeSql('CREATE TABLE mydiary (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, db_check TEXT NOT NULL DEFAULT "0", db_data TEXT NOT NULL DEFAULT "//", db_times TEXT NOT NULL DEFAULT "00:00", db_job TEXT NOT NULL DEFAULT "Новое задание");', [], nullDataHandler, errorHandler);
         }
     );
 }
@@ -46,7 +46,7 @@ function dbopenJob(){
                 myname = row['db_job']; mypassword = row['db_data'];
                 for (i = 1; i < len; i++) { 
                     row = results.rows.item(i);
-                    addRowTable(-1, row['db_check'], row['db_data'], row['db_job']);    // добавить строку в таблицу
+                    addRowTable(-1, row['db_check'], row['db_data'], row['db_times'], row['db_job']);    // добавить строку в таблицу
                 } 
             }, null); 
     });
@@ -55,11 +55,10 @@ function dbopenJob(){
 //-----------------------------------------------------------------------------
 //      ВСТАВИТЬ НОВУЮ СТРОКУ В ТАБЛИЦУ БД
 //-----------------------------------------------------------------------------
-function dbinsJob(newcheck, newdata, newjob){
+function dbinsJob(newcheck, newdata, newtimes, newjob){
     db.transaction(
         function (transaction) {
-            transaction.executeSql('insert into mydiary (db_check, db_data, db_job) VALUES (?, ?, ?)', [newcheck, newdata, newjob], nullDataHandler, errorHandler);
-        //alert(newjob);
+            transaction.executeSql('insert into mydiary (db_check, db_data, db_times, db_job) VALUES (?, ?, ?, ?)', [newcheck, newdata, newtimes, newjob], nullDataHandler, errorHandler);
 		}
     );
 }
@@ -71,14 +70,14 @@ function dbsaveJob(){
     var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
     if (trStroka.length <= 1) {
         alert('ОШИБКА - НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ !!!');
-        dbinsJob("0", mypassword, myname);                                  // в 1-ю запись -> пароль и имя пользователя
+        dbinsJob("0", mypassword, "00:00", myname);                         // в 1-ю запись -> пароль и имя пользователя
     } else {
         db.transaction(                                                     // Удалить все старые записи
             function(transaction){
                 transaction.executeSql("DELETE FROM mydiary", [], nullDataHandler, errorHandler);
             }
         );
-        dbinsJob("0", mypassword, myname);                                  // в 1-ю запись -> пароль и имя пользователя
+        dbinsJob("0", mypassword, "00:00", myname);                                  // в 1-ю запись -> пароль и имя пользователя
         for (var i=1;i<trStroka.length;i++)                                 // цикл по количеству строк в таблице
         {                                                                   //          0-я строка - это заголовок
             var tdStroka = trStroka[i].getElementsByTagName('td');          // получить массив всех колонок в строке
@@ -90,8 +89,10 @@ function dbsaveJob(){
                 newcheck="0";      // чекбокс не выбран
             };
             var newdata = tdStroka[1].innerHTML;
-            var newjob = tdStroka[2].innerHTML;
-            dbinsJob(newcheck, newdata, newjob);
+            var newtimes = tdStroka[2].innerHTML;
+            var newjob = tdStroka[3].innerHTML;
+
+            dbinsJob(newcheck, newdata, newtimes, newjob);
         } 
     }
     strvoice("Сохранили "+(trStroka.length-1)+" заданий");

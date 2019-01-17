@@ -311,6 +311,15 @@ input[type=date] {
     font-size: 18px;
 }
 
+.time-input {
+    color: black;
+    width: 30px;
+    margin: 1px;
+    box-sizing: border-box;
+    border: 2px solid grey;
+    font-size: 18px;
+}
+
 .miganie {
     animation: miganie 1500ms infinite;
 }
