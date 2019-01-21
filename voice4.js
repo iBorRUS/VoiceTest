@@ -243,8 +243,8 @@ function voicecommand(strcommand) {
     	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');   // получить массив всех колонок в строке
     	         var newjob = (tdStroka[3].innerHTML).toLowerCase();                // сделать все буквы маленькими
     	         if ( newjob.indexOf(strcommand) !== -1 ) {                         // нашли совпадение искомой строки
-                  onend = true;                                                   // что-то нашли в таблице заданий
-                  var str = tdStroka[1].innerHTML.split('.');                     // разделить на массив день-месяц-год
+                    onend = true;                                                   // что-то нашли в таблице заданий
+                    var str = tdStroka[1].innerHTML.split('.');                     // разделить на массив день-месяц-год
     	          	today.value = str[2]+"-"+str[1]+"-"+str[0];			                // дата -> в поле "дата"
 					hours.value = tdStroka[2].innerHTML.substr(0,2);
 					minutes.value = tdStroka[2].innerHTML.substr(-2);
@@ -272,19 +272,11 @@ function voicecommand(strcommand) {
         					var checkstat = tdStroka[0].getElementsByTagName('input');
         					checkstat[0].checked = !(checkstat[0].checked);
 							editjob = "";
-							//strvoice("Задание отмечено");
-
-						    var newdate = new Date();     		    // установить новую дату (из строки таблицы)
-						  	newdate.setDate(str[0]);            	// день
-						  	newdate.setMonth(str[1]-1);         	// месяц
-						  	newdate.setFullYear(str[2]);        	// полный год
-						    var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
-							var dd = new Date();
-							var mstoday = Date.UTC(dd.getFullYear(), dd.getMonth()+1, dd.getDate());
-
-							checkstat[0].checked  &&  (parseFloat(mstoday) > parseFloat(msnewdate)) ? 
-								trStroka[nomerstroki].style.background="#ffffff" : trStroka[nomerstroki].style.background="#ff6347";
+							twodates(tdStroka[1].innerHTML) == 1 && checkstat[0].checked  	// сегодня больше
+								? trStroka[nomerstroki].style.background="#ffffff" 			// снять выделение строки
+								: trStroka[nomerstroki].style.background="#ff6347";			// выделить строку "красным"
         					document.getElementById('dtststus').classList.remove("miganie");
+
         				break
         			}						
           			break	// выход из for... нашли задание в таблице
@@ -370,16 +362,9 @@ function formatDate(strdate) {
 //----------------------------------------------------------------
 function sortbydate(textCheck, textDate, textTimes, textZadaniya) {
   var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
-  var mstextDate = Date.UTC(textDate.getFullYear(), textDate.getMonth()+1, textDate.getDate()); // возвращает количество миллисекунд 
   for ( var nrow = trStroka.length-1; nrow>0; nrow--) {    	  // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
     var tdStroka = trStroka[nrow].getElementsByTagName('td');	// получить массив всех колонок в строке  
-    var str = tdStroka[1].innerHTML.split('.');             	// разделить строку даты на массив день-месяц-год
-    var newdate = new Date();     		    // установить новую дату (из строки таблицы)
-  	newdate.setDate(str[0]);            	// день
-  	newdate.setMonth(str[1]-1);         	// месяц
-  	newdate.setFullYear(str[2]);        	// полный год
-    var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
-    if (parseFloat(mstextDate) >= parseFloat(msnewdate)) break;
+    if (twodates(tdStroka[1].innerHTML, textDate) >= 0) break;
   }
   addRowTable(nrow, textCheck, textDate.toLocaleDateString(), textTimes, textZadaniya);
 }
@@ -397,5 +382,22 @@ function tdmiganie() {
 //----------------------------------------------------------------
 function checkTime(i){
 if (i<10) i="0" + i; return i;
+}
+
+//----------------------------------------------------------------
+// СРАВНЕНИЕ ДАТЫ С ТЕКУЩЕЙ ДАТОЙ
+//----------------------------------------------------------------
+function twodates(date1,date2){
+	var str = date1.split('.');          	// разделить строку даты на массив день-месяц-год
+    var dd, newdate = new Date();     		    // установить дату (из строки таблицы)
+  	newdate.setDate(str[0]);            	// день
+  	newdate.setMonth(str[1]-1);         	// месяц
+  	newdate.setFullYear(str[2]);        	// полный год
+    var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
+	!date2 ? dd = new Date() : dd = date2;					// текущая дата (сегодня)
+	var mstoday = Date.UTC(dd.getFullYear(), dd.getMonth()+1, dd.getDate());
+    if ( parseFloat(mstoday) > parseFloat(msnewdate))  return (1);	// сегодня больше сравниваемой даты
+    if ( parseFloat(mstoday) < parseFloat(msnewdate))  return (-1);	// сегодня меньше сравниваемой даты
+    if ( parseFloat(mstoday) == parseFloat(msnewdate))  return (0);	// сегодня равно сравниваемой дате
 }
 

@@ -173,17 +173,7 @@ var addRowTable = function(nrow, textCheck, textDate, textTimes, textZadaniya) {
     newCell2.appendChild(newText);                          // добавить 3-ю ячейку в новую стоку с новым временем
     var newText  = document.createTextNode(textZadaniya);   // присвоить переменной новое задание
 	newCell3.appendChild(newText);                          // добавить 4-ю ячейку в новую стоку с новым заданием
-	
-	var str = textDate.split('.');          // разделить строку даты на массив день-месяц-год
-    var newdate = new Date();     		    // установить новую дату (из строки таблицы)
-  	newdate.setDate(str[0]);            	// день
-  	newdate.setMonth(str[1]-1);         	// месяц
-  	newdate.setFullYear(str[2]);        	// полный год
-    var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
-	var dd = new Date();
-	var mstoday = Date.UTC(dd.getFullYear(), dd.getMonth()+1, dd.getDate());
-    if ( !newCheck.checked &&  (parseFloat(mstoday) > parseFloat(msnewdate)) ) newRow.style.background="#ff6347";
-    
+    if ( !newCheck.checked &&  twodates(textDate) == 1 ) newRow.style.background="#ff6347";	// выделить невыполненное задание
 }     
 
 //----------------------------------------------------------------
