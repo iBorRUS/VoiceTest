@@ -46,7 +46,7 @@ function myevent(kod) {
           case 1:                                    
             if (target.cellIndex >0){                         // если не check box, то "ИЗМЕНИТЬ ЗАДАНИЕ"
               job.focus();
-			  document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+			         document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
               modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "ИЗМЕНИТЬ");
             }
           break
@@ -63,7 +63,7 @@ function myevent(kod) {
           // ПРОИЗНЕСТИ ЗАДАНИЕ (click левой клавишей)
           //----------------------------------------------------------------
           case 3:
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance(tdStroka[2].innerHTML));
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(tdStroka[3].innerHTML));
           break
           //----------------------------------------------------------------
           // УДАЛИТЬ ВЫБРАННУЮ СТРОКУ (click правой клавишей)
@@ -163,8 +163,8 @@ var addRowTable = function(nrow, textCheck, textDate, textTimes, textZadaniya) {
     var newCell2  = newRow.insertCell(2);
     var newCell3  = newRow.insertCell(3);
     var newCheck = document.createElement('input');         // новая переменная для checkbox
-    newCheck.type = 'checkbox';                                  
-    if (textCheck == '1') {newCheck.checked = true;} else {newCheck.checked = false;} // указать тип переменной
+    newCheck.type = 'checkbox'; 
+    textCheck == '1' ? newCheck.checked = true : newCheck.checked = false;  // указать тип переменной
     newCell0.appendChild(newCheck);                         // добавить 1-ю ячейку в новую стоку
     var newDate  = document.createTextNode(textDate);       // присвоить переменной новую дату 
     newDate.type = 'date';
@@ -172,7 +172,18 @@ var addRowTable = function(nrow, textCheck, textDate, textTimes, textZadaniya) {
     var newText  = document.createTextNode(textTimes);      // присвоить переменной новое время
     newCell2.appendChild(newText);                          // добавить 3-ю ячейку в новую стоку с новым временем
     var newText  = document.createTextNode(textZadaniya);   // присвоить переменной новое задание
-    newCell3.appendChild(newText);                          // добавить 4-ю ячейку в новую стоку с новым заданием
+	newCell3.appendChild(newText);                          // добавить 4-ю ячейку в новую стоку с новым заданием
+	
+	var str = textDate.split('.');          // разделить строку даты на массив день-месяц-год
+    var newdate = new Date();     		    // установить новую дату (из строки таблицы)
+  	newdate.setDate(str[0]);            	// день
+  	newdate.setMonth(str[1]-1);         	// месяц
+  	newdate.setFullYear(str[2]);        	// полный год
+    var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
+	var dd = new Date();
+	var mstoday = Date.UTC(dd.getFullYear(), dd.getMonth()+1, dd.getDate());
+    if ( !newCheck.checked &&  (parseFloat(mstoday) > parseFloat(msnewdate)) ) newRow.style.background="#ff6347";
+    
 }     
 
 //----------------------------------------------------------------

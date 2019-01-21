@@ -122,8 +122,8 @@ function voicecommand(strcommand) {
     case 'статус':                                // удалить существующее задание
     	strvoice("назовите задание.");
     	editjob = 'статус';
-      tdmiganie();
-		  document.getElementById('dtststus').classList.add("miganie");    // добавить МИГАНИЕ 
+      	tdmiganie();
+		document.getElementById('dtststus').classList.add("miganie");    // добавить МИГАНИЕ 
     break
 
     case 'интернет':
@@ -227,7 +227,7 @@ function voicecommand(strcommand) {
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
-			      document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ 
+			document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ 
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
@@ -235,45 +235,58 @@ function voicecommand(strcommand) {
         //----------------------------------------------------------------
         case 'изменить':
         case 'удалить':
-    		case 'статус':
+    	case 'статус':
         case 'копия':
           var onend = false;                                                      // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');  // получить массив всех строк
             for (nomerstroki=trStroka.length-1; nomerstroki>0; nomerstroki--) {   // цикл по количеству строк в таблице
     	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');   // получить массив всех колонок в строке
-    	         var newjob = (tdStroka[2].innerHTML).toLowerCase();                // сделать все буквы маленькими
+    	         var newjob = (tdStroka[3].innerHTML).toLowerCase();                // сделать все буквы маленькими
     	         if ( newjob.indexOf(strcommand) !== -1 ) {                         // нашли совпадение искомой строки
                   onend = true;                                                   // что-то нашли в таблице заданий
                   var str = tdStroka[1].innerHTML.split('.');                     // разделить на массив день-месяц-год
     	          	today.value = str[2]+"-"+str[1]+"-"+str[0];			                // дата -> в поле "дата"
-              		job.value = tdStroka[2].innerHTML;                              // задание -> в поле "задание"
+					hours.value = tdStroka[2].innerHTML.substr(0,2);
+					minutes.value = tdStroka[2].innerHTML.substr(-2);
+              		job.value = tdStroka[3].innerHTML;                              // задание -> в поле "задание"
 					
-        					switch (editjob) {
-        						case 'изменить':
-        						  job.focus();
-                  		modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-                  		editjob = "newjob";
-        							document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
-        						break
-                    case 'копия':
-                      job.focus();
-                      modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-                      editjob = "newjob";
-                      document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
-                    break
-        						case 'удалить':
-        						  modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
-                  		editjob = "deljob";
-                  		strvoice("Удалить?");
-        						break
-        						case 'статус':
-        							var checkstat = tdStroka[0].getElementsByTagName('input');
-        						  checkstat[0].checked = !(checkstat[0].checked);
-                  		editjob = "";
-                  		strvoice("Задание отмечено");
-        							document.getElementById('dtststus').classList.remove("miganie");
-        						break
-        					}						
+        			switch (editjob) {
+						case 'изменить':
+							job.focus();
+							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+							editjob = "newjob";
+        					document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
+        				break
+						case 'копия':
+							job.focus();
+							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+							editjob = "newjob";
+							document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
+						break
+        				case 'удалить':
+							modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
+							editjob = "deljob";
+							strvoice("Удалить?");
+        				break
+        				case 'статус':
+        					var checkstat = tdStroka[0].getElementsByTagName('input');
+        					checkstat[0].checked = !(checkstat[0].checked);
+							editjob = "";
+							//strvoice("Задание отмечено");
+
+						    var newdate = new Date();     		    // установить новую дату (из строки таблицы)
+						  	newdate.setDate(str[0]);            	// день
+						  	newdate.setMonth(str[1]-1);         	// месяц
+						  	newdate.setFullYear(str[2]);        	// полный год
+						    var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
+							var dd = new Date();
+							var mstoday = Date.UTC(dd.getFullYear(), dd.getMonth()+1, dd.getDate());
+
+							checkstat[0].checked  &&  (parseFloat(mstoday) > parseFloat(msnewdate)) ? 
+								trStroka[nomerstroki].style.background="#ffffff" : trStroka[nomerstroki].style.background="#ff6347";
+        					document.getElementById('dtststus').classList.remove("miganie");
+        				break
+        			}						
           			break	// выход из for... нашли задание в таблице
 				      }	// if ( newjob.indexOf(strcommand) !== -1 )
     	      }	// for (nomerstroki=1;
@@ -327,7 +340,7 @@ function voicecommand(strcommand) {
         // ОТКРЫТЬ НОВОЕ ОКНО В goodle со сказанной строкой
         //----------------------------------------------------------------
       	case 'okgoogle':
-          var h = 900, w = 1200;
+          var h = 1000, w = 1200;
           windowmain=window.open('https://www.google.ru/search?q='+strcommand, 'contacts', 'scrollbars=1,height='+Math.min(h, screen.availHeight)+',width='+Math.min(w, screen.availWidth)+',left='+Math.max(0, (screen.availWidth - w)/2)+',top='+Math.max(0, (screen.availHeight - h)/2));
           windowmain.focus();
       	break
@@ -347,8 +360,7 @@ function formatDate(strdate) {
   var newdate = new Date();                 // установить новую СКАЗАННУЮ дату
   newdate.setDate(str[0]);                  // день
   newdate.setMonth(nmonth);                 // месяц
-  if (str.length <3) { newdate.setFullYear(newdate.getFullYear()); }
-  	else { newdate.setFullYear(str[2]); }   // полный год     
+  str.length <3 ? newdate.setFullYear(newdate.getFullYear()) : newdate.setFullYear(str[2]); // полный год
   if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); }
   return (newdate);                         // вернуть новую дату
 }
@@ -386,3 +398,4 @@ function tdmiganie() {
 function checkTime(i){
 if (i<10) i="0" + i; return i;
 }
+
