@@ -245,40 +245,39 @@ function voicecommand(strcommand) {
     	         if ( newjob.indexOf(strcommand) !== -1 ) {                         // нашли совпадение искомой строки
                     onend = true;                                                   // что-то нашли в таблице заданий
                     var str = tdStroka[1].innerHTML.split('.');                     // разделить на массив день-месяц-год
-    	          	today.value = str[2]+"-"+str[1]+"-"+str[0];			                // дата -> в поле "дата"
-					hours.value = tdStroka[2].innerHTML.substr(0,2);
-					minutes.value = tdStroka[2].innerHTML.substr(-2);
-              		job.value = tdStroka[3].innerHTML;                              // задание -> в поле "задание"
+      	          	today.value = str[2]+"-"+str[1]+"-"+str[0];			                // дата -> в поле "дата"
+          					hours.value = tdStroka[2].innerHTML.substr(0,2);
+          					minutes.value = tdStroka[2].innerHTML.substr(-2);
+                		job.value = tdStroka[3].innerHTML;                              // задание -> в поле "задание"
 					
-        			switch (editjob) {
-						case 'изменить':
-							job.focus();
-							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-							editjob = "newjob";
-        					document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
-        				break
-						case 'копия':
-							job.focus();
-							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-							editjob = "newjob";
-							document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
-						break
-        				case 'удалить':
-							modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
-							editjob = "deljob";
-							strvoice("Удалить?");
-        				break
-        				case 'статус':
-        					var checkstat = tdStroka[0].getElementsByTagName('input');
-        					checkstat[0].checked = !(checkstat[0].checked);
-							editjob = "";
-							twodates(tdStroka[1].innerHTML) == 1 && checkstat[0].checked  	// сегодня больше
-								? trStroka[nomerstroki].style.background="#ffffff" 			// снять выделение строки
-								: trStroka[nomerstroki].style.background="#ff6347";			// выделить строку "красным"
-        					document.getElementById('dtststus').classList.remove("miganie");
-
-        				break
-        			}						
+              			switch (editjob) {
+          						case 'изменить':
+          							job.focus();
+          							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+          							editjob = "newjob";
+                  					document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
+                  				break
+          						case 'копия':
+          							job.focus();
+          							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+          							editjob = "newjob";
+          							document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
+          						break
+                  				case 'удалить':
+          							modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
+          							editjob = "deljob";
+          							strvoice("Удалить?");
+                  			break
+                  			case 'статус':
+                  				var checkstat = tdStroka[0].getElementsByTagName('input');
+                  				checkstat[0].checked = !(checkstat[0].checked);
+              						editjob = "";
+              						twodates(tdStroka[1].innerHTML) == 1 && checkstat[0].checked  	// сегодня больше
+              							? trStroka[nomerstroki].style.background="#ffffff" 			// снять выделение строки
+              							: trStroka[nomerstroki].style.background="#ff6347";			// выделить строку "красным"
+                      				document.getElementById('dtststus').classList.remove("miganie");
+                  			break
+            		    } // switch (editjob)
           			break	// выход из for... нашли задание в таблице
 				      }	// if ( newjob.indexOf(strcommand) !== -1 )
     	      }	// for (nomerstroki=1;
