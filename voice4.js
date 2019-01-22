@@ -227,7 +227,7 @@ function voicecommand(strcommand) {
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
-			document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ 
+			document.getElementById('recjob').classList.add("miganie");                  // добавить МИГАНИЕ 
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
@@ -243,43 +243,42 @@ function voicecommand(strcommand) {
     	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');   // получить массив всех колонок в строке
     	         var newjob = (tdStroka[3].innerHTML).toLowerCase();                // сделать все буквы маленькими
     	         if ( newjob.indexOf(strcommand) !== -1 ) {                         // нашли совпадение искомой строки
-                    onend = true;                                                   // что-то нашли в таблице заданий
-                    var str = tdStroka[1].innerHTML.split('.');                     // разделить на массив день-месяц-год
-      	          	today.value = str[2]+"-"+str[1]+"-"+str[0];			                // дата -> в поле "дата"
+                    onend = true;                                                 // что-то нашли в таблице заданий
+                    var str = tdStroka[1].innerHTML.split('.');                   // разделить на массив день-месяц-год
+      	          	today.value = str[2]+"-"+str[1]+"-"+str[0];			              // дата -> в поле "дата"
           					hours.value = tdStroka[2].innerHTML.substr(0,2);
           					minutes.value = tdStroka[2].innerHTML.substr(-2);
-                		job.value = tdStroka[3].innerHTML;                              // задание -> в поле "задание"
+                		job.value = tdStroka[3].innerHTML;                            // задание -> в поле "задание"
 					
               			switch (editjob) {
           						case 'изменить':
           							job.focus();
           							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
           							editjob = "newjob";
-                  					document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
-                  				break
+                  			document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
+                  		break
           						case 'копия':
           							job.focus();
           							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
           							editjob = "newjob";
           							document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
           						break
-                  				case 'удалить':
+                  		case 'удалить':
           							modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
           							editjob = "deljob";
           							strvoice("Удалить?");
-                  			break
-                  			case 'статус':
-                  				var checkstat = tdStroka[0].getElementsByTagName('input');
-                          if (twodates(tdStroka[1].innerHTML) >= 0) {                 // сегодня дата больше или равно
-                    				checkstat[0].checked = !(checkstat[0].checked);
-                						
-                						checkstat[0].checked  	                                  
-                							? trStroka[nomerstroki].style.background="#ffffff" 			// снять выделение строки
-                							: trStroka[nomerstroki].style.background="#ff6347";			// выделить строку "красным"
-                        				document.getElementById('dtststus').classList.remove("miganie");
-                          } else strvoice("Рано. Событие ещё не произошло!");
-                          editjob = "";
-                  			break
+                  		break
+                  		case 'статус':
+                  			var checkstat = tdStroka[0].getElementsByTagName('input');
+                        if (twodates(tdStroka[1].innerHTML) >= 0) {                  // сегодня дата больше или равно
+                    			checkstat[0].checked = !(checkstat[0].checked);    						
+                					checkstat[0].checked  	                                  
+                						? trStroka[nomerstroki].style.background="#ffffff" 			 // снять выделение строки
+                						: trStroka[nomerstroki].style.background="#ff6347";			 // выделить строку "красным"
+                        		document.getElementById('dtststus').classList.remove("miganie");
+                            editjob = "";
+                        } else strvoice("Рано. Событие ещё не произошло!");
+                  		break
             		    } // switch (editjob)
           			break	// выход из for... нашли задание в таблице
 				      }	// if ( newjob.indexOf(strcommand) !== -1 )
@@ -292,7 +291,7 @@ function voicecommand(strcommand) {
               strvoice("скажите новую дату");
               editjob='newdate';
               strcommand="";
-      			  document.getElementById('recdate').classList.add("miganie");    // добавить МИГАНИЕ 
+      			  document.getElementById('recdate').classList.add("miganie");  // добавить МИГАНИЕ 
       			  document.getElementById('recjob').classList.remove("miganie");
             break
 
@@ -300,13 +299,12 @@ function voicecommand(strcommand) {
               strvoice("скажите новое время");
               editjob='newtimes';
               strcommand="";
-              document.getElementById('rechours').classList.add("miganie");    // добавить МИГАНИЕ 
+              document.getElementById('rechours').classList.add("miganie"); // добавить МИГАНИЕ 
               document.getElementById('recjob').classList.remove("miganie");
             break
 
             default:
               job.value = strcommand.trim().charAt(0).toUpperCase() + strcommand.trim().substr(1);  // Сделать 1-ю букву заглавной
-              //strvoice("Сохранить?");
           }
     		break
         //----------------------------------------------------------------
@@ -314,20 +312,20 @@ function voicecommand(strcommand) {
         //----------------------------------------------------------------
         case 'newdate':
           today.valueAsDate = formatDate(strcommand);
-          editjob = "newjob";                             // вернуться в окно редактирования задания
-		      document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ 
+          editjob = "newjob";                                             // вернуться в окно редактирования задания
+		      document.getElementById('recjob').classList.add("miganie");     // добавить МИГАНИЕ 
 		      document.getElementById('recdate').classList.remove("miganie");
         break
         //----------------------------------------------------------------
         // ВВОД НОВОГО ВРЕМЕНИ
         //----------------------------------------------------------------
         case 'newtimes':
-          strcommand=strcommand.replace(/[^0-9]/gim, '');               // удалить все символы кроме цифр
-          if (strcommand.length < 4) strcommand='0'+strcommand; // если час сказан одной цифрой
+          strcommand=strcommand.replace(/[^0-9]/gim, '');                 // удалить все символы кроме цифр
+          if (strcommand.length < 4) strcommand='0'+strcommand;           // если час сказан одной цифрой
           hours.value = strcommand.substr(0,2);
           minutes.value = strcommand.substr(-2);
-          editjob = "newjob";                             // вернуться в окно редактирования задания
-          document.getElementById('recjob').classList.add("miganie");    // добавить МИГАНИЕ 
+          editjob = "newjob";                                             // вернуться в окно редактирования задания
+          document.getElementById('recjob').classList.add("miganie");     // добавить МИГАНИЕ 
           document.getElementById('rechours').classList.remove("miganie");
         break
         //----------------------------------------------------------------
