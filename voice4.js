@@ -8,7 +8,7 @@ var speech = new SpeechSynthesisUtterance();        // Возвращает но
     speech.pitch = 1;                               // диапазон речи
 var voicestart = false;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
-var recognizing = false;
+var waitingrec = 0, recognizing = false;
 recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
@@ -46,7 +46,12 @@ recognizer.onstart = function(){                    // вллючился мик
 
 recognizer.onend = function(){                      // Закончилось время ожидания (примерно 15 сек)
   if (recognizing) { 
-    strvoice("Я жду команду");
+    if (waitingrec++ > 3) {
+      strvoice("Я устала ждать. Выключаюсь.");
+      recognizer.stop();                            // отключить микрофн
+      document.getElementById('micbutton').classList.remove("miganie");
+      waitingrec = 0;
+    } else strvoice("Я жду команду");
     recognizer.start();
   }
 }
@@ -235,7 +240,7 @@ function voicecommand(strcommand) {
         //----------------------------------------------------------------
         case 'изменить':
         case 'удалить':
-    	case 'статус':
+    	  case 'статус':
         case 'копия':
           var onend = false;                                                      // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');  // получить массив всех строк
@@ -270,9 +275,9 @@ function voicecommand(strcommand) {
                   		break
                   		case 'статус':
                   			var checkstat = tdStroka[0].getElementsByTagName('input');
-                        var eqldates = twodates(tdStroka[1].innerHTML);
-                        if (eqldates >= 0) {                 // сегодня дата больше или равно
-                          checkstat[0].checked = !(checkstat[0].checked);
+                        var eqldates = twodates(tdStroka[1].innerHTML);             // сравнить даты
+                        if (eqldates >= 0) {                                        // сегодня дата больше или равно
+                          checkstat[0].checked = !(checkstat[0].checked);           // снять/поставить галочку
                 					if (checkstat[0].checked)                                 // если галочка стоит,
                 						{ trStroka[nomerstroki].style.background="#ffffff"; }   //    то: снять выделение строки
                             else 			                                              // иначе: выделить строку "красным"
@@ -285,7 +290,7 @@ function voicecommand(strcommand) {
           			break	// выход из for... нашли задание в таблице
 				      }	// if ( newjob.indexOf(strcommand) !== -1 )
     	      }	// for (nomerstroki=1;
-    	        if (!onend) strvoice("нет такого задания");
+    	    if (!onend) strvoice("нет такого задания");
         	break
         case 'newjob':
           switch (strcommand) {
