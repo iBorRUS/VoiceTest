@@ -270,12 +270,15 @@ function voicecommand(strcommand) {
                   			break
                   			case 'статус':
                   				var checkstat = tdStroka[0].getElementsByTagName('input');
-                  				checkstat[0].checked = !(checkstat[0].checked);
-              						editjob = "";
-              						twodates(tdStroka[1].innerHTML) == 1 && checkstat[0].checked  	// сегодня больше
-              							? trStroka[nomerstroki].style.background="#ffffff" 			// снять выделение строки
-              							: trStroka[nomerstroki].style.background="#ff6347";			// выделить строку "красным"
-                      				document.getElementById('dtststus').classList.remove("miganie");
+                          if (twodates(tdStroka[1].innerHTML) >= 0) {                 // сегодня дата больше или равно
+                    				checkstat[0].checked = !(checkstat[0].checked);
+                						
+                						checkstat[0].checked  	                                  
+                							? trStroka[nomerstroki].style.background="#ffffff" 			// снять выделение строки
+                							: trStroka[nomerstroki].style.background="#ff6347";			// выделить строку "красным"
+                        				document.getElementById('dtststus').classList.remove("miganie");
+                          } else strvoice("Рано. Событие ещё не произошло!");
+                          editjob = "";
                   			break
             		    } // switch (editjob)
           			break	// выход из for... нашли задание в таблице
