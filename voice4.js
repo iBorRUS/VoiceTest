@@ -4,20 +4,25 @@ var editjob = "";									                  // изменение, удален�
 var speech = new SpeechSynthesisUtterance();        // Возвращает новый экземпляр объекта т.е. включает динамики (массив)
     speech.lang = 'ru-Ru';                          // Язык для диктовки текста
     speech.volume = 1;                              // громкость речи
-    speech.rate = 1;                                // темп речи
-    speech.pitch = 1;                               // диапазон речи
+    speech.rate = 1.1;                              // темп речи
+    speech.pitch = 0.9;                               // диапазон речи
 var voicestart = false;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
-var waitingrec = 0, recognizing = false;
+var recognizing = false;
 recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
 function speechmic () {                             // Включаем микрофон
-  document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
-  //if (!voicestart) { strvoice("Приветствую вас, " + myname); strvoice("Произнесите команду."); }
-  voicestart = true;
-  recognizer.start();
+  if (!voicestart) {
+    document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+    voicestart = true;
+    recognizer.start();
+  } else {
+    document.getElementById('micbutton').classList.remove("miganie");    // убрать МИГАНИЕ МИКРОФОНА
+    voicestart = false;
+    recognizer.stop();
+  }
 }
 //-----------------------------------------------------------------------------------------------
 speech.onstart = function() {                       // когда идет текст, 
@@ -46,12 +51,7 @@ recognizer.onstart = function(){                    // вллючился мик
 
 recognizer.onend = function(){                      // Закончилось время ожидания (примерно 15 сек)
   if (recognizing) { 
-    if (waitingrec++ > 3) {
-      strvoice("Я устала ждать. Выключаюсь.");
-      recognizer.stop();                            // отключить микрофн
-      document.getElementById('micbutton').classList.remove("miganie");
-      waitingrec = 0;
-    } else strvoice("Я жду команду");
+    strvoice("Я жду команду");
     recognizer.start();
   }
 }
@@ -232,7 +232,7 @@ function voicecommand(strcommand) {
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
-			document.getElementById('recjob').classList.add("miganie");                  // добавить МИГАНИЕ 
+			      document.getElementById('recjob').classList.add("miganie");                  // добавить МИГАНИЕ 
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
@@ -294,7 +294,7 @@ function voicecommand(strcommand) {
         	break
         case 'newjob':
           switch (strcommand) {
-            case 'изменить дату':
+            case 'дата':
               strvoice("скажите новую дату");
               editjob='newdate';
               strcommand="";
@@ -302,7 +302,7 @@ function voicecommand(strcommand) {
       			  document.getElementById('recjob').classList.remove("miganie");
             break
 
-            case 'изменить время':
+            case 'время':
               strvoice("скажите новое время");
               editjob='newtimes';
               strcommand="";
@@ -353,14 +353,47 @@ function voicecommand(strcommand) {
 //----------------------------------------------------------------
 function formatDate(strdate) {
   var nmonth;
+  var month = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
   var str = strdate.split(' ');             // разделить строку даты на массив день-месяц-год 
-  var month = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"]; 
+
+
+  var newdate = new Date();                 
+  newdate.setDate(today.valueAsDate.getDate());          
+  newdate.setMonth(today.valueAsDate.getMonth());                
+  newdate.setFullYear(today.valueAsDate.getFullYear());       
+
+
+  // завтра, послезавтра, через 3 дня, через 10 дней, через неделю, через 2 недели .......
+  switch (str[0]) {
+    case 'завтра': newdate.setDate(newdate.getDate()+1); break
+    case 'послезавтра':
+    case 'после завтра': newdate.setDate(newdate.getDate()+2); break
+    case 'через':
+      switch (str[2]) {
+        case 'день':
+        case 'дня':
+        case 'дней':
+          newdate.setDate(newdate.getDate()+Number(str[1]));
+        break
+      }
+    break
+    default :
+      for ( nmonth =0; nmonth < 12; nmonth++) if ( month[nmonth] == str[1].substring(0,3)) break; // поиск по первым трем символам названия месяца
+      var newdate = new Date();                 // установить новую СКАЗАННУЮ дату
+      newdate.setDate(str[0]);                  // день
+      newdate.setMonth(nmonth);                 // месяц
+      str.length <3 ? newdate.setFullYear(newdate.getFullYear()) : newdate.setFullYear(str[2]); // полный год
+      if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); return(today.valueAsDate); }
+  }
+
+/*
   for ( nmonth =0; nmonth < 12; nmonth++) if ( month[nmonth] == str[1].substring(0,3)) break; // поиск по первым трем символам названия месяца
   var newdate = new Date();                 // установить новую СКАЗАННУЮ дату
   newdate.setDate(str[0]);                  // день
   newdate.setMonth(nmonth);                 // месяц
   str.length <3 ? newdate.setFullYear(newdate.getFullYear()) : newdate.setFullYear(str[2]); // полный год
-  if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); }
+  if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); return(today.valueAsDate); }
+*/ 
   return (newdate);                         // вернуть новую дату
 }
 
@@ -394,17 +427,63 @@ if (i<10) i="0" + i; return i;
 //----------------------------------------------------------------
 // СРАВНЕНИЕ ДАТЫ С ТЕКУЩЕЙ ДАТОЙ
 //----------------------------------------------------------------
-function twodates(date1,date2){
+function twodates(date1,date2) {
 	var str = date1.split('.');          	// разделить строку даты на массив день-месяц-год
-    var dd, newdate = new Date();     		    // установить дату (из строки таблицы)
-  	newdate.setDate(str[0]);            	// день
-  	newdate.setMonth(str[1]-1);         	// месяц
-  	newdate.setFullYear(str[2]);        	// полный год
-    var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
-	!date2 ? dd = new Date() : dd = date2;					// текущая дата (сегодня)
+  var dd, newdate = new Date();     		// установить дату (из строки таблицы)
+  newdate.setDate(str[0]);            	// день
+  newdate.setMonth(str[1]-1);         	// месяц
+  newdate.setFullYear(str[2]);        	// полный год
+  var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
+	!date2 ? dd = new Date() : dd = date2;					                // текущая дата (сегодня)
 	var mstoday = Date.UTC(dd.getFullYear(), dd.getMonth()+1, dd.getDate());
-    if ( parseFloat(mstoday) > parseFloat(msnewdate))  return (1);	// сегодня больше сравниваемой даты
-    if ( parseFloat(mstoday) < parseFloat(msnewdate))  return (-1);	// сегодня меньше сравниваемой даты
-    if ( parseFloat(mstoday) == parseFloat(msnewdate))  return (0);	// сегодня равно сравниваемой дате
+  if ( parseFloat(mstoday) > parseFloat(msnewdate))  return (1);	// сегодня больше сравниваемой даты
+  if ( parseFloat(mstoday) < parseFloat(msnewdate))  return (-1);	// сегодня меньше сравниваемой даты
+  if ( parseFloat(mstoday) == parseFloat(msnewdate))  return (0);	// сегодня равно сравниваемой дате
 }
 
+/*-------------------------- ВЫВОД КАЛЕНДАРЯ В ОКНЕ -----------------------------------------
+<table id="calendar1">
+  <thead>
+    <tr><td colspan="4"><td colspan="3">
+    <tr><td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+  <tbody>
+</table>
+
+<script>
+var D1 = new Date(),
+    D1last = new Date(D1.getFullYear(),D1.getMonth()+1,0).getDate(), // последний день месяца
+    D1Nlast = new Date(D1.getFullYear(),D1.getMonth(),D1last).getDay(), // день недели последнего дня месяца
+    D1Nfirst = new Date(D1.getFullYear(),D1.getMonth(),1).getDay(), // день недели первого дня месяца
+    calendar1 = '<tr>',
+    month=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"]; // название месяца, вместо цифр 0-11
+
+// пустые клетки до первого дня текущего месяца
+if (D1Nfirst != 0) {
+  for(var  i = 1; i < D1Nfirst; i++) calendar1 += '<td>';
+}else{ // если первый день месяца выпадает на воскресенье, то требуется 7 пустых клеток 
+  for(var  i = 0; i < 6; i++) calendar1 += '<td>';
+}
+
+// дни месяца
+for(var  i = 1; i <= D1last; i++) {
+  if (i != D1.getDate()) {
+    calendar1 += '<td>' + i;
+  }else{
+    calendar1 += '<td id="today">' + i;  // сегодняшней дате можно задать стиль CSS
+  }
+  if (new Date(D1.getFullYear(),D1.getMonth(),i).getDay() == 0) {  // если день выпадает на воскресенье, то перевод строки
+    calendar1 += '<tr>';
+  }
+}
+
+// пустые клетки после последнего дня месяца
+if (D1Nlast != 0) {
+  for(var  i = D1Nlast; i < 7; i++) calendar1 += '<td>';
+}
+
+document.querySelector('#calendar1 tbody').innerHTML = calendar1;
+document.querySelector('#calendar1 thead td:last-child').innerHTML = D1.getFullYear();
+document.querySelector('#calendar1 thead td:first-child').innerHTML = month[D1.getMonth()];
+</script>
+
+---------------------------- ВЫВОД КАЛЕНДАРЯ В ОКНЕ -----------------------------------------*/
