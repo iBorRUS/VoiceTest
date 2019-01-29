@@ -5,6 +5,7 @@ var errmodalopen = false;                         // открыто окно с 
 var timeclick;                                    // интервал ожидания функции "setTimeout"
 var target;                                       // где был клик?
 var btnCode;                                      // 0 - левая клавиша, 2 - правая клавиша мышки
+var selectjob = 0;								  // просроченные задания
 
 function bodyclick(){
   target = event.target;                          // где был клик?
@@ -172,8 +173,11 @@ var addRowTable = function(nrow, textCheck, textDate, textTimes, textZadaniya) {
     var newText  = document.createTextNode(textTimes);      // присвоить переменной новое время
     newCell2.appendChild(newText);                          // добавить 3-ю ячейку в новую стоку с новым временем
     var newText  = document.createTextNode(textZadaniya);   // присвоить переменной новое задание
-	newCell3.appendChild(newText);                          // добавить 4-ю ячейку в новую стоку с новым заданием
-    if ( !newCheck.checked &&  twodates(textDate) == 1 ) newRow.style.background="#ff6347";	// выделить невыполненное задание
+	  newCell3.appendChild(newText);                        // добавить 4-ю ячейку в новую стоку с новым заданием
+    if ( !newCheck.checked &&  twodates(textDate) == 1 ) {
+		selectjob ++;										// подсчет просроченных заданий
+		newRow.style.background="#ff6347";					// выделить не выполненное задание
+	}
 }     
 
 //----------------------------------------------------------------

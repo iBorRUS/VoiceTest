@@ -4,14 +4,32 @@ var editjob = "";									                  // изменение, удален�
 var speech = new SpeechSynthesisUtterance();        // Возвращает новый экземпляр объекта т.е. включает динамики (массив)
     speech.lang = 'ru-Ru';                          // Язык для диктовки текста
     speech.volume = 1;                              // громкость речи
-    speech.rate = 1.1;                              // темп речи
-    speech.pitch = 0.9;                               // диапазон речи
+    speech.rate = 1;                              // темп речи
+    speech.pitch = 1;                               // диапазон речи
 var voicestart = false;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
 var recognizing = false;
 recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
+
+//-------------------------------------------------------------------
+//    АВТОЗАГРУЗКА 
+//-------------------------------------------------------------------
+window.onload = function(){
+	dbopenJob();
+	setTimeout(function(){ 
+		document.getElementById('errmodaltext').innerHTML = "Найдено "+selectjob+" не выполненных задания"
+		document.getElementById('errModal').className = 'errmodal';
+        document.getElementById('errModal').style.display = "block";
+        modaltitle = 'ВНИМАНИЕ !!!';
+        errmodalopen = true;
+
+
+		 //strvoice("Найдено "+selectjob+" не выполненных задания"); 
+	}, 1000);	
+}
+
 
 function speechmic () {                             // Включаем микрофон
   if (!voicestart) {
@@ -43,6 +61,7 @@ recognizer.onresult = function (event) {            // Вызывается ес
 }
 
 recognizer.onstart = function(){                    // вллючился микрофон
+	
   //document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   //if (!voicestart) strvoice("Произнесите команду."); 
@@ -55,6 +74,8 @@ recognizer.onend = function(){                      // Закончилось в
     recognizer.start();
   }
 }
+
+
 //----------------------------------------------------------------
 // ПРОИЗНЕСТИ КОМАНДУ 
 //----------------------------------------------------------------
@@ -162,7 +183,8 @@ function voicecommand(strcommand) {
             //----------------------------------------------------------------
             // НЕТ ДАТЫ ИЛИ ТЕКСТА ЗАДАНИЯ
             //----------------------------------------------------------------
-            soundClick();
+            soundClick();									// включить смех
+            document.getElementById('errmodaltext').innerHTML = "ОШИБКА - НЕТ ТЕКСТА ЗАДАНИЯ !!!"
             document.getElementById('errModal').className = 'errmodal';
             document.getElementById('errModal').style.display = "block";
             modaltitle = 'ВНИМАНИЕ !!!';
@@ -355,14 +377,10 @@ function formatDate(strdate) {
   var nmonth;
   var month = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
   var str = strdate.split(' ');             // разделить строку даты на массив день-месяц-год 
-
-
   var newdate = new Date();                 
   newdate.setDate(today.valueAsDate.getDate());          
   newdate.setMonth(today.valueAsDate.getMonth());                
   newdate.setFullYear(today.valueAsDate.getFullYear());       
-
-
   // завтра, послезавтра, через 3 дня, через 10 дней, через неделю, через 2 недели .......
   switch (str[0]) {
     case 'завтра': newdate.setDate(newdate.getDate()+1); break

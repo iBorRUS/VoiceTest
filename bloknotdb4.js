@@ -37,6 +37,8 @@ function createTables(db){
 //      ОТКРЫТЬ ТАБЛИЦУ БД ДЛЯ ПРОСМОТРА (автозагрузка с диска)
 //-----------------------------------------------------------------------------
 function dbopenJob(){
+    // начать повторы с интервалом 10 сек
+    //var timerId = setInterval(function() { console.log( "тик" ); }, 10000);
     opentable();
     db.transaction(function (transaction) { 
         transaction.executeSql('SELECT * from mydiary', [], 
@@ -83,11 +85,7 @@ function dbsaveJob(){
             var tdStroka = trStroka[i].getElementsByTagName('td');          // получить массив всех колонок в строке
             var td = trStroka[i].querySelectorAll("td")[0];                 // Берем 1-ю ячейку в строке
             var checkbox = td.querySelector("input[type='checkbox']");      // Берем чекбокс
-            if (checkbox.checked) {                                         // Если чекбок с галоччкой (отмечен)
-                newcheck="1";      // чекбокс выбран                        
-            } else {
-                newcheck="0";      // чекбокс не выбран
-            };
+            checkbox.checked ? newcheck="1" : newcheck="0";                 // Если чекбок с галоччкой (отмечен)
             var newdata = tdStroka[1].innerHTML;
             var newtimes = tdStroka[2].innerHTML;
             var newjob = tdStroka[3].innerHTML;
