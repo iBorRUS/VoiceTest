@@ -18,16 +18,16 @@ recognizer.continuous = true;                     	// когда пользов�
 //-------------------------------------------------------------------
 window.onload = function(){
 	dbopenJob();
-	setTimeout(function(){ 
-		document.getElementById('errmodaltext').innerHTML = "Найдено "+selectjob+" не выполненных задания"
-		document.getElementById('errModal').className = 'errmodal';
-        document.getElementById('errModal').style.display = "block";
-        modaltitle = 'ВНИМАНИЕ !!!';
-        errmodalopen = true;
-
-
-		 //strvoice("Найдено "+selectjob+" не выполненных задания"); 
-	}, 1000);	
+	if(selectjob) {
+		setTimeout(function(){ 
+			document.getElementById('errmodaltext').innerHTML = "Найдено "+selectjob+" не выполненных задания"
+			document.getElementById('errModal').className = 'errmodal';
+	        document.getElementById('errModal').style.display = "block";
+	        modaltitle = 'ВНИМАНИЕ !!!';
+	        errmodalopen = true;
+			 //strvoice("Найдено "+selectjob+" не выполненных задания"); 
+		}, 500);
+	}	
 }
 
 
