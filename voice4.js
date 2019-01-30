@@ -11,7 +11,7 @@ var recognizer = new webkitSpeechRecognition();   	// Создаем распо�
 var recognizing = false;
 recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
-recognizer.continuous = false;                     	// когда пользователь прекратил говорить, распознование не закончилось
+recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
 //-------------------------------------------------------------------
 //    АВТОЗАГРУЗКА 
@@ -117,7 +117,7 @@ function voicecommand(strcommand) {
       tdmiganie();
       editjob = 'новое';
       strcommand="";
-	    document.getElementById('dtins').classList.add("miganie");    // добавить МИГАНИЕ 
+	  document.getElementById('dtins').classList.add("miganie");    // добавить МИГАНИЕ 
       voicecommand(strcommand);
     break
 	
@@ -254,7 +254,7 @@ function voicecommand(strcommand) {
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
-			      document.getElementById('recjob').classList.add("miganie");                  // добавить МИГАНИЕ 
+			document.getElementById('recjob').classList.add("miganie");                  // добавить МИГАНИЕ 
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
@@ -267,15 +267,15 @@ function voicecommand(strcommand) {
           var onend = false;                                                      // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');  // получить массив всех строк
             for (nomerstroki=trStroka.length-1; nomerstroki>0; nomerstroki--) {   // цикл по количеству строк в таблице
-    	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');   // получить массив всех колонок в строке
-    	         var newjob = (tdStroka[3].innerHTML).toLowerCase();                // сделать все буквы маленькими
-    	         if ( newjob.indexOf(strcommand) !== -1 ) {                         // нашли совпадение искомой строки
+    	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td'); // получить массив всех колонок в строке
+    	         var newjob = (tdStroka[3].innerHTML).toLowerCase();              // сделать все буквы маленькими
+    	         if ( newjob.indexOf(strcommand) !== -1 ) {                       // нашли совпадение искомой строки
                     onend = true;                                                 // что-то нашли в таблице заданий
                     var str = tdStroka[1].innerHTML.split('.');                   // разделить на массив день-месяц-год
-      	          	today.value = str[2]+"-"+str[1]+"-"+str[0];			              // дата -> в поле "дата"
-          					hours.value = tdStroka[2].innerHTML.substr(0,2);
-          					minutes.value = tdStroka[2].innerHTML.substr(-2);
-                		job.value = tdStroka[3].innerHTML;                            // задание -> в поле "задание"
+      	          	today.value = str[2]+"-"+str[1]+"-"+str[0];			          // дата -> в поле "дата"
+          			hours.value = tdStroka[2].innerHTML.substr(0,2);
+          			minutes.value = tdStroka[2].innerHTML.substr(-2);
+                	job.value = tdStroka[3].innerHTML;                            // задание -> в поле "задание"
 					
               			switch (editjob) {
           				case 'изменить':
