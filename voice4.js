@@ -11,7 +11,7 @@ var recognizer = new webkitSpeechRecognition();   	// Создаем распо�
 var recognizing = false;
 recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
-recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
+recognizer.continuous = false;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
 //-------------------------------------------------------------------
 //    АВТОЗАГРУЗКА 
@@ -377,15 +377,17 @@ function formatDate(strdate) {
   var nmonth;
   var month = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
   var str = strdate.split(' ');             // разделить строку даты на массив день-месяц-год 
-  var newdate = new Date();                 
-  newdate.setDate(today.valueAsDate.getDate());          
-  newdate.setMonth(today.valueAsDate.getMonth());                
-  newdate.setFullYear(today.valueAsDate.getFullYear());       
+  var newdate = new Date(); 
+
   // завтра, послезавтра, через 3 дня, через 10 дней, через неделю, через 2 недели .......
   switch (str[0]) {
-    case 'завтра': newdate.setDate(newdate.getDate()+1); break
+    case 'завтра':
+    	newdate.setDate(newdate.getDate()+1); 
+    break
     case 'послезавтра':
-    case 'после завтра': newdate.setDate(newdate.getDate()+2); break
+    case 'после завтра':
+    	newdate.setDate(newdate.getDate()+2); 
+    break
     case 'через':
       switch (str[2]) {
         case 'день':
@@ -403,15 +405,6 @@ function formatDate(strdate) {
       str.length <3 ? newdate.setFullYear(newdate.getFullYear()) : newdate.setFullYear(str[2]); // полный год
       if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); return(today.valueAsDate); }
   }
-
-/*
-  for ( nmonth =0; nmonth < 12; nmonth++) if ( month[nmonth] == str[1].substring(0,3)) break; // поиск по первым трем символам названия месяца
-  var newdate = new Date();                 // установить новую СКАЗАННУЮ дату
-  newdate.setDate(str[0]);                  // день
-  newdate.setMonth(nmonth);                 // месяц
-  str.length <3 ? newdate.setFullYear(newdate.getFullYear()) : newdate.setFullYear(str[2]); // полный год
-  if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); return(today.valueAsDate); }
-*/ 
   return (newdate);                         // вернуть новую дату
 }
 
@@ -446,12 +439,9 @@ if (i<10) i="0" + i; return i;
 // СРАВНЕНИЕ ДАТЫ С ТЕКУЩЕЙ ДАТОЙ
 //----------------------------------------------------------------
 function twodates(date1,date2) {
-  if (!date2) date2= new Date();
-  var str = date1.split('.');          			// разделить строку даты на массив день-месяц-год
+  if (!date2) date2 = new Date();
+  var str = date1.split('.');          	// разделить строку даты на массив день-месяц-год
   var intstr1 = str[2]+str[1]+str[0];	// дата -> в число yyyymmdd
-  //var mmstr = date2.getMonth()+1 <10 ? "0"+String(date2.getMonth()+1) : String(date2.getMonth()+1);
-  //var ddstr = date2.getDate()<10 ? "0"+date2.getDate() : date2.getDate() ;
-  //var intstr2 = String(date2.getFullYear())+mmstr+ddstr;
   var intstr2 = String(date2.getFullYear())+checkTime(date2.getMonth()+1)+checkTime(date2.getDate());
   if (intstr2 > intstr1) return (1);	// сегодня больше сравниваемой даты
   if (intstr2 < intstr1) return (-1);	// сегодня меньше сравниваемой даты
