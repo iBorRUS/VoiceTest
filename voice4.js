@@ -42,6 +42,7 @@ function speechmic () {                             // Включаем микр
     recognizer.stop();
   }
 }
+
 //-----------------------------------------------------------------------------------------------
 speech.onstart = function() {                       // когда идет текст, 
   recognizer.stop();                                //                  отключить микрофн
@@ -56,12 +57,12 @@ speech.onend = function() {                         // когда текст з�
 recognizer.onresult = function (event) {            // Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];    // содержит все данные, связанные с конечным результатом распознавания речи
   if (result.isFinal) {                             // результат является окончательным
+  	console.log('result[0].transcript= '+result[0].transcript.trim().toLowerCase());
     voicecommand((result[0].transcript).trim().toLowerCase());	// удалиь пробелы слева и справа, все буквы - мленькие
   } 
 }
 
 recognizer.onstart = function(){                    // вллючился микрофон
-	
   //document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
   //if (!voicestart) strvoice("Произнесите команду."); 
@@ -80,7 +81,7 @@ recognizer.onend = function(){                      // Закончилось в
 // ПРОИЗНЕСТИ КОМАНДУ 
 //----------------------------------------------------------------
 function strvoice(textvoice){
-  speech.text = textvoice;					  		        // текстовая строка 
+  speech.text = textvoice;					  		// текстовая строка 
   window.speechSynthesis.speak(speech);         	// произнести тестовую строку
 }
   
@@ -197,13 +198,12 @@ function voicecommand(strcommand) {
         break
         case "УДАЛИТЬ ЗАДАНИЕ":
           document.getElementById("myTable").deleteRow(nomerstroki);
+          strvoice("Задание удалено");
         break
       } // switch (modaltitle)
 
       if (!errmodalopen) {
         modal.className = 'modal-out';                  // поменять класс на <Закрытие модального окна>
-        today.removeAttribute('readonly');
-        job.removeAttribute('readonly'); 
         editjob = "";
         modaltitle = "";
         tdmiganie();
@@ -223,7 +223,7 @@ function voicecommand(strcommand) {
         case 'НОВОЕ ЗАДАНИЕ':
   	    case 'ИЗМЕНИТЬ ЗАДАНИЕ':
   	    case 'УДАЛИТЬ ЗАДАНИЕ':
-  	     	modal.className = 'modal-out';                  // поменять класс на <Закрытие модального окна>
+  	      modal.className = 'modal-out';                  // поменять класс на <Закрытие модального окна>
   	      editjob = "";
           modaltitle = "";
           tdmiganie();
@@ -262,9 +262,9 @@ function voicecommand(strcommand) {
         //----------------------------------------------------------------
         case 'изменить':
         case 'удалить':
-    	  case 'статус':
+    	case 'статус':
         case 'копия':
-          var onend = false;                                                      // если что то нашли, то = true
+          	var onend = false;                                                    // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');  // получить массив всех строк
             for (nomerstroki=trStroka.length-1; nomerstroki>0; nomerstroki--) {   // цикл по количеству строк в таблице
     	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td'); // получить массив всех колонок в строке
@@ -291,26 +291,26 @@ function voicecommand(strcommand) {
           					document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
           				break
                   		case 'удалить':
-          							modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
-          							editjob = "deljob";
-          							strvoice("Удалить?");
+          					modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
+          					//editjob = "deljob";
+          					strvoice("Удалить?");
                   		break
                   		case 'статус':
                   			var checkstat = tdStroka[0].getElementsByTagName('input');
-                        var eqldates = twodates(tdStroka[1].innerHTML);             // сравнить даты
-                        if (eqldates >= 0) {                                        // сегодня дата больше или равно
-                          checkstat[0].checked = !(checkstat[0].checked);           // снять/поставить галочку
-                			if (checkstat[0].checked)                                 	// если галочка стоит,
-                				{ trStroka[nomerstroki].style.background="#ffffff"; }   //    то: снять выделение строки
-                            else 			                                            // иначе: выделить строку "красным"
-                				{ if(eqldates != 0) trStroka[nomerstroki].style.background="#ff6347";	}		 
-                        } else strvoice("Рано. Событие ещё не произошло!");
-                        document.getElementById('dtststus').classList.remove("miganie");
-                        editjob = "";
+	                        var eqldates = twodates(tdStroka[1].innerHTML);             // сравнить даты
+	                        if (eqldates >= 0) {                                        // сегодня дата больше или равно
+                          		checkstat[0].checked = !(checkstat[0].checked);           // снять/поставить галочку
+                				if (checkstat[0].checked)                                 	// если галочка стоит,
+                					{ trStroka[nomerstroki].style.background="#ffffff"; }   //    то: снять выделение строки
+                            	else 			                                            // иначе: выделить строку "красным"
+                					{ if(eqldates != 0) trStroka[nomerstroki].style.background="#ff6347";	}		 
+                        	} else strvoice("Рано. Событие ещё не произошло!");
+	                        document.getElementById('dtststus').classList.remove("miganie");
+	                        editjob = "";
                   		break
             		    } // switch (editjob)
           			break	// выход из for... нашли задание в таблице
-				      }	// if ( newjob.indexOf(strcommand) !== -1 )
+				  }	// if ( newjob.indexOf(strcommand) !== -1 )
     	      }	// for (nomerstroki=1;
     	    if (!onend) strvoice("нет такого задания");
         	break
