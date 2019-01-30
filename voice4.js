@@ -17,18 +17,17 @@ recognizer.continuous = true;                     	// когда пользов�
 //    АВТОЗАГРУЗКА 
 //-------------------------------------------------------------------
 window.onload = function(){
-	dbopenJob();
-	
-		setTimeout(function(){
-		  if(selectjob) {
-			document.getElementById('errmodaltext').innerHTML = "Найдено "+selectjob+" не выполненных задания"
-			document.getElementById('errModal').className = 'errmodal';
-	        document.getElementById('errModal').style.display = "block";
-	        modaltitle = 'ВНИМАНИЕ !!!';
-	        errmodalopen = true;
-			 //strvoice("Найдено "+selectjob+" не выполненных задания"); 
-		  }
-		}, 500);
+  dbopenJob();
+	setTimeout(function(){
+	  if(selectjob) {
+		document.getElementById('errmodaltext').innerHTML = "Найдено "+selectjob+" не выполненных задания"
+		document.getElementById('errModal').className = 'errmodal';
+		document.getElementById('errModal').style.display = "block";
+		modaltitle = 'ВНИМАНИЕ !!!';
+		errmodalopen = true;
+		//strvoice("Найдено "+selectjob+" не выполненных задания"); 
+	  }
+	}, 500);
 }
 
 
@@ -279,18 +278,18 @@ function voicecommand(strcommand) {
                 		job.value = tdStroka[3].innerHTML;                            // задание -> в поле "задание"
 					
               			switch (editjob) {
-          						case 'изменить':
-          							job.focus();
-          							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-          							editjob = "newjob";
+          				case 'изменить':
+          					job.focus();
+          					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+          					editjob = "newjob";
                   			document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
                   		break
-          						case 'копия':
-          							job.focus();
-          							modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-          							editjob = "newjob";
-          							document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
-          						break
+          				case 'копия':
+          					job.focus();
+          					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+          					editjob = "newjob";
+          					document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
+          				break
                   		case 'удалить':
           							modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
           							editjob = "deljob";
@@ -301,10 +300,10 @@ function voicecommand(strcommand) {
                         var eqldates = twodates(tdStroka[1].innerHTML);             // сравнить даты
                         if (eqldates >= 0) {                                        // сегодня дата больше или равно
                           checkstat[0].checked = !(checkstat[0].checked);           // снять/поставить галочку
-                					if (checkstat[0].checked)                                 // если галочка стоит,
-                						{ trStroka[nomerstroki].style.background="#ffffff"; }   //    то: снять выделение строки
-                            else 			                                              // иначе: выделить строку "красным"
-                						{ if(eqldates != 0) trStroka[nomerstroki].style.background="#ff6347";	}		 
+                			if (checkstat[0].checked)                                 	// если галочка стоит,
+                				{ trStroka[nomerstroki].style.background="#ffffff"; }   //    то: снять выделение строки
+                            else 			                                            // иначе: выделить строку "красным"
+                				{ if(eqldates != 0) trStroka[nomerstroki].style.background="#ff6347";	}		 
                         } else strvoice("Рано. Событие ещё не произошло!");
                         document.getElementById('dtststus').classList.remove("miganie");
                         editjob = "";
@@ -321,8 +320,8 @@ function voicecommand(strcommand) {
               strvoice("скажите новую дату");
               editjob='newdate';
               strcommand="";
-      			  document.getElementById('recdate').classList.add("miganie");  // добавить МИГАНИЕ 
-      			  document.getElementById('recjob').classList.remove("miganie");
+      		  document.getElementById('recdate').classList.add("miganie");  // добавить МИГАНИЕ 
+      		  document.getElementById('recjob').classList.remove("miganie");
             break
 
             case 'время':
@@ -343,8 +342,8 @@ function voicecommand(strcommand) {
         case 'newdate':
           today.valueAsDate = formatDate(strcommand);
           editjob = "newjob";                                             // вернуться в окно редактирования задания
-		      document.getElementById('recjob').classList.add("miganie");     // добавить МИГАНИЕ 
-		      document.getElementById('recdate').classList.remove("miganie");
+		  document.getElementById('recjob').classList.add("miganie");     // добавить МИГАНИЕ 
+		  document.getElementById('recdate').classList.remove("miganie");
         break
         //----------------------------------------------------------------
         // ВВОД НОВОГО ВРЕМЕНИ
@@ -447,17 +446,16 @@ if (i<10) i="0" + i; return i;
 // СРАВНЕНИЕ ДАТЫ С ТЕКУЩЕЙ ДАТОЙ
 //----------------------------------------------------------------
 function twodates(date1,date2) {
-	var str = date1.split('.');          	// разделить строку даты на массив день-месяц-год
-  var dd, newdate = new Date();     		// установить дату (из строки таблицы)
-  newdate.setDate(str[0]);            	// день
-  newdate.setMonth(str[1]-1);         	// месяц
-  newdate.setFullYear(str[2]);        	// полный год
-  var msnewdate = Date.UTC(newdate.getFullYear(), newdate.getMonth()+1, newdate.getDate());
-	!date2 ? dd = new Date() : dd = date2;					                // текущая дата (сегодня)
-	var mstoday = Date.UTC(dd.getFullYear(), dd.getMonth()+1, dd.getDate());
-  if ( parseFloat(mstoday) > parseFloat(msnewdate))  return (1);	// сегодня больше сравниваемой даты
-  if ( parseFloat(mstoday) < parseFloat(msnewdate))  return (-1);	// сегодня меньше сравниваемой даты
-  if ( parseFloat(mstoday) == parseFloat(msnewdate))  return (0);	// сегодня равно сравниваемой дате
+  if (!date2) date2= new Date();
+  var str = date1.split('.');          			// разделить строку даты на массив день-месяц-год
+  var intstr1 = str[2]+str[1]+str[0];	// дата -> в число yyyymmdd
+  //var mmstr = date2.getMonth()+1 <10 ? "0"+String(date2.getMonth()+1) : String(date2.getMonth()+1);
+  //var ddstr = date2.getDate()<10 ? "0"+date2.getDate() : date2.getDate() ;
+  //var intstr2 = String(date2.getFullYear())+mmstr+ddstr;
+  var intstr2 = String(date2.getFullYear())+checkTime(date2.getMonth()+1)+checkTime(date2.getDate());
+  if (intstr2 > intstr1) return (1);	// сегодня больше сравниваемой даты
+  if (intstr2 < intstr1) return (-1);	// сегодня меньше сравниваемой даты
+  if (intstr2 == intstr1) return (0);	// сегодня равно сравниваемой дате
 }
 
 /*-------------------------- ВЫВОД КАЛЕНДАРЯ В ОКНЕ -----------------------------------------
