@@ -76,7 +76,6 @@ recognizer.onend = function(){                      // Закончилось в
   }
 }
 
-
 //----------------------------------------------------------------
 // ПРОИЗНЕСТИ КОМАНДУ 
 //----------------------------------------------------------------
@@ -147,7 +146,7 @@ function voicecommand(strcommand) {
     break
 
     case 'статус':                                // удалить существующее задание
-    	strvoice("назовите задание.");
+    	strvoice("назовите задание");
     	editjob = 'статус';
       	tdmiganie();
 		document.getElementById('dtststus').classList.add("miganie");    // добавить МИГАНИЕ 
@@ -198,7 +197,7 @@ function voicecommand(strcommand) {
         break
         case "УДАЛИТЬ ЗАДАНИЕ":
           document.getElementById("myTable").deleteRow(nomerstroki);
-          strvoice("Задание удалено");
+          strvoice("удалили");
         break
       } // switch (modaltitle)
 
