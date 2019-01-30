@@ -1,14 +1,14 @@
 var windowmain;                                     // указатель на окно с открытым приложением
-var modaltitle = "";								                // Заголовок текущего окна
-var editjob = "";									                  // изменение, удаление задания
+var modaltitle = "";								// Заголовок текущего окна
+var editjob = "";									// изменение, удаление задания
 var speech = new SpeechSynthesisUtterance();        // Возвращает новый экземпляр объекта т.е. включает динамики (массив)
     speech.lang = 'ru-Ru';                          // Язык для диктовки текста
     speech.volume = 1;                              // громкость речи
-    speech.rate = 1;                              // темп речи
+    speech.rate = 1;                              	// темп речи
     speech.pitch = 1;                               // диапазон речи
-var voicestart = false;                             // флаг 1-го включения микрофона
+var voicestart = 0;                             // флаг 1-го включения микрофона
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
-var recognizing = false;
+var recognizing = false;							// идет (ожидание) процесс записи голосовой команды
 recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
@@ -34,11 +34,12 @@ window.onload = function(){
 function speechmic () {                             // Включаем микрофон
   if (!voicestart) {
     document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
-    voicestart = true;
+    strvoice("Произнесите команду"); 
+    voicestart = 1;
     recognizer.start();
   } else {
     document.getElementById('micbutton').classList.remove("miganie");    // убрать МИГАНИЕ МИКРОФОНА
-    voicestart = false;
+    voicestart = 0;
     recognizer.stop();
   }
 }
@@ -49,7 +50,9 @@ speech.onstart = function() {                       // когда идет те�
   recognizing = false;                              //
 }                                                   
 speech.onend = function() {                         // когда текст закончился, 
-  if (!recognizing) recognizer.start();             //                        включить микрофон
+  if (!recognizing && voicestart < 4) {
+  	recognizer.start();             //                        включить микрофон
+  } else { voicestart = 0; }
   recognizing = true;                               //
 }
 //-----------------------------------------------------------------------------------------------
@@ -57,7 +60,6 @@ speech.onend = function() {                         // когда текст з�
 recognizer.onresult = function (event) {            // Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];    // содержит все данные, связанные с конечным результатом распознавания речи
   if (result.isFinal) {                             // результат является окончательным
-  	console.log('result[0].transcript= '+result[0].transcript.trim().toLowerCase());
     voicecommand((result[0].transcript).trim().toLowerCase());	// удалиь пробелы слева и справа, все буквы - мленькие
   } 
 }
@@ -65,14 +67,20 @@ recognizer.onresult = function (event) {            // Вызывается ес
 recognizer.onstart = function(){                    // вллючился микрофон
   //document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
   //if (!voicestart) strvoice("Приветствую вас, " + myname);
-  //if (!voicestart) strvoice("Произнесите команду."); 
+  //if (!voicestart) strvoice("Произнесите команду"); 
   //voicestart = true;
 }
 
 recognizer.onend = function(){                      // Закончилось время ожидания (примерно 15 сек)
   if (recognizing) { 
-    strvoice("Я жду команду");
-    recognizer.start();
+  	if (++voicestart < 4) {
+    	strvoice("Я жду команду");
+    	recognizer.start();
+	} else {
+		document.getElementById('micbutton').classList.remove("miganie");    // убрать МИГАНИЕ МИКРОФОНА
+		strvoice("Я устала ждать. Отключаюсь");
+    	recognizer.stop();
+	}
   }
 }
 
