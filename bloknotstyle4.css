@@ -252,6 +252,23 @@ th, td {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* голосовые команды */
+.command {
+    padding: 2px 10px;
+    border-radius: 5px;
+    color: black;
+    font-size: 16px;
+}
+/* навели курсор на кнопку -> изменился цвет кнопки */
+.command:hover,
+.command:focus {
+    background-color: #0000ff;
+    color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 /* заголовок модального окна */
 .modal-header {
     border-radius: 10px 10px 0px 0px;

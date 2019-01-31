@@ -7,6 +7,7 @@
   <script src="voice4.js"></script>
   <script src="bloknot4.js"></script>
   <script src="bloknotdb4.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 </head>
 
 <body id="mybody" onclick="bodyclick()" oncontextmenu="bodyclick(); return false;">
@@ -46,27 +47,27 @@
 <div class="theadhelp">
   <h>Голосовые команды:</h>
   <dl>
-    <dt id="dtins">- Добавить</dt>
+    <dt id="dtins" class="command">- Добавить</dt>
         <dd>- Дата</dd>
         <dd>- Время</dd>
         <dd>- Сохранить</dd>
         <dd>- Закрыть</dd>
-    <dt id="dtedit">- Изменить</dt>
+    <dt id="dtedit"class="command">- Изменить</dt>
         <dd>- Дата</dd>
         <dd>- Время</dd>
         <dd>- Сохранить</dd>
         <dd>- Закрыть</dd>
-    <dt id="dtdel">- Удалить</dt>
+    <dt id="dtdel" class="command">- Удалить</dt>
         <dd>- Да</dd>
         <dd>- Закрыть</dd>
-    <dt id="dtenet">- Интернет</dt>
+    <dt id="dtenet" class="command">- Интернет</dt>
         <dd>- Закрыть интернет</dd>
-  	<dt id="dtcopy">- Копия</dt>
-    <dt id="dtststus">- Статус</dt>
-    <dt>- Ниже</dt>
-    <dt>- Выше</dt>
-    <dt>- Сохранить таблицу</dt>
-    <dt>- Закрыть программу</dt>
+  	<dt id="dtcopy" class="command">- Копия</dt>
+    <dt id="dtststus" class="command">- Статус</dt>
+    <dt class="command">- Ниже</dt>
+    <dt class="command">- Выше</dt>
+    <dt class="command">- Сохранить таблицу</dt>
+    <dt class="command">- Закрыть программу</dt>
   </dl>
   <button id="micbutton" class="mic" onclick="speechmic ()" style="margin-left: 30%;"> </button>
 </div>

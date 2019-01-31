@@ -77,11 +77,13 @@ recognizer.onend = function(){                      // Закончилось в
   	if (++voicestart < 3) {
     	strvoice("Я жду команду");
     	recognizer.start();
-	} else {
+	} 
+  else {
 		document.getElementById('micbutton').classList.remove("miganie");    // убрать МИГАНИЕ МИКРОФОНА
 		strvoice("Я устала ждать. Отключаюсь");
     	recognizer.stop();
-	}
+	 }
+
   }
 }
 

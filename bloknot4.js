@@ -22,12 +22,29 @@ function bodyclick(){
 }
 
 function myevent(kod) {
-  //alert("nomerstroki="+nomerstroki+ "  kod="+kod+ " btnCode="+btnCode+"  tagName="+target.tagName+"  class="+target.className);
+  //alert("id="+target.id + "  kod="+kod+ " btnCode="+btnCode+"  tagName="+target.tagName+"  class="+target.className);
   var modal = document.getElementById('myModal'); // указатель на модальное окно с ключевыми фразами
   var today = document.getElementById("today");   // указатель на дату в строке с заданием
   var job = document.getElementById("job");       // указатель на задание
   document.getElementById("mytbody").contentEditable = "false"; // запретить изменения в таблице
+  switch (target.id) {
+    case 'dtins' :
+      //strvoice("добавить");
+      voicecommand("добавить");
+    break
+    case 'dtedit' :
+      //strvoice("изменить");
+      voicecommand("изменить");
+    break
+    case 'dtdel' :
+      //strvoice("удалить");
+      voicecommand("удалить");
+    break
+  }
 
+
+
+/*
   switch (target.tagName) { 
     //----------------------------------------------------------------
     // КЛИКНУЛИ ПО СТРОКЕ ТАБЛИЦЫ
@@ -142,6 +159,7 @@ function myevent(kod) {
       } // switch (target.id)
     break // default:
   } // switch (target.tagName)
+*/  
 } // function myevent(kod)
 
 function modalblock (modal, title, okbutton) {
