@@ -83,7 +83,6 @@ recognizer.onend = function(){                      // Закончилось в
 		strvoice("Я устала ждать. Отключаюсь");
     	recognizer.stop();
 	 }
-
   }
 }
 
@@ -118,7 +117,7 @@ function voicecommand(strcommand) {
     break
     case 'закрыть программу':
       modaltitle = 'ЗАКРЫТЬ ПРОГРАММУ';
-      strvoice("Сохранить данные?");
+      strvoice("сохранить? таблицу?");
     break
     case 'сохранить таблицу':                     // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ
        dbsaveJob();
@@ -188,6 +187,7 @@ function voicecommand(strcommand) {
           setTimeout( function(){ window.close()}, 3000);   // Задержка 3сек. для озвучки сообщения о записи на диск 
         break
         case "НОВОЕ ЗАДАНИЕ":
+        case "ИЗМЕНИТЬ ЗАДАНИЕ":
           if (today.value !== "" && job.value !== "") {
           	sortbydate("0", today.valueAsDate, hours.value+":"+minutes.value, job.value);
           } else {
@@ -200,6 +200,11 @@ function voicecommand(strcommand) {
             document.getElementById('errModal').style.display = "block";
             modaltitle = 'ВНИМАНИЕ !!!';
             errmodalopen = true;
+            setTimeout(function(){ 
+                          document.getElementById('errModal').className = 'errmodal-out';
+                          modaltitle = 'НОВОЕ ЗАДАНИЕ';
+                          job.focus();
+                       }, 4500);
           }
         break
         case "ИЗМЕНИТЬ ЗАДАНИЕ":
@@ -264,7 +269,7 @@ function voicecommand(strcommand) {
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
-			document.getElementById('recjob').classList.add("miganie");                  // добавить МИГАНИЕ 
+			      document.getElementById('recjob').classList.add("miganie");                  // добавить МИГАНИЕ 
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
@@ -272,9 +277,9 @@ function voicecommand(strcommand) {
         //----------------------------------------------------------------
         case 'изменить':
         case 'удалить':
-    	case 'статус':
+    	  case 'статус':
         case 'копия':
-          	var onend = false;                                                    // если что то нашли, то = true
+          var onend = false;                                                    // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');  // получить массив всех строк
             for (nomerstroki=trStroka.length-1; nomerstroki>0; nomerstroki--) {   // цикл по количеству строк в таблице
     	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td'); // получить массив всех колонок в строке
