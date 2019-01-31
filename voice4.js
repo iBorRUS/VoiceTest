@@ -1,15 +1,17 @@
 var windowmain;                                     // указатель на окно с открытым приложением
-var modaltitle = "";								// Заголовок текущего окна
-var editjob = "";									// изменение, удаление задания
+var errmodalopen = false;                           // открыто окно с ошибками
+var modaltitle = "";								                // Заголовок текущего окна
+var editjob = "";									                  // изменение, удаление задания
 var speech = new SpeechSynthesisUtterance();        // Возвращает новый экземпляр объекта т.е. включает динамики (массив)
     speech.lang = 'ru-Ru';                          // Язык для диктовки текста
     speech.volume = 1;                              // громкость речи
     speech.rate = 1;                              	// темп речи
     speech.pitch = 1;                               // диапазон речи
-var voicestart = 0;                             	// пауза ожидания голосовой команды
+var voicestart = 0;                                 // пауза ожидания голосовой команды
 var errcommand = 0;
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
-var recognizing = false;							// идет (ожидание) процесс записи голосовой команды
+var micon = false;                                  // микрофон выключен
+var recognizing = false;                            // идет (ожидание) процесс записи голосовой команды
 recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
@@ -24,15 +26,15 @@ window.onload = function(){
 		document.getElementById('errmodaltext').innerHTML = "Найдено "+selectjob+" не выполненных задания"
 		document.getElementById('errModal').className = 'errmodal';
 		document.getElementById('errModal').style.display = "block";
-		modaltitle = 'ВНИМАНИЕ !!!';
-		errmodalopen = true;
-		//strvoice("Найдено "+selectjob+" не выполненных задания"); 
+    modaltitle = "";
+		//modaltitle = 'ВНИМАНИЕ !!!';
 	  }
 	}, 500);
 }
 
 
 function speechmic () {                             // Включаем микрофон
+  micon = true;
   if (!voicestart) {
     document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
     voicestart=0;									// количество пауз ожидания
@@ -40,20 +42,22 @@ function speechmic () {                             // Включаем микр
     recognizer.start();
   } else {
     document.getElementById('micbutton').classList.remove("miganie"); // убрать МИГАНИЕ МИКРОФОНА
-    recognizer.stop();
+    recognizer.stop(); micon = false;
   }
 }
 
 //-----------------------------------------------------------------------------------------------
 speech.onstart = function() {                       // когда идет текст, 
-  recognizer.stop();                                //                  отключить микрофн
-  recognizing = false;                              //
+    recognizer.stop();                                //                  отключить микрофн
+    recognizing = false;                              //
 }                                                   
 speech.onend = function() {                         // когда текст закончился, 
-  if (!recognizing && voicestart < 3) {
-  	recognizer.start();             //                        включить микрофон
-  } else { voicestart = 0; }
-  recognizing = true;                               //
+  if (micon) {
+    if (!recognizing && voicestart < 3) {
+    	recognizer.start();             //                        включить микрофон
+    } else { voicestart = 0; }
+    recognizing = true;                               //
+  }
 }
 //-----------------------------------------------------------------------------------------------
 
@@ -112,61 +116,76 @@ function voicecommand(strcommand) {
     case 'выше':
       window.scrollBy(0,-200);                    // прокрутка окна вниз
     break
+
     case 'ниже':                                  // прокрутка окна вверх
       window.scrollBy(0,200);
     break
+
     case 'закрыть программу':
       modaltitle = 'ЗАКРЫТЬ ПРОГРАММУ';
       strvoice("сохранить? таблицу?");
     break
+
     case 'сохранить таблицу':                     // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ
        dbsaveJob();
     break
 	
     case 'добавить':                              // ВВОД НОВОГО ЗАДАНИЯ
-      tdmiganie();
-      editjob = 'новое';
-      strcommand="";
-	  document.getElementById('dtins').classList.add("miganie");    // добавить МИГАНИЕ 
-      voicecommand(strcommand);
+      if (!modaltitle) {
+        tdmiganie();
+        editjob = 'новое';
+        strcommand="";
+  	    document.getElementById('dtins').classList.add("miganie");    // добавить МИГАНИЕ 
+        voicecommand(strcommand);
+      }
     break
 	
     case 'изменить':                              // изменить существующее задание
-    tdmiganie();
-      strvoice("какое задание изменить?");
-      editjob = 'изменить';
-      modaltitle = 'ИЗМЕНИТЬ ЗАДАНИЕ';
-    document.getElementById('dtedit').classList.add("miganie");    // добавить МИГАНИЕ 
+      if (!modaltitle) {
+        tdmiganie();
+        strvoice("какое задание изменить?");
+        editjob = 'изменить';
+        modaltitle = 'ИЗМЕНИТЬ ЗАДАНИЕ';
+        document.getElementById('dtedit').classList.add("miganie");    // добавить МИГАНИЕ 
+      }
     break
 
     case 'копия':                                 // копировать существующее задание
-    tdmiganie();
-      strvoice("какое задание копировать?");
-      editjob = 'копия';
-      modaltitle = 'НОВОЕ ЗАДАНИЕ';
-    document.getElementById('dtcopy').classList.add("miganie");    // добавить МИГАНИЕ 
+      if (!modaltitle) {
+        tdmiganie();
+        strvoice("какое задание копировать?");
+        editjob = 'копия';
+        modaltitle = 'НОВОЕ ЗАДАНИЕ';
+        document.getElementById('dtcopy').classList.add("miganie");    // добавить МИГАНИЕ 
+      }
     break
 
     case 'удалить':                               // удалить существующее задание
-		tdmiganie();
-    	strvoice("какое задание удалить?");
-    	editjob = 'удалить';
-    	modaltitle = 'УДАЛИТЬ ЗАДАНИЕ';
-		document.getElementById('dtdel').classList.add("miganie");    // добавить МИГАНИЕ 
+      if (!modaltitle) {
+  		  tdmiganie();
+      	strvoice("какое задание удалить?");
+      	editjob = 'удалить';
+      	modaltitle = 'УДАЛИТЬ ЗАДАНИЕ';
+  		  document.getElementById('dtdel').classList.add("miganie");    // добавить МИГАНИЕ 
+      }
     break
 
     case 'статус':                                // удалить существующее задание
-    	strvoice("назовите задание");
-    	editjob = 'статус';
-      	tdmiganie();
-		document.getElementById('dtststus').classList.add("miganie");    // добавить МИГАНИЕ 
+      if (!modaltitle) {
+      	strvoice("назовите задание");
+      	editjob = 'статус';
+        tdmiganie();
+  		  document.getElementById('dtststus').classList.add("miganie");    // добавить МИГАНИЕ 
+      }
     break
 
     case 'интернет':
-      strvoice("Скажите, что искать");
-      editjob = "okgoogle";
-      tdmiganie();
-      document.getElementById('dtenet').classList.add("miganie");    // добавить МИГАНИЕ 
+    if (!modaltitle) {
+        strvoice("Скажите, что искать");
+        editjob = "okgoogle";
+        tdmiganie();
+        document.getElementById('dtenet').classList.add("miganie");    // добавить МИГАНИЕ 
+      }
     break
 
     case 'закрыть интернет':
@@ -187,7 +206,6 @@ function voicecommand(strcommand) {
           setTimeout( function(){ window.close()}, 3000);   // Задержка 3сек. для озвучки сообщения о записи на диск 
         break
         case "НОВОЕ ЗАДАНИЕ":
-        case "ИЗМЕНИТЬ ЗАДАНИЕ":
           if (today.value !== "" && job.value !== "") {
           	sortbydate("0", today.valueAsDate, hours.value+":"+minutes.value, job.value);
           } else {
@@ -203,7 +221,7 @@ function voicecommand(strcommand) {
             setTimeout(function(){ 
                           document.getElementById('errModal').className = 'errmodal-out';
                           modaltitle = 'НОВОЕ ЗАДАНИЕ';
-                          job.focus();
+                          job.focus(); errmodalopen = false;
                        }, 4500);
           }
         break
@@ -247,7 +265,8 @@ function voicecommand(strcommand) {
   	      errmodalopen = false;
   	      document.getElementById('errModal').className = 'errmodal-out'; // закрыть окно с ошибками
   	      job.focus();                                    // установить фокус ввода в поле <НОВОЕ ЗАДАНИЕ>
-  	      modaltitle = 'НОВОЕ ЗАДАНИЕ';
+  	      modaltitle = "";
+          // modaltitle = 'НОВОЕ ЗАДАНИЕ';
   	    break
       }
     break
@@ -382,6 +401,7 @@ function voicecommand(strcommand) {
       	break
       default :
       	strvoice("нет такой команды");
+        modaltitle = "";
       	if ( ++errcommand > 2) {errcommand = 0; strvoice("и пожалуйста, будте повнимательней!");}
       	
       break
