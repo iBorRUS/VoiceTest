@@ -6,7 +6,7 @@ var speech = new SpeechSynthesisUtterance();        // Возвращает но
     speech.volume = 1;                              // громкость речи
     speech.rate = 1;                              	// темп речи
     speech.pitch = 1;                               // диапазон речи
-var voicestart = 0;                             // флаг 1-го включения микрофона
+var voicestart = 0;                             	// пауза ожидания голосовой команды
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
 var recognizing = false;							// идет (ожидание) процесс записи голосовой команды
 recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
@@ -34,12 +34,11 @@ window.onload = function(){
 function speechmic () {                             // Включаем микрофон
   if (!voicestart) {
     document.getElementById('micbutton').classList.add("miganie");    // добавить МИГАНИЕ МИКРОФОНА
+    voicestart=0;									// количество пауз ожидания
     strvoice("Произнесите команду"); 
-    voicestart = 1;
     recognizer.start();
   } else {
-    document.getElementById('micbutton').classList.remove("miganie");    // убрать МИГАНИЕ МИКРОФОНА
-    voicestart = 0;
+    document.getElementById('micbutton').classList.remove("miganie"); // убрать МИГАНИЕ МИКРОФОНА
     recognizer.stop();
   }
 }
@@ -50,7 +49,7 @@ speech.onstart = function() {                       // когда идет те�
   recognizing = false;                              //
 }                                                   
 speech.onend = function() {                         // когда текст закончился, 
-  if (!recognizing && voicestart < 4) {
+  if (!recognizing && voicestart < 3) {
   	recognizer.start();             //                        включить микрофон
   } else { voicestart = 0; }
   recognizing = true;                               //
@@ -60,6 +59,7 @@ speech.onend = function() {                         // когда текст з�
 recognizer.onresult = function (event) {            // Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];    // содержит все данные, связанные с конечным результатом распознавания речи
   if (result.isFinal) {                             // результат является окончательным
+  	voicestart=0;									// количество пауз ожидания
     voicecommand((result[0].transcript).trim().toLowerCase());	// удалиь пробелы слева и справа, все буквы - мленькие
   } 
 }
@@ -73,7 +73,7 @@ recognizer.onstart = function(){                    // вллючился мик
 
 recognizer.onend = function(){                      // Закончилось время ожидания (примерно 15 сек)
   if (recognizing) { 
-  	if (++voicestart < 4) {
+  	if (++voicestart < 3) {
     	strvoice("Я жду команду");
     	recognizer.start();
 	} else {
@@ -388,6 +388,7 @@ function formatDate(strdate) {
 
   // завтра, послезавтра, через 3 дня, через 10 дней, через неделю, через 2 недели .......
   switch (str[0]) {
+  	case 'сегодня': break
     case 'завтра':
     	newdate.setDate(newdate.getDate()+1); 
     break
