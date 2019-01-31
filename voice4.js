@@ -7,6 +7,7 @@ var speech = new SpeechSynthesisUtterance();        // Возвращает но
     speech.rate = 1;                              	// темп речи
     speech.pitch = 1;                               // диапазон речи
 var voicestart = 0;                             	// пауза ожидания голосовой команды
+var errcommand = 0;
 var recognizer = new webkitSpeechRecognition();   	// Создаем распознаватель
 var recognizing = false;							// идет (ожидание) процесс записи голосовой команды
 recognizer.interimResults = true;                 	// true = распознавание началось ещё до того, как пользователь закончит говорить
@@ -372,6 +373,11 @@ function voicecommand(strcommand) {
           windowmain=window.open('https://www.google.ru/search?q='+strcommand, 'contacts', 'scrollbars=1,height='+Math.min(h, screen.availHeight)+',width='+Math.min(w, screen.availWidth)+',left='+Math.max(0, (screen.availWidth - w)/2)+',top='+Math.max(0, (screen.availHeight - h)/2));
           windowmain.focus();
       	break
+      default :
+      	strvoice("нет такой команды");
+      	if ( ++errcommand > 2) {errcommand = 0; strvoice("и пожалуйста, будте повнимательней!");}
+      	
+      break
       } // switch (editjob)
     break // default:
   } // switch (strcommand)
