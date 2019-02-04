@@ -1,4 +1,5 @@
-var nomerstroki;                                  // текущая строка в таблице (по которой кликнули)
+var nomerstroki;                       			  // текущая строка в таблице (по которой кликнули)
+var nomercol;									  // 		 колонка
 var editstroka = false;                           // режим редактирования строки
 var waitingclick = false;                         // ожидание повторного клика
 var timeclick;                                    // интервал ожидания функции "setTimeout"
@@ -9,6 +10,9 @@ var selectjob = 0;								  // просроченные задания
 function bodyclick(){
   target = event.target;                          // где был клик?
   btnCode = event.button;                         // 0 - левая клавиша, 2 - правая клавиша мышки
+  //nomerstroki = target.parentNode.rowIndex;       // номер строки по которой кликнули
+  //nomercol = target.cellIndex;         			  // номер коллонки по которой кликнули
+  //console.log(nomercol+'  '+nomerstroki);
   
   if (!waitingclick) {                            // был первый клик
     waitingclick = true;                          // запомнить паузу между кликами (ждем возможного 2-го клика)
@@ -21,15 +25,17 @@ function bodyclick(){
 }
 
 function myevent(kod) {
+
   //alert("id="+target.id + "  kod="+kod+ " btnCode="+btnCode+"  tagName="+target.tagName+"  class="+target.className);
            //if (!document.getElementsByTagName || !document.createTextNode) return;
   var rows = document.getElementById('myTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
   for (var i = 0; i < rows.length; i++) {
       rows[i].onclick = function() {
-          console.log(this.rowIndex);
+		  nomerstroki=this.rowIndex;
       }
   }
-  
+
+
   switch (target.id) {
     case 'dtins' :
       voicecommand("добавить");
@@ -72,22 +78,23 @@ function myevent(kod) {
       dbsaveJob();
     break
     default :
+	
       switch (target.tagName) {
         //----------------------------------------------------------------
         // КЛИКНУЛИ ПО СТРОКЕ ТАБЛИЦЫ
         //----------------------------------------------------------------
         case 'TD':
-          nomerstroki = target.parentNode.rowIndex;       // номер строки по которой кликнули
           var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
-          var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');    // получить массив всех колонок в строке
-          voicecommand(tdStroka[3].innerHTML.trim().toLowerCase());
+          var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');    // получить массив всех колонок в строке	  
+		  voicecommand(tdStroka[3].innerHTML.trim().toLowerCase());
         break
-        case 'INPUT':
-
- 
-
-          //editjob = 'статус';
-          //voicecommand(tdStroka[3].innerHTML.trim().toLowerCase());
+        case 'INPUT':		
+		  var trStroka = document.getElementById('myTable').getElementsByTagName('tr');
+          var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');
+		  var checkstat = tdStroka[0].getElementsByTagName('input');
+		  if ( !checkstat[0].checked && twodates(tdStroka[1].innerHTML) == 1 ) {
+			trStroka[nomerstroki].style.background="#ff6347";			// выделить не выполненное задание
+		  } else { trStroka[nomerstroki].style.background="#ffffff"; }	// снять выделение
         break
       }
     break
@@ -125,10 +132,10 @@ var addRowTable = function(nrow, textCheck, textDate, textTimes, textZadaniya) {
     var newText  = document.createTextNode(textTimes);      // присвоить переменной новое время
     newCell2.appendChild(newText);                          // добавить 3-ю ячейку в новую стоку с новым временем
     var newText  = document.createTextNode(textZadaniya);   // присвоить переменной новое задание
-	  newCell3.appendChild(newText);                          // добавить 4-ю ячейку в новую стоку с новым заданием
-    if ( !newCheck.checked &&  twodates(textDate) == 1 ) {
-		selectjob ++;										                        // подсчет просроченных заданий
-		newRow.style.background="#ff6347";					            // выделить не выполненное задание
+	  newCell3.appendChild(newText);                        // добавить 4-ю ячейку в новую стоку с новым заданием
+    if ( !newCheck.checked && twodates(textDate) == 1 ) {
+		selectjob ++;										// подсчет просроченных заданий
+		newRow.style.background="#ff6347";					// выделить не выполненное задание
 	}
 }     
 

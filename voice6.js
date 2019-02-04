@@ -226,6 +226,7 @@ function voicecommand(strcommand) {
           }
         break
         case "ИЗМЕНИТЬ ЗАДАНИЕ":
+		console.log('nomerstroki= '+nomerstroki)
           document.getElementById("myTable").deleteRow(nomerstroki);
           sortbydate("0", document.getElementById("today").valueAsDate, hours.value+":"+minutes.value, document.getElementById("job").value);	  
         break
@@ -296,7 +297,7 @@ function voicecommand(strcommand) {
         //----------------------------------------------------------------
         case 'изменить':
         case 'удалить':
-    	  case 'статус':
+    	case 'статус':
         case 'копия':
           var onend = false;                                                    // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');  // получить массив всех строк
