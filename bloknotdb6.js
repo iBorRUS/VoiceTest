@@ -43,11 +43,11 @@ function dbopenJob(){
     db.transaction(function (transaction) { 
         transaction.executeSql('SELECT * from mydiary', [], 
             function (transaction, results) { 
-                var len = results.rows.length, i, row; 
+                var len = results.rows.length, row; 
                 row = results.rows.item(0);
                 myname = row['db_job']; mypassword = row['db_data'];
-                for (i = 1; i < len; i++) { 
-                    row = results.rows.item(i);
+                for (nomerstroki = 1; nomerstroki < len; nomerstroki++) { 
+                    row = results.rows.item(nomerstroki);
                     addRowTable(-1, row['db_check'], row['db_data'], row['db_times'], row['db_job']);    // добавить строку в таблицу
                 } 
             }, null); 

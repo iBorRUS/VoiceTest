@@ -1,19 +1,37 @@
-var nomerstroki;                       			  // текущая строка в таблице (по которой кликнули)
-var nomercol;									  // 		 колонка
+var nomerstroki;                                  // текущая строка в таблице (по которой кликнули)
+var strtabljob;									                  // строка задания в таблице (по клику)
 var editstroka = false;                           // режим редактирования строки
 var waitingclick = false;                         // ожидание повторного клика
 var timeclick;                                    // интервал ожидания функции "setTimeout"
 var target;                                       // где был клик?
 var btnCode;                                      // 0 - левая клавиша, 2 - правая клавиша мышки
-var selectjob = 0;								  // просроченные задания
+var selectjob = 0;								                // просроченные задания
+
+//-------------------------------------------------------------------
+//    АВТОЗАГРУЗКА 
+//-------------------------------------------------------------------
+window.onload = function(){
+  dbopenJob();
+  setTimeout(function(){
+    if(selectjob) {
+    document.getElementById('errmodaltext').innerHTML = "Найдено "+selectjob+" не выполненных задания"
+    document.getElementById('errModal').className = 'errmodal';
+    document.getElementById('errModal').style.display = "block";
+    modaltitle = "";
+    //modaltitle = 'ВНИМАНИЕ !!!';
+    }
+  }, 500);
+}
 
 function bodyclick(){
   target = event.target;                          // где был клик?
   btnCode = event.button;                         // 0 - левая клавиша, 2 - правая клавиша мышки
-  //nomerstroki = target.parentNode.rowIndex;       // номер строки по которой кликнули
-  //nomercol = target.cellIndex;         			  // номер коллонки по которой кликнули
-  //console.log(nomercol+'  '+nomerstroki);
-  
+
+  if (target.tagName == 'TD'){ 
+      nomerstroki = target.parentNode.rowIndex;   // номер строки, по которой кликнули
+      strtabljob = target.parentNode.getElementsByTagName('td');  // массив колонок в строке, по которой кликнули
+  }
+
   if (!waitingclick) {                            // был первый клик
     waitingclick = true;                          // запомнить паузу между кликами (ждем возможного 2-го клика)
     timeclick = setTimeout( function(){ if (btnCode==2) {myevent(4);} else {myevent(3);}; waitingclick=false; clearTimeout(timeclick); }, 280);
@@ -25,16 +43,6 @@ function bodyclick(){
 }
 
 function myevent(kod) {
-
-  //alert("id="+target.id + "  kod="+kod+ " btnCode="+btnCode+"  tagName="+target.tagName+"  class="+target.className);
-           //if (!document.getElementsByTagName || !document.createTextNode) return;
-  var rows = document.getElementById('myTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-  for (var i = 0; i < rows.length; i++) {
-      rows[i].onclick = function() {
-		  nomerstroki=this.rowIndex;
-      }
-  }
-
 
   switch (target.id) {
     case 'dtins' :
@@ -73,33 +81,18 @@ function myevent(kod) {
     //----------------------------------------------------------------
     // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ 
     //----------------------------------------------------------------
-    case 'buttontopsavetabl':
+    //case 'buttontopsavetabl':
     case 'dtsavetable':     
       dbsaveJob();
     break
     default :
-	
+
       switch (target.tagName) {
         //----------------------------------------------------------------
         // КЛИКНУЛИ ПО СТРОКЕ ТАБЛИЦЫ
         //----------------------------------------------------------------
-        case 'TD':
-          var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
-          var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');    // получить массив всех колонок в строке	  
-		      voicecommand(tdStroka[3].innerHTML.trim().toLowerCase());
-        break
-        case 'INPUT':		
-    		  var trStroka = document.getElementById('myTable').getElementsByTagName('tr');
-          var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');
-    		  var checkstat = tdStroka[0].getElementsByTagName('input');
-          if (checkstat[0].checked && twodates(tdStroka[1].innerHTML) == -1) { 
-              strvoice("Рано. Событие ещё не произошло!");
-              checkstat[0].checked = false;
-            } else {
-        		  if ( !checkstat[0].checked && twodates(tdStroka[1].innerHTML) == 1 ) {
-        			trStroka[nomerstroki].style.background="#ff6347";			// выделить не выполненное задание
-        		  } else { trStroka[nomerstroki].style.background="#ffffff"; }	// снять выделение
-            }
+        case 'TD':	  
+		      voicecommand(strtabljob[3].innerHTML.trim().toLowerCase());     
         break
       }
     break
@@ -127,6 +120,7 @@ var addRowTable = function(nrow, textCheck, textDate, textTimes, textZadaniya) {
     var newCell2  = newRow.insertCell(2);
     var newCell3  = newRow.insertCell(3);
     var newCheck  = document.createElement('input');        // новая переменная для checkbox
+    newCheck.onchange = function(){ click_checkbox(this); } // кликнули checkbox
     newCheck.type = 'checkbox';
     newCheck.className ='checkclass'; 
     textCheck == '1' ? newCheck.checked = true : newCheck.checked = false;  // указать тип переменной
@@ -137,12 +131,26 @@ var addRowTable = function(nrow, textCheck, textDate, textTimes, textZadaniya) {
     var newText  = document.createTextNode(textTimes);      // присвоить переменной новое время
     newCell2.appendChild(newText);                          // добавить 3-ю ячейку в новую стоку с новым временем
     var newText  = document.createTextNode(textZadaniya);   // присвоить переменной новое задание
-	  newCell3.appendChild(newText);                        // добавить 4-ю ячейку в новую стоку с новым заданием
+	  newCell3.appendChild(newText);                          // добавить 4-ю ячейку в новую стоку с новым заданием
     if ( !newCheck.checked && twodates(textDate) == 1 ) {
-		selectjob ++;										// подсчет просроченных заданий
-		newRow.style.background="#ff6347";					// выделить не выполненное задание
+		selectjob ++;										                        // подсчет просроченных заданий
+		newRow.style.background="#ff6347";					            // выделить не выполненное задание
 	}
 }     
+
+function click_checkbox(el) {
+    //nomerstroki = el.parentNode.parentNode.rowIndex;
+    var checkstat = el.parentNode.parentNode.getElementsByTagName('input');
+    var strdate = el.parentNode.parentNode.getElementsByTagName('td');
+    if (checkstat[0].checked && twodates(strdate[1].innerHTML) == -1) { 
+      strvoice("Рано. Событие ещё не произошло!");
+      checkstat[0].checked = false;
+    } else {
+      if ( !checkstat[0].checked && twodates(strdate[1].innerHTML) == 1 ) {
+      el.parentNode.parentNode.style.background="#ff6347";  // выделить не выполненное задание
+      } else { el.parentNode.parentNode.style.background="#ffffff"; }  // снять выделение
+    }
+}
 
 //----------------------------------------------------------------
 // ВКЛЮЧИТЬ ЗВУК ПРИ ОТКРЫТИИ ОКНА С ОШИБКОЙ 

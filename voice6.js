@@ -16,22 +16,6 @@ recognizer.interimResults = true;                 	// true = распознав�
 recognizer.lang = 'ru-Ru';                        	// Язык для распознования
 recognizer.continuous = true;                     	// когда пользователь прекратил говорить, распознование не закончилось
 
-//-------------------------------------------------------------------
-//    АВТОЗАГРУЗКА 
-//-------------------------------------------------------------------
-window.onload = function(){
-  dbopenJob();
-	setTimeout(function(){
-	  if(selectjob) {
-		document.getElementById('errmodaltext').innerHTML = "Найдено "+selectjob+" не выполненных задания"
-		document.getElementById('errModal').className = 'errmodal';
-		document.getElementById('errModal').style.display = "block";
-    modaltitle = "";
-		//modaltitle = 'ВНИМАНИЕ !!!';
-	  }
-	}, 500);
-}
-
 
 function speechmic () {                             // Включаем микрофон
   micon = true;
@@ -201,6 +185,7 @@ function voicecommand(strcommand) {
     case 'да':
       switch (modaltitle) {
         case 'ЗАКРЫТЬ ПРОГРАММУ':
+        
           dbsaveJob();
           errmodalopen = true;                              // не показывать закрытие модальных окон (не красиво смотриться)
           setTimeout( function(){ window.close()}, 3000);   // Задержка 3сек. для озвучки сообщения о записи на диск 
@@ -226,7 +211,6 @@ function voicecommand(strcommand) {
           }
         break
         case "ИЗМЕНИТЬ ЗАДАНИЕ":
-		console.log('nomerstroki= '+nomerstroki)
           document.getElementById("myTable").deleteRow(nomerstroki);
           sortbydate("0", document.getElementById("today").valueAsDate, hours.value+":"+minutes.value, document.getElementById("job").value);	  
         break
@@ -305,45 +289,44 @@ function voicecommand(strcommand) {
     	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td'); // получить массив всех колонок в строке
     	         var newjob = (tdStroka[3].innerHTML).toLowerCase();              // сделать все буквы маленькими
     	         if ( newjob.indexOf(strcommand) !== -1 ) {                       // нашли совпадение искомой строки
-                    onend = true;                                                 // что-то нашли в таблице заданий
-                    var str = tdStroka[1].innerHTML.split('.');                   // разделить на массив день-месяц-год
-      	          	today.value = str[2]+"-"+str[1]+"-"+str[0];			          // дата -> в поле "дата"
-          			hours.value = tdStroka[2].innerHTML.substr(0,2);
-          			minutes.value = tdStroka[2].innerHTML.substr(-2);
+                  onend = true;                                                 // что-то нашли в таблице заданий
+                  var str = tdStroka[1].innerHTML.split('.');                   // разделить на массив день-месяц-год
+      	          today.value = str[2]+"-"+str[1]+"-"+str[0];			          // дата -> в поле "дата"
+                  hours.value = tdStroka[2].innerHTML.substr(0,2);
+                  minutes.value = tdStroka[2].innerHTML.substr(-2);
                 	job.value = tdStroka[3].innerHTML;                            // задание -> в поле "задание"
 					
-              			switch (editjob) {
+                  switch (editjob) {
           				case 'изменить':
           					job.focus();
           					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
           					editjob = "newjob";
-                  			document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
-                  		break
+                  	document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
+                  break
           				case 'копия':
           					job.focus();
           					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
           					editjob = "newjob";
           					document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
           				break
-                  		case 'удалить':
+                  case 'удалить':
           					modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
-          					//editjob = "deljob";
           					strvoice("Удалить?");
-                  		break
-                  		case 'статус':
-                  			var checkstat = tdStroka[0].getElementsByTagName('input');
-	                        var eqldates = twodates(tdStroka[1].innerHTML);             // сравнить даты
-	                        if (eqldates >= 0) {                                        // сегодня дата больше или равно
-                          		checkstat[0].checked = !(checkstat[0].checked);           // снять/поставить галочку
-                				if (checkstat[0].checked)                                 	// если галочка стоит,
-                					{ trStroka[nomerstroki].style.background="#ffffff"; }   //    то: снять выделение строки
-                            	else 			                                            // иначе: выделить строку "красным"
-                					{ if(eqldates != 0) trStroka[nomerstroki].style.background="#ff6347";	}		 
-                        	} else strvoice("Рано. Событие ещё не произошло!");
-	                        document.getElementById('dtststus').classList.remove("miganie");
-	                        editjob = "";
-                  		break
-            		    } // switch (editjob)
+                  break
+                  case 'статус':
+                    var checkstat = tdStroka[0].getElementsByTagName('input');
+                    var eqldates = twodates(tdStroka[1].innerHTML);             // сравнить даты
+	                  if (eqldates >= 0) {                                        // сегодня дата больше или равно
+                        checkstat[0].checked = !(checkstat[0].checked);           // снять/поставить галочку
+                  			if (checkstat[0].checked)                                 	// если галочка стоит,
+                    			{ trStroka[nomerstroki].style.background="#ffffff"; }   //    то: снять выделение строки
+                           else 			                                            // иначе: выделить строку "красным"
+                    			{ if(eqldates != 0) trStroka[nomerstroki].style.background="#ff6347";	}		 
+                    } else strvoice("Рано. Событие ещё не произошло!");
+	                  document.getElementById('dtststus').classList.remove("miganie");
+	                  editjob = "";
+                  break
+            		  } // switch (editjob)
           			break	// выход из for... нашли задание в таблице
 				  }	// if ( newjob.indexOf(strcommand) !== -1 )
     	      }	// for (nomerstroki=1;
@@ -377,8 +360,8 @@ function voicecommand(strcommand) {
         case 'newdate':
           today.valueAsDate = formatDate(strcommand);
           editjob = "newjob";                                             // вернуться в окно редактирования задания
-		  document.getElementById('recjob').classList.add("miganie");     // добавить МИГАНИЕ 
-		  document.getElementById('recdate').classList.remove("miganie");
+		      document.getElementById('recjob').classList.add("miganie");     // добавить МИГАНИЕ 
+		      document.getElementById('recdate').classList.remove("miganie");
         break
         //----------------------------------------------------------------
         // ВВОД НОВОГО ВРЕМЕНИ
@@ -490,49 +473,3 @@ function twodates(date1,date2) {
   if (intstr2 == intstr1) return (0);	// сегодня равно сравниваемой дате
 }
 
-/*-------------------------- ВЫВОД КАЛЕНДАРЯ В ОКНЕ -----------------------------------------
-<table id="calendar1">
-  <thead>
-    <tr><td colspan="4"><td colspan="3">
-    <tr><td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-  <tbody>
-</table>
-
-<script>
-var D1 = new Date(),
-    D1last = new Date(D1.getFullYear(),D1.getMonth()+1,0).getDate(), // последний день месяца
-    D1Nlast = new Date(D1.getFullYear(),D1.getMonth(),D1last).getDay(), // день недели последнего дня месяца
-    D1Nfirst = new Date(D1.getFullYear(),D1.getMonth(),1).getDay(), // день недели первого дня месяца
-    calendar1 = '<tr>',
-    month=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"]; // название месяца, вместо цифр 0-11
-
-// пустые клетки до первого дня текущего месяца
-if (D1Nfirst != 0) {
-  for(var  i = 1; i < D1Nfirst; i++) calendar1 += '<td>';
-}else{ // если первый день месяца выпадает на воскресенье, то требуется 7 пустых клеток 
-  for(var  i = 0; i < 6; i++) calendar1 += '<td>';
-}
-
-// дни месяца
-for(var  i = 1; i <= D1last; i++) {
-  if (i != D1.getDate()) {
-    calendar1 += '<td>' + i;
-  }else{
-    calendar1 += '<td id="today">' + i;  // сегодняшней дате можно задать стиль CSS
-  }
-  if (new Date(D1.getFullYear(),D1.getMonth(),i).getDay() == 0) {  // если день выпадает на воскресенье, то перевод строки
-    calendar1 += '<tr>';
-  }
-}
-
-// пустые клетки после последнего дня месяца
-if (D1Nlast != 0) {
-  for(var  i = D1Nlast; i < 7; i++) calendar1 += '<td>';
-}
-
-document.querySelector('#calendar1 tbody').innerHTML = calendar1;
-document.querySelector('#calendar1 thead td:last-child').innerHTML = D1.getFullYear();
-document.querySelector('#calendar1 thead td:first-child').innerHTML = month[D1.getMonth()];
-</script>
-
----------------------------- ВЫВОД КАЛЕНДАРЯ В ОКНЕ -----------------------------------------*/
