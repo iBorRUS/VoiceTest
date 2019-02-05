@@ -86,15 +86,20 @@ function myevent(kod) {
         case 'TD':
           var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
           var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');    // получить массив всех колонок в строке	  
-		  voicecommand(tdStroka[3].innerHTML.trim().toLowerCase());
+		      voicecommand(tdStroka[3].innerHTML.trim().toLowerCase());
         break
         case 'INPUT':		
-		  var trStroka = document.getElementById('myTable').getElementsByTagName('tr');
+    		  var trStroka = document.getElementById('myTable').getElementsByTagName('tr');
           var tdStroka = trStroka[nomerstroki].getElementsByTagName('td');
-		  var checkstat = tdStroka[0].getElementsByTagName('input');
-		  if ( !checkstat[0].checked && twodates(tdStroka[1].innerHTML) == 1 ) {
-			trStroka[nomerstroki].style.background="#ff6347";			// выделить не выполненное задание
-		  } else { trStroka[nomerstroki].style.background="#ffffff"; }	// снять выделение
+    		  var checkstat = tdStroka[0].getElementsByTagName('input');
+          if (checkstat[0].checked && twodates(tdStroka[1].innerHTML) == -1) { 
+              strvoice("Рано. Событие ещё не произошло!");
+              checkstat[0].checked = false;
+            } else {
+        		  if ( !checkstat[0].checked && twodates(tdStroka[1].innerHTML) == 1 ) {
+        			trStroka[nomerstroki].style.background="#ff6347";			// выделить не выполненное задание
+        		  } else { trStroka[nomerstroki].style.background="#ffffff"; }	// снять выделение
+            }
         break
       }
     break

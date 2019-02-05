@@ -65,23 +65,24 @@ h1 {                    /* ЕЖЕДНЕВНИК 2018 */
 }
 
 
-.theadhelp {           /* ПОДСКАЗКА  */
-	position: fixed;    /* Позиционирует объект точно так же, как absolute, но относительно window */
+.theadhelp {            /* ПОДСКАЗКА  */
+	position: fixed;    
     top: 5px;
     left: 5px;
     border: 1px solid black;
 	padding: 2px;
 }
 
-.mic {
-    border: 1px solid black;
+.mic {                  /* кнопка с изображением микрофона */
+    /*border: 1px solid white;*/
+    border-radius: 25px;
     background: url('mic.gif');
     width: 50px;
     height: 50px;
-	box-shadow: 0px 16px 20px 0px rgba(0,0,0,0.1);
+	box-shadow: 0px 16px 60px 0px rgba(0,0,0,0.5);
 }
 
-.rec {
+.rec {                 /* кнопка-индикатор записи текущего поля */
 	color: white;
     border-radius: 10px;
 }
