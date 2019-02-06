@@ -40,7 +40,7 @@ speech.onend = function() {                         // когда текст з�
     if (!recognizing && voicestart < 3) {
     	recognizer.start();             //                        включить микрофон
     } else { voicestart = 0; }
-    recognizing = true;                               //
+    recognizing = true;                             
   }
 }
 //-----------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ speech.onend = function() {                         // когда текст з�
 recognizer.onresult = function (event) {            // Вызывается если результат — слово или фраза были распознаны положительно
   var result = event.results[event.resultIndex];    // содержит все данные, связанные с конечным результатом распознавания речи
   if (result.isFinal) {                             // результат является окончательным
-  	voicestart=0;									// количество пауз ожидания
+  	voicestart=0;                                   // количество пауз ожидания
     voicecommand((result[0].transcript).trim().toLowerCase());	// удалиь пробелы слева и справа, все буквы - мленькие
   } 
 }
@@ -92,6 +92,28 @@ function voicecommand(strcommand) {
   var hours = document.getElementById("hours");   // указатель на часы
   var minutes = document.getElementById("minutes");   // указатель на минуты
   document.getElementById('voice').innerHTML = strcommand;
+
+  var voicejob, pozdate;                          // поиск заданий по указанной дате
+  if (strcommand.indexOf('задани') >= 0 && (pozdate=strcommand.indexOf(' на ')) >= 0 ){
+    switch (strcommand.substr(pozdate+4, 6)) {
+      case 'сегодн': voicejob = 'сегодня'; break
+      case 'завтра': voicejob = 'завтра'; break
+      case 'послез': voicejob = 'послезавтра'; break
+      default :
+        voicejob = strcommand.substr(pozdate+4, 20);
+      break
+    }
+    var poiskjob=0;                             // количество найденных заданий
+    var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
+    for ( var nrow = trStroka.length-1; nrow>0; nrow--) {       // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
+      var tdStroka = trStroka[nrow].getElementsByTagName('td'); // получить массив всех колонок в строке  
+      if (twodates(tdStroka[1].innerHTML, formatDate(voicejob)) == 0) poiskjob++;
+    }
+    strvoice('Смотрим задания на '+voicejob+', их '+poiskjob);
+    return
+  }
+
+
 
   switch (strcommand) {
     //--------------------------------------------------------------------
@@ -151,6 +173,17 @@ function voicecommand(strcommand) {
       	editjob = 'удалить';
       	modaltitle = 'УДАЛИТЬ ЗАДАНИЕ';
   		  document.getElementById('dtdel').classList.add("miganie");    // добавить МИГАНИЕ 
+      }
+    break
+
+    case 'задания на сегодня':
+    case 'задание на сегодня':
+      if (!modaltitle) {
+        tdmiganie();
+
+        editjob = 'поиск';
+
+        document.getElementById('dtjobondate').classList.add("miganie");    // добавить МИГАНИЕ 
       }
     break
 
@@ -273,7 +306,7 @@ function voicecommand(strcommand) {
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
-			      document.getElementById('recjob').classList.add("miganie");                  // добавить МИГАНИЕ 
+			      document.getElementById('recjob').classList.add("miganie");         // добавить МИГАНИЕ 
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
@@ -281,17 +314,17 @@ function voicecommand(strcommand) {
         //----------------------------------------------------------------
         case 'изменить':
         case 'удалить':
-    	case 'статус':
+    	  case 'статус':
         case 'копия':
           var onend = false;                                                    // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');  // получить массив всех строк
-            for (nomerstroki=trStroka.length-1; nomerstroki>0; nomerstroki--) {   // цикл по количеству строк в таблице
+            for (nomerstroki=trStroka.length-1; nomerstroki>0; nomerstroki--) { // цикл по количеству строк в таблице
     	         var tdStroka = trStroka[nomerstroki].getElementsByTagName('td'); // получить массив всех колонок в строке
     	         var newjob = (tdStroka[3].innerHTML).toLowerCase();              // сделать все буквы маленькими
     	         if ( newjob.indexOf(strcommand) !== -1 ) {                       // нашли совпадение искомой строки
                   onend = true;                                                 // что-то нашли в таблице заданий
                   var str = tdStroka[1].innerHTML.split('.');                   // разделить на массив день-месяц-год
-      	          today.value = str[2]+"-"+str[1]+"-"+str[0];			          // дата -> в поле "дата"
+      	          today.value = str[2]+"-"+str[1]+"-"+str[0];			              // дата -> в поле "дата"
                   hours.value = tdStroka[2].innerHTML.substr(0,2);
                   minutes.value = tdStroka[2].innerHTML.substr(-2);
                 	job.value = tdStroka[3].innerHTML;                            // задание -> в поле "задание"
@@ -301,13 +334,13 @@ function voicecommand(strcommand) {
           					job.focus();
           					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
           					editjob = "newjob";
-                  	document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
+                  	document.getElementById('recjob').classList.add("miganie"); // добавить МИГАНИЕ 
                   break
           				case 'копия':
           					job.focus();
           					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
           					editjob = "newjob";
-          					document.getElementById('recjob').classList.add("miganie");  // добавить МИГАНИЕ 
+          					document.getElementById('recjob').classList.add("miganie"); // добавить МИГАНИЕ 
           				break
                   case 'удалить':
           					modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
@@ -317,10 +350,10 @@ function voicecommand(strcommand) {
                     var checkstat = tdStroka[0].getElementsByTagName('input');
                     var eqldates = twodates(tdStroka[1].innerHTML);             // сравнить даты
 	                  if (eqldates >= 0) {                                        // сегодня дата больше или равно
-                        checkstat[0].checked = !(checkstat[0].checked);           // снять/поставить галочку
-                  			if (checkstat[0].checked)                                 	// если галочка стоит,
-                    			{ trStroka[nomerstroki].style.background="#ffffff"; }   //    то: снять выделение строки
-                           else 			                                            // иначе: выделить строку "красным"
+                        checkstat[0].checked = !(checkstat[0].checked);         // снять/поставить галочку
+                  			if (checkstat[0].checked)                               // если галочка стоит,
+                    			{ trStroka[nomerstroki].style.background="#ffffff"; } //    то: снять выделение строки
+                           else 			                                          // иначе: выделить строку "красным"
                     			{ if(eqldates != 0) trStroka[nomerstroki].style.background="#ff6347";	}		 
                     } else strvoice("Рано. Событие ещё не произошло!");
 	                  document.getElementById('dtststus').classList.remove("miganie");
@@ -328,7 +361,7 @@ function voicecommand(strcommand) {
                   break
             		  } // switch (editjob)
           			break	// выход из for... нашли задание в таблице
-				  }	// if ( newjob.indexOf(strcommand) !== -1 )
+				      }	// if ( newjob.indexOf(strcommand) !== -1 )
     	      }	// for (nomerstroki=1;
     	    if (!onend) strvoice("нет такого задания");
         	break
@@ -428,7 +461,7 @@ function formatDate(strdate) {
       newdate.setDate(str[0]);                  // день
       newdate.setMonth(nmonth);                 // месяц
       str.length <3 ? newdate.setFullYear(newdate.getFullYear()) : newdate.setFullYear(str[2]); // полный год
-      if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате."); return(today.valueAsDate); }
+      if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате"); return(today.valueAsDate); }
   }
   return (newdate);                         // вернуть новую дату
 }

@@ -138,17 +138,16 @@ var addRowTable = function(nrow, textCheck, textDate, textTimes, textZadaniya) {
 	}
 }     
 
-function click_checkbox(el) {
-    //nomerstroki = el.parentNode.parentNode.rowIndex;
-    var checkstat = el.parentNode.parentNode.getElementsByTagName('input');
-    var strdate = el.parentNode.parentNode.getElementsByTagName('td');
+function click_checkbox(ev) {
+    var checkstat = ev.parentNode.parentNode.getElementsByTagName('input');
+    var strdate = ev.parentNode.parentNode.getElementsByTagName('td');
     if (checkstat[0].checked && twodates(strdate[1].innerHTML) == -1) { 
       strvoice("Рано. Событие ещё не произошло!");
       checkstat[0].checked = false;
     } else {
       if ( !checkstat[0].checked && twodates(strdate[1].innerHTML) == 1 ) {
-      el.parentNode.parentNode.style.background="#ff6347";  // выделить не выполненное задание
-      } else { el.parentNode.parentNode.style.background="#ffffff"; }  // снять выделение
+        ev.parentNode.parentNode.style.background="#ff6347";            // выделить не выполненное задание
+      } else { ev.parentNode.parentNode.style.background="#ffffff"; }   // снять выделение
     }
 }
 
