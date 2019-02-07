@@ -95,6 +95,7 @@ function voicecommand(strcommand) {
 
   var voicejob, pozdate;                          // поиск заданий по указанной дате
   if (strcommand.indexOf('задани') >= 0 && (pozdate=strcommand.indexOf(' на ')) >= 0 ){
+    document.getElementById('dtjobondate').classList.add("miganie");    // добавить МИГАНИЕ
     switch (strcommand.substr(pozdate+4, 6)) {
       case 'сегодн': voicejob = 'сегодня'; break
       case 'завтра': voicejob = 'завтра'; break
@@ -107,6 +108,7 @@ function voicecommand(strcommand) {
     var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
     for ( var nrow = trStroka.length-1; nrow>0; nrow--) {       // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
       var tdStroka = trStroka[nrow].getElementsByTagName('td'); // получить массив всех колонок в строке  
+      console.log('date='+formatDate(voicejob))
       if (twodates(tdStroka[1].innerHTML, formatDate(voicejob)) == 0) poiskjob++;
     }
     strvoice('Смотрим задания на '+voicejob+', их '+poiskjob);
@@ -456,11 +458,11 @@ function formatDate(strdate) {
       }
     break
     default :
-      for ( nmonth =0; nmonth < 12; nmonth++) if ( month[nmonth] == str[1].substring(0,3)) break; // поиск по первым трем символам названия месяца
+      for ( nmonth =0; nmonth < 12; nmonth++) if ( month[nmonth] == str[1].substr(0,3)) break; // поиск по первым трем символам названия месяца
       var newdate = new Date();                 // установить новую СКАЗАННУЮ дату
-      newdate.setDate(str[0]);                  // день
       newdate.setMonth(nmonth);                 // месяц
-      str.length <3 ? newdate.setFullYear(newdate.getFullYear()) : newdate.setFullYear(str[2]); // полный год
+      newdate.setDate(Number(str[0]));                  // день
+      str.length <3 ? newdate.setFullYear(newdate.getFullYear()) : newdate.setFullYear(Number(str[2])); // полный год
       if (str[0] != newdate.getDate()) { strvoice("Ошибка в дате"); return(today.valueAsDate); }
   }
   return (newdate);                         // вернуть новую дату
@@ -482,7 +484,7 @@ function sortbydate(textCheck, textDate, textTimes, textZadaniya) {
 // ВЫКЛЮЧИТЬ МИГАНИЕ УПРАВЛЯЮЩИХ КОМАНД
 //----------------------------------------------------------------
 function tdmiganie() {
-  var idindex = ["recjob","dtins","dtedit","dtdel","dtenet","dtststus","dtcopy"];
+  var idindex = ["recjob","dtins","dtedit","dtdel","dtenet","dtststus","dtcopy","dtjobondate"];
   for (var i=0; i < idindex.length; i++)
     document.getElementById(idindex[i]).classList.remove("miganie");  
 }
