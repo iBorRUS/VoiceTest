@@ -45,6 +45,7 @@ function bodyclick(){
 function myevent(kod) {
 
   switch (target.id) {
+  /*
     case 'dtins' :
       voicecommand("добавить");
     break
@@ -63,6 +64,7 @@ function myevent(kod) {
     case 'dtclose' :
       window.close();
     break
+  */
     case 'closemodal':
     case 'closeerrmodal':
       switch (target.className) {

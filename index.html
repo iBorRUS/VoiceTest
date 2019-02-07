@@ -47,17 +47,17 @@
 <div class="theadhelp">
   <h style="margin: 0 auto;">Голосовые команды:</h>
   <dl>
-    <dt id="dtins" class="command">- Добавить</dt>
+    <dt id="dtins" class="command" onclick="voicecommand ('добавить')">- Добавить</dt>
         <dd>- Дата</dd>
         <dd>- Время</dd>
         <dd>- Сохранить</dd>
         <dd>- Закрыть</dd>
-    <dt id="dtedit"class="command">- Изменить</dt>
+    <dt id="dtedit"class="command" onclick="voicecommand('изменить')">- Изменить</dt>
         <dd>- Дата</dd>
         <dd>- Время</dd>
         <dd>- Сохранить</dd>
         <dd>- Закрыть</dd>
-    <dt id="dtdel" class="command">- Удалить</dt>
+    <dt id="dtdel" class="command" onclick="voicecommand('удалить')">- Удалить</dt>
         <dd>- Да</dd>
         <dd>- Закрыть</dd>
     <dt id="dtjobondate"class="command">- Задания на</dt>
@@ -67,12 +67,12 @@
         <dd>- (дата)</dd>
     <dt id="dtenet" class="command">- Интернет</dt>
         <dd>- Закрыть интернет</dd>
-  	<dt id="dtcopy" class="command">- Копия</dt>
-    <dt id="dtststus" class="command">- Статус</dt>
+  	<dt id="dtcopy" class="command" onclick="voicecommand('копия')">- Копия</dt>
+    <dt id="dtststus" class="command" onclick="voicecommand('статус')">- Статус</dt>
     <dt class="command">- Ниже</dt>
     <dt class="command">- Выше</dt>
     <dt id="dtsavetable" class="command">- Сохранить таблицу</dt>
-    <dt id="dtclose" class="command">- Закрыть программу</dt>
+    <dt id="dtclose" class="command" onclick="window.close()">- Закрыть программу</dt>
   </dl>
   <button id="micbutton" class="mic" onclick="speechmic ()" style="margin-left: 30%;"> </button>
 </div>

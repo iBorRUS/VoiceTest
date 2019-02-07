@@ -108,8 +108,10 @@ function voicecommand(strcommand) {
     var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
     for ( var nrow = trStroka.length-1; nrow>0; nrow--) {       // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
       var tdStroka = trStroka[nrow].getElementsByTagName('td'); // получить массив всех колонок в строке  
-      console.log('date='+formatDate(voicejob))
-      if (twodates(tdStroka[1].innerHTML, formatDate(voicejob)) == 0) poiskjob++;
+      if (twodates(tdStroka[1].innerHTML, formatDate(voicejob)) == 0) {
+        poiskjob++;
+        trStroka[nrow].style.background = "#00ffff";
+      }
     }
     strvoice('Смотрим задания на '+voicejob+', их '+poiskjob);
     return
