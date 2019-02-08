@@ -87,6 +87,7 @@ function strvoice(textvoice){
 //----------------------------------------------------------------
 function voicecommand(strcommand) {
   var modal = document.getElementById('myModal'); // указатель на модальное окно с ключевыми фразами
+  var modaldate = document.getElementById('myModaldate'); // указатель на модальное окно с найденными (по дате) заданиями
   var today = document.getElementById("today");   // указатель на дату в строке с заданием
   var job = document.getElementById("job");       // указатель на задание
   var hours = document.getElementById("hours");   // указатель на часы
@@ -104,16 +105,28 @@ function voicecommand(strcommand) {
         voicejob = strcommand.substr(pozdate+4, 20);
       break
     }
-    var poiskjob=0;                             // количество найденных заданий
+    var tabledate = document.getElementById('tabledate'); // указатель на модальное окно с найденными (по дате) заданиями
+    var rowCount = tabledate.rows.length;
+    for (var x=rowCount-1; x>0; x--) tabledate.deleteRow(x);
+    var poiskjob=0, kodcheck=0;                             // количество найденных заданий
     var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
     for ( var nrow = trStroka.length-1; nrow>0; nrow--) {       // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
       var tdStroka = trStroka[nrow].getElementsByTagName('td'); // получить массив всех колонок в строке  
       if (twodates(tdStroka[1].innerHTML, formatDate(voicejob)) == 0) {
         poiskjob++;
-        trStroka[nrow].style.background = "#00ffff";
+        trStroka[nrow].getElementsByTagName('input')[0].checked ? kodcheck = 1 : kodcheck = 0;
+        addRowTable("myModaldate", -1, kodcheck, tdStroka[1].innerHTML, tdStroka[2].innerHTML, tdStroka[3].innerHTML);
       }
     }
-    strvoice('Смотрим задания на '+voicejob+', их '+poiskjob);
+    if (poiskjob) {
+      strvoice('Смотрим задания на '+voicejob+', их '+poiskjob);
+      //var modaldate = document.getElementById('myModaldate'); // указатель на модальное окно с найденными (по дате) заданиями
+      document.getElementById("modal-title-date").innerHTML = "ЗАДАНИЯ НА "+voicejob; // заголовок модального окна
+      document.getElementById("okbuttondate").innerHTML = "Перечислить"; // заголовок подтверждения изменения
+      modaldate.className = 'modal';                                // поменять класс на первоначальный
+      modaldate.style.display = "block";                            // показать окно на экране 
+      modaltitle = 'ПОИСК ПО ДАТЕ';
+    } else { strvoice('На '+voicejob+' никаких заданий нет!'); }
     return
   }
 
@@ -274,6 +287,11 @@ function voicecommand(strcommand) {
       switch (modaltitle) {
         case 'ЗАКРЫТЬ ПРОГРАММУ':
           window.close();
+        break
+        case 'ПОИСК ПО ДАТЕ':
+          modaldate.className = 'modal-out';
+          modaltitle = ""; 
+          tdmiganie();
         break
         case 'НОВОЕ ЗАДАНИЕ':
   	    case 'ИЗМЕНИТЬ ЗАДАНИЕ':
@@ -479,7 +497,7 @@ function sortbydate(textCheck, textDate, textTimes, textZadaniya) {
     var tdStroka = trStroka[nrow].getElementsByTagName('td');	// получить массив всех колонок в строке  
     if (twodates(tdStroka[1].innerHTML, textDate) >= 0) break;
   }
-  addRowTable(nrow, textCheck, textDate.toLocaleDateString(), textTimes, textZadaniya);
+  addRowTable("myTable", nrow, textCheck, textDate.toLocaleDateString(), textTimes, textZadaniya);
 }
 
 //----------------------------------------------------------------

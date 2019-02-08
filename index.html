@@ -106,6 +106,36 @@
 </div>
 
 <!-----------------------------------------------------------------------
+<   МОДАЛЬНОЕ ОКНО с заданиями по указанной дате
+<----------------------------------------------------------------------->
+<div id="myModaldate" class="modal">
+  <div class="modal-header"> 
+    <span id="closemodaldate" class="closedate">&times;</span>
+      <p id="modal-title-date" class="modal-title"></p>
+  </div>
+  <div>
+  <div class="modal-body">
+    <table id="tabledate" class = "table">
+        <thead>
+        <tr>                                  <!-- строка заголовка таблицы -->
+          <th type="checkbox" >Статус</th>  
+          <th type="text" style="width: 12%;">Дата</th> 
+          <th type="text" style="width: 5%;">Время</th>
+          <th style="width: 83%;">Задание</th>
+        </tr>
+        </thead>
+        <tbody>     
+        </tbody>
+      </table> 
+  </div>
+  <div class="modal-footer">
+    <button id="okbuttondate" class="Ok"></button>
+    </div>
+  </div>
+</div>
+
+
+<!-----------------------------------------------------------------------
 <   МОДАЛЬНОЕ ОКНО С СООБЩЕНИЕМ ОБ ОШИБКЕ
 <----------------------------------------------------------------------->
   <div id="errModal" class="errmodal">

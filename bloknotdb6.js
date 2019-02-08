@@ -48,7 +48,7 @@ function dbopenJob(){
                 myname = row['db_job']; mypassword = row['db_data'];
                 for (nomerstroki = 1; nomerstroki < len; nomerstroki++) { 
                     row = results.rows.item(nomerstroki);
-                    addRowTable(-1, row['db_check'], row['db_data'], row['db_times'], row['db_job']);    // добавить строку в таблицу
+                    addRowTable("myTable", -1, row['db_check'], row['db_data'], row['db_times'], row['db_job']);    // добавить строку в таблицу
                 } 
             }, null); 
     });

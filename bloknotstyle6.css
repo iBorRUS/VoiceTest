@@ -1,16 +1,12 @@
 body {font-family: Arial, Helvetica, sans-serif;}
 h, dl {
-font-size:  80%;
-}
-
-.bord {
-  color: red;
+/*font-size:  80%;*/
 }
 
 h1 {                    /* ЕЖЕДНЕВНИК 2018 */
     color: white;
     text-shadow: 1px 3px 6px #000000;
-    font-size:  170%;
+    font-size:  180%;
     text-align: left;
     letter-spacing: 0.1em;
 }
@@ -62,6 +58,7 @@ h1 {                    /* ЕЖЕДНЕВНИК 2018 */
 }
 
 .center {               /* ОКНО С ДАННЫМИ В ТАБЛИЦЕ */
+    /*font-size:  120%;*/
     position: relative; /* Позиционирует объект точно так же, как absolute, но относительно window */
     top: 64px;
     width: 85.2%;
@@ -96,6 +93,7 @@ h1 {                    /* ЕЖЕДНЕВНИК 2018 */
 /    ТАБЛИЦА С РЕЗУЛЬТАТАМИ ПОИСКА 
 /------------------------------------------------------*/
 table {
+    font-size:  130%;
     border-collapse: collapse;
 }
 
@@ -228,15 +226,15 @@ th, td {
 }
 
 /* кнопка <X> */
-.close, .errclose {
+.close, .closedate, .errclose {
     color: white;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 /* навели курсор на кнопку -> изменился цвет кнопки */
-.close, .errclose:hover,
-.close, .errclose:focus {
+.close, .closedate, .errclose:hover,
+.close, .closedate, .errclose:focus {
     color: #0000ff;
     text-decoration: none;
     cursor: pointer;

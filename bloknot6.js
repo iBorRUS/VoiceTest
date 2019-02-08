@@ -64,15 +64,24 @@ function myevent(kod) {
     case 'dtclose' :
       window.close();
     break
+    //----------------------------------------------------------------
+    // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ 
+    //----------------------------------------------------------------
+    case 'dtsavetable':     
+      dbsaveJob();
+    break
   */
     case 'closemodal':
     case 'closeerrmodal':
+    case 'closemodaldate':
       switch (target.className) {
         case 'close':
           document.getElementById('myModal').className = 'modal-out';     // поменять класс на <Закрытие модального окна>
         case 'errclose':
           document.getElementById('errModal').className = 'errmodal-out'; // закрыть окно с ошибками
         break
+        case 'closedate':
+          document.getElementById('myModaldate').className = 'modal-out';     // поменять класс на <Закрытие модального окна>
       }
       tdmiganie();
       modaltitle = "";
@@ -80,13 +89,7 @@ function myevent(kod) {
     case 'okbutton':
       voicecommand("да");
     break
-    //----------------------------------------------------------------
-    // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ 
-    //----------------------------------------------------------------
-    //case 'buttontopsavetabl':
-    case 'dtsavetable':     
-      dbsaveJob();
-    break
+
     default :
 
       switch (target.tagName) {
@@ -113,8 +116,8 @@ function modalblock (modal, title, okbutton) {
 //----------------------------------------------------------------
 // добавить строку в таблицу на экране
 //----------------------------------------------------------------
-var addRowTable = function(nrow, textCheck, textDate, textTimes, textZadaniya) { 
-    var tableRef = document.getElementById("myTable").getElementsByTagName('tbody')[0];
+var addRowTable = function(table, nrow, textCheck, textDate, textTimes, textZadaniya) { 
+    var tableRef = document.getElementById(table).getElementsByTagName('tbody')[0];
     if (nrow == -1) nrow = tableRef.rows.length;			      // Вставить строку в конец таблицы
     var newRow = tableRef.insertRow(nrow);  				        // Вставить строку в тело таблицы
     var newCell0  = newRow.insertCell(0);                   // Создать пустые ячейки в добавленной строке
