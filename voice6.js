@@ -328,7 +328,7 @@ function voicecommand(strcommand) {
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
-			document.getElementById('recjob').classList.add("miganie");         // добавить МИГАНИЕ 
+			      document.getElementById('recjob').classList.add("miganie");         // добавить МИГАНИЕ 
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
@@ -497,22 +497,7 @@ function sortbydate(textCheck, textDate, textTimes, textZadaniya) {
     var tdStroka = trStroka[nrow].getElementsByTagName('td');	// получить массив всех колонок в строке  
     if (twodates(tdStroka[1].innerHTML, textDate) >= 0) break;
   }
-  addRowTable("myTable", nrow, textCheck, textDate.toLocaleDateString(), textTimes, textZadaniya);
-}
-
-//----------------------------------------------------------------
-// ВЫКЛЮЧИТЬ МИГАНИЕ УПРАВЛЯЮЩИХ КОМАНД
-//----------------------------------------------------------------
-function tdmiganie() {
-  var idindex = ["recjob","dtins","dtedit","dtdel","dtenet","dtststus","dtcopy","dtjobondate"];
-  for (var i=0; i < idindex.length; i++)
-    document.getElementById(idindex[i]).classList.remove("miganie");  
-}
-//----------------------------------------------------------------
-// ФОРМАТ ВЫВОДА ВРЕМЕНИ 00:00
-//----------------------------------------------------------------
-function checkTime(i){
-if (i<10) i="0" + i; return i;
+  addRowTable('myTable', nrow+1, textCheck, textDate.toLocaleDateString(), textTimes, textZadaniya);
 }
 
 //----------------------------------------------------------------
@@ -523,8 +508,26 @@ function twodates(date1,date2) {
   var str = date1.split('.');          	// разделить строку даты на массив день-месяц-год
   var intstr1 = str[2]+str[1]+str[0];	// дата -> в число yyyymmdd
   var intstr2 = String(date2.getFullYear())+checkTime(date2.getMonth()+1)+checkTime(date2.getDate());
+  console.log('intstr2= '+intstr2+'   intstr1= '+intstr1)
   if (intstr2 > intstr1) return (1);	// сегодня больше сравниваемой даты
   if (intstr2 < intstr1) return (-1);	// сегодня меньше сравниваемой даты
   if (intstr2 == intstr1) return (0);	// сегодня равно сравниваемой дате
+}
+
+//----------------------------------------------------------------
+// ВЫКЛЮЧИТЬ МИГАНИЕ УПРАВЛЯЮЩИХ КОМАНД
+//----------------------------------------------------------------
+function tdmiganie() {
+  var idindex = ["recjob","dtins","dtedit","dtdel","dtenet","dtststus","dtcopy","dtjobondate"];
+  for (var i=0; i < idindex.length; i++)
+    document.getElementById(idindex[i]).classList.remove("miganie");  
+}
+
+
+//----------------------------------------------------------------
+// ФОРМАТ ВЫВОДА ВРЕМЕНИ 00:00
+//----------------------------------------------------------------
+function checkTime(i){
+if (i<10) i="0" + i; return i;
 }
 
