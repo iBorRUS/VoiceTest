@@ -88,6 +88,7 @@ function strvoice(textvoice){
 function voicecommand(strcommand) {
   var modal = document.getElementById('myModal'); // указатель на модальное окно с ключевыми фразами
   var modaldate = document.getElementById('myModaldate'); // указатель на модальное окно с найденными (по дате) заданиями
+  
   var today = document.getElementById("today");   // указатель на дату в строке с заданием
   var job = document.getElementById("job");       // указатель на задание
   var hours = document.getElementById("hours");   // указатель на часы
@@ -105,24 +106,24 @@ function voicecommand(strcommand) {
         voicejob = strcommand.substr(pozdate+4, 20);
       break
     }
-    var tabledate = document.getElementById('tabledate'); // указатель на модальное окно с найденными (по дате) заданиями
-    var rowCount = tabledate.rows.length;
-    for (var x=rowCount-1; x>0; x--) tabledate.deleteRow(x);
     var poiskjob=0, kodcheck=0;                             // количество найденных заданий
+    var tabledate = document.getElementById('tabledate'); // указатель на таблицу с найденными (по дате) заданиями
+    var rowCount = tabledate.rows.length;
+    if(rowCount) for (var x=rowCount-1; x>0; x--) tabledate.deleteRow(x);
     var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
     for ( var nrow = trStroka.length-1; nrow>0; nrow--) {       // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
       var tdStroka = trStroka[nrow].getElementsByTagName('td'); // получить массив всех колонок в строке  
       if (twodates(tdStroka[1].innerHTML, formatDate(voicejob)) == 0) {
         poiskjob++;
         trStroka[nrow].getElementsByTagName('input')[0].checked ? kodcheck = 1 : kodcheck = 0;
-        addRowTable("myModaldate", -1, kodcheck, tdStroka[1].innerHTML, tdStroka[2].innerHTML, tdStroka[3].innerHTML);
+        addRowTable("tabledate", poiskjob, kodcheck, tdStroka[1].innerHTML, tdStroka[2].innerHTML, tdStroka[3].innerHTML);
       }
     }
     if (poiskjob) {
       strvoice('Смотрим задания на '+voicejob+', их '+poiskjob);
       //var modaldate = document.getElementById('myModaldate'); // указатель на модальное окно с найденными (по дате) заданиями
       document.getElementById("modal-title-date").innerHTML = "ЗАДАНИЯ НА "+voicejob; // заголовок модального окна
-      document.getElementById("okbuttondate").innerHTML = "Перечислить"; // заголовок подтверждения изменения
+      document.getElementById("okbuttondate").innerHTML = "Закрыть"; // заголовок подтверждения изменения
       modaldate.className = 'modal';                                // поменять класс на первоначальный
       modaldate.style.display = "block";                            // показать окно на экране 
       modaltitle = 'ПОИСК ПО ДАТЕ';
@@ -139,6 +140,19 @@ function voicecommand(strcommand) {
     case 'выше':
       window.scrollBy(0,-200);                    // прокрутка окна вниз
     break
+/*
+    case 'перечислить':
+      if (modaltitle == 'ПОИСК ПО ДАТЕ'){
+        var row = document.getElementById('tabledate').getElementsByTagName('tr');
+
+        for (var i = 0; i < row.length-1; i++) {
+          var stroka = row[i].getElementsByTagName('td'); // получить массив всех колонок в строке
+          console.log('i='+i+'  '+row.length+'   '+stroka.length)
+          strvoice(stroka[3].innerHTML);
+        }
+      }
+    break
+*/
 
     case 'ниже':                                  // прокрутка окна вверх
       window.scrollBy(0,200);
@@ -328,7 +342,7 @@ function voicecommand(strcommand) {
             modaltitle = 'НОВОЕ ЗАДАНИЕ';
             job.value = "";
             job.focus();
-			      document.getElementById('recjob').classList.add("miganie");         // добавить МИГАНИЕ 
+			document.getElementById('recjob').classList.add("miganie");         // добавить МИГАНИЕ 
             modalblock (modal, modaltitle, 'СОХРАНИТЬ');
         break
         //----------------------------------------------------------------
@@ -336,7 +350,7 @@ function voicecommand(strcommand) {
         //----------------------------------------------------------------
         case 'изменить':
         case 'удалить':
-    	  case 'статус':
+    	case 'статус':
         case 'копия':
           var onend = false;                                                    // если что то нашли, то = true
         	var trStroka = document.getElementById('myTable').getElementsByTagName('tr');  // получить массив всех строк
@@ -352,38 +366,38 @@ function voicecommand(strcommand) {
                 	job.value = tdStroka[3].innerHTML;                            // задание -> в поле "задание"
 					
                   switch (editjob) {
-          				case 'изменить':
-          					job.focus();
-          					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-          					editjob = "newjob";
-                  	document.getElementById('recjob').classList.add("miganie"); // добавить МИГАНИЕ 
-                  break
-          				case 'копия':
-          					job.focus();
-          					modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
-          					editjob = "newjob";
-          					document.getElementById('recjob').classList.add("miganie"); // добавить МИГАНИЕ 
-          				break
-                  case 'удалить':
-          					modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
-          					strvoice("Удалить?");
-                  break
-                  case 'статус':
-                    var checkstat = tdStroka[0].getElementsByTagName('input');
-                    var eqldates = twodates(tdStroka[1].innerHTML);             // сравнить даты
-	                  if (eqldates >= 0) {                                        // сегодня дата больше или равно
-                        checkstat[0].checked = !(checkstat[0].checked);         // снять/поставить галочку
-                  			if (checkstat[0].checked)                               // если галочка стоит,
-                    			{ trStroka[nomerstroki].style.background="#ffffff"; } //    то: снять выделение строки
-                           else 			                                          // иначе: выделить строку "красным"
-                    			{ if(eqldates != 0) trStroka[nomerstroki].style.background="#ff6347";	}		 
-                    } else strvoice("Рано. Событие ещё не произошло!");
-	                  document.getElementById('dtststus').classList.remove("miganie");
-	                  editjob = "";
-                  break
+          			case 'изменить':
+          				job.focus();
+          				modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+          				editjob = "newjob";
+                  		document.getElementById('recjob').classList.add("miganie"); // добавить МИГАНИЕ 
+                  	break
+          			case 'копия':
+          				job.focus();
+          				modalblock (modal, "ИЗМЕНИТЬ ЗАДАНИЕ", "СОХРАНИТЬ");
+          				editjob = "newjob";
+          				document.getElementById('recjob').classList.add("miganie"); // добавить МИГАНИЕ 
+          			break
+                  	case 'удалить':
+          				modalblock (modal, "УДАЛИТЬ ЗАДАНИЕ", "Да");
+          				strvoice("Удалить?");
+                  	break
+	                  case 'статус':
+	                    var checkstat = tdStroka[0].getElementsByTagName('input');
+	                    var eqldates = twodates(tdStroka[1].innerHTML);             // сравнить даты
+		                  if (eqldates >= 0) {                                        // сегодня дата больше или равно
+	                        checkstat[0].checked = !(checkstat[0].checked);         // снять/поставить галочку
+	                  			if (checkstat[0].checked)                               // если галочка стоит,
+	                    			{ trStroka[nomerstroki].style.background="#ffffff"; } //    то: снять выделение строки
+	                           else 			                                          // иначе: выделить строку "красным"
+	                    			{ if(eqldates != 0) trStroka[nomerstroki].style.background="#ff6347";	}		 
+	                    } else strvoice("Рано. Событие ещё не произошло!");
+		                  document.getElementById('dtststus').classList.remove("miganie");
+		                  editjob = "";
+	                  	break
             		  } // switch (editjob)
           			break	// выход из for... нашли задание в таблице
-				      }	// if ( newjob.indexOf(strcommand) !== -1 )
+				  }	// if ( newjob.indexOf(strcommand) !== -1 )
     	      }	// for (nomerstroki=1;
     	    if (!onend) strvoice("нет такого задания");
         	break
