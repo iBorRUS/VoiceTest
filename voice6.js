@@ -111,13 +111,14 @@ function voicecommand(strcommand) {
     var rowCount = tabledate.rows.length;
     if(rowCount) for (var x=rowCount-1; x>0; x--) tabledate.deleteRow(x);
     var trStroka = document.getElementById('myTable').getElementsByTagName('tr');   // получить массив всех строк
-    for ( var nrow = trStroka.length-1; nrow>0; nrow--) {       // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
-      var tdStroka = trStroka[nrow].getElementsByTagName('td'); // получить массив всех колонок в строке  
+    for ( var nrow = trStroka.length-1; nrow > 0; nrow--) {       // цикл по количеству строк в таблице (начиная с последней записи и до 1-й)
+      var tdStroka = trStroka[nrow].getElementsByTagName('td'); // получить массив всех колонок в строке
+      console.log('nrow= '+nrow)  
       if (twodates(tdStroka[1].innerHTML, formatDate(voicejob)) == 0) {
         poiskjob++;
         trStroka[nrow].getElementsByTagName('input')[0].checked ? kodcheck = 1 : kodcheck = 0;
-        addRowTable("tabledate", poiskjob, kodcheck, tdStroka[1].innerHTML, tdStroka[2].innerHTML, tdStroka[3].innerHTML);
-      }
+        addRowTable("tabledate", 1, kodcheck, tdStroka[1].innerHTML, tdStroka[2].innerHTML, tdStroka[3].innerHTML);
+      } else if (poiskjob) break;
     }
     if (poiskjob) {
       strvoice('Смотрим задания на '+voicejob+', их '+poiskjob);
@@ -131,8 +132,6 @@ function voicecommand(strcommand) {
     return
   }
 
-
-
   switch (strcommand) {
     //--------------------------------------------------------------------
     // АНАЛИЗ ОСНОВНЫХ КОМАНД (команды первого уровня)
@@ -140,19 +139,6 @@ function voicecommand(strcommand) {
     case 'выше':
       window.scrollBy(0,-200);                    // прокрутка окна вниз
     break
-/*
-    case 'перечислить':
-      if (modaltitle == 'ПОИСК ПО ДАТЕ'){
-        var row = document.getElementById('tabledate').getElementsByTagName('tr');
-
-        for (var i = 0; i < row.length-1; i++) {
-          var stroka = row[i].getElementsByTagName('td'); // получить массив всех колонок в строке
-          console.log('i='+i+'  '+row.length+'   '+stroka.length)
-          strvoice(stroka[3].innerHTML);
-        }
-      }
-    break
-*/
 
     case 'ниже':                                  // прокрутка окна вверх
       window.scrollBy(0,200);
@@ -160,7 +146,7 @@ function voicecommand(strcommand) {
 
     case 'закрыть программу':
       modaltitle = 'ЗАКРЫТЬ ПРОГРАММУ';
-      strvoice("сохранить? таблицу?");
+      strvoice("сохранить? данные в таблице?");
     break
 
     case 'сохранить таблицу':                     // СОХРАНИТЬ ТАБЛИЦУ НА ДИСКЕ

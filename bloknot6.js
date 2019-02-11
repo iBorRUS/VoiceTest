@@ -117,7 +117,7 @@ function modalblock (modal, title, okbutton) {
 // добавить строку в таблицу на экране
 //----------------------------------------------------------------
 var addRowTable = function(table, nrow, textCheck, textDate, textTimes, textZadaniya) { 
-    var tableRef = document.getElementById(table).getElementsByTagName('tbody')[0];
+    var tableRef = document.getElementById(table); //.getElementsByTagName('tbody')[0];
     if (nrow == -1) nrow = tableRef.rows.length;			      // Вставить строку в конец таблицы
     var newRow = tableRef.insertRow(nrow);  				        // Вставить строку в тело таблицы
     var newCell0  = newRow.insertCell(0);                   // Создать пустые ячейки в добавленной строке
